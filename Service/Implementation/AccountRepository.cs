@@ -29,16 +29,30 @@ namespace Service.Implementation
 		}
 		public async Task<Account> CreateAsync(Account t)
 		{
-			throw new NotImplementedException();
+			var newAccount = await _context.Accounts.AddAsync(t);
+			await _context.SaveChangesAsync();
+			return newAccount.Entity;
 		}
 
-		public async Task<bool> DeleteAsync(int id)
+		public async Task<bool> DeleteAsync(Account t)
 		{
-			throw new NotImplementedException();
+			if (t == null) 
+			{
+				return false;
+			}
+			_context.Remove(t);
+			await _context.SaveChangesAsync();
+			return true;
 		}
-		public async Task<bool> UpdateAsync(Account entity)
+		public async Task<bool> UpdateAsync(Account t)
 		{
-			throw new NotImplementedException();
+			if(t == null) 
+			{
+				return false;
+			}
+			_context.Update(t);
+			await _context.SaveChangesAsync();
+			return true;
 		}
 	}
 }

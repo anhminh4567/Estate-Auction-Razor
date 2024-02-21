@@ -11,7 +11,7 @@ namespace Service.Interfaces
 		Task<T> GetAsync(int id);
 		Task<List<T>> GetAllAsync();
 		Task<T> CreateAsync(T t);
-		Task<bool> UpdateAsync(T entity);	
-		Task<bool> DeleteAsync(int id);
+		Task<bool> UpdateAsync(T t);	
+		Task<bool> DeleteAsync(T t);
 	}
 }
