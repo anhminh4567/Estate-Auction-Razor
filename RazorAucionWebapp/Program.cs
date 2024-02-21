@@ -2,7 +2,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-
+builder.Services.AddAuthentication()
+    .AddCookie("cookie",options => 
+    {
+        options.LoginPath = "/Login";
+        options.LogoutPath = "/Logout";
+        options.AccessDeniedPath = "/Unauthorized";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+    });
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

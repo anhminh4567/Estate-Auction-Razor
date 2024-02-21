@@ -1,0 +1,13 @@
+﻿@page
+@model RazorAucionWebapp.Pages.LoginModel
+@{
+}
+<form method="post" class="" >
+	<div asp-validation-summary="All"></div>
+	<label asp-for="Username">user name</label>
+	<input type="text" class="form-control" asp-for="Username" />
+	<span asp-validation-for="Username"></span>
+	<label asp-for="Password">password</label>
+	<input type="password" class="form-control" asp-for="Password" />
+	<span asp-validation-for="Password"></span>
+</form>
