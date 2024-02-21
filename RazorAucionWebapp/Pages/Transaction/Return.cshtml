@@ -1,0 +1,22 @@
+﻿@page
+@model RazorAucionWebapp.Pages.Transaction.ReturnModel
+@{
+}
+<div class="text-danger" asp-validation-summary="ModelOnly">
+</div>
+@{
+	var result = Model.VnpayResult;
+	if (result is not null)
+	{
+		<div>
+			<p>is success	 : @result.Success</p>
+			<p>Message		 : @result.Message</p>
+			<p>order id		 : @result.Vnp_TxnRef</p>
+			<p>transaction no: @result.TransactionNo</p>
+			<p>transac stat  : @result.TransactionStatus</p>
+			<p>status code	 : @result.StatusCode</p>
+			<p>amoun		 : @result.Amount</p>
+			<p>bank code	 : @result.BankCode</p>
+		</div>
+	}
+}
