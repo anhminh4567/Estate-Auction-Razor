@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33627.172
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RazorAucionWebapp", "RazorAucionWebapp\RazorAucionWebapp.csproj", "{C2595959-C041-4C74-B838-5A492394F748}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository", "Repository\Repository.csproj", "{501F93E4-1B31-4B06-B423-D0583288E0C3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C2595959-C041-4C74-B838-5A492394F748}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2595959-C041-4C74-B838-5A492394F748}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2595959-C041-4C74-B838-5A492394F748}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2595959-C041-4C74-B838-5A492394F748}.Release|Any CPU.Build.0 = Release|Any CPU
+		{501F93E4-1B31-4B06-B423-D0583288E0C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{501F93E4-1B31-4B06-B423-D0583288E0C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{501F93E4-1B31-4B06-B423-D0583288E0C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{501F93E4-1B31-4B06-B423-D0583288E0C3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A1260015-8A87-4528-83F3-08723FA45CBB}
+	EndGlobalSection
+EndGlobal
