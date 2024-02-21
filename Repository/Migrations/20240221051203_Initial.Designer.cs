@@ -12,8 +12,8 @@ using Repository.Database;
 namespace Repository.Migrations
 {
     [DbContext(typeof(AuctionRealEstateDbContext))]
-    [Migration("20240221044655_Fourth")]
-    partial class Fourth
+    [Migration("20240221051203_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -20,7 +20,7 @@ namespace Repository.Migrations
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Dob = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Telephone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsActive = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsVerified = table.Column<byte>(type: "tinyint", nullable: false),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CMND = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -87,7 +87,7 @@ namespace Repository.Migrations
                 {
                     TransactionId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    AccountId = table.Column<int>(type: "int", nullable: false),
+                    AccountId = table.Column<int>(type: "int", nullable: true),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     vnp_TxnRef = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     vnp_Amount = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -102,7 +102,7 @@ namespace Repository.Migrations
                         column: x => x.AccountId,
                         principalTable: "Account",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -149,14 +149,15 @@ namespace Repository.Migrations
                         column: x => x.CompanyId,
                         principalTable: "Company",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Auctions",
                 columns: table => new
                 {
-                    AuctionId = table.Column<int>(type: "int", nullable: false),
+                    AuctionId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     EstateId = table.Column<int>(type: "int", nullable: false),
                     RegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -170,8 +171,8 @@ namespace Repository.Migrations
                 {
                     table.PrimaryKey("PK_Auctions", x => x.AuctionId);
                     table.ForeignKey(
-                        name: "FK_Auctions_Estates_AuctionId",
-                        column: x => x.AuctionId,
+                        name: "FK_Auctions_Estates_EstateId",
+                        column: x => x.EstateId,
                         principalTable: "Estates",
                         principalColumn: "EstateId",
                         onDelete: ReferentialAction.Cascade);
@@ -231,8 +232,8 @@ namespace Repository.Migrations
                 {
                     ReceiptId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    AuctionId = table.Column<int>(type: "int", nullable: false),
-                    BuyerId = table.Column<int>(type: "int", nullable: false),
+                    AuctionId = table.Column<int>(type: "int", nullable: true),
+                    BuyerId = table.Column<int>(type: "int", nullable: true),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Commission = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
@@ -244,17 +245,17 @@ namespace Repository.Migrations
                         column: x => x.BuyerId,
                         principalTable: "Account",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_AuctionReceipts_Auctions_AuctionId",
                         column: x => x.AuctionId,
                         principalTable: "Auctions",
                         principalColumn: "AuctionId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
-                name: "BidLogs",
+                name: "Bids",
                 columns: table => new
                 {
                     AuctionId = table.Column<int>(type: "int", nullable: false),
@@ -264,15 +265,15 @@ namespace Repository.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BidLogs", x => new { x.BidderId, x.AuctionId });
+                    table.PrimaryKey("PK_Bids", x => new { x.BidderId, x.AuctionId });
                     table.ForeignKey(
-                        name: "FK_BidLogs_Account_BidderId",
+                        name: "FK_Bids_Account_BidderId",
                         column: x => x.BidderId,
                         principalTable: "Account",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BidLogs_Auctions_AuctionId",
+                        name: "FK_Bids_Auctions_AuctionId",
                         column: x => x.AuctionId,
                         principalTable: "Auctions",
                         principalColumn: "AuctionId",
@@ -295,8 +296,13 @@ namespace Repository.Migrations
                 column: "BuyerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BidLogs_AuctionId",
-                table: "BidLogs",
+                name: "IX_Auctions_EstateId",
+                table: "Auctions",
+                column: "EstateId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bids_AuctionId",
+                table: "Bids",
                 column: "AuctionId");
 
             migrationBuilder.CreateIndex(
@@ -329,7 +335,7 @@ namespace Repository.Migrations
                 name: "AuctionReceipts");
 
             migrationBuilder.DropTable(
-                name: "BidLogs");
+                name: "Bids");
 
             migrationBuilder.DropTable(
                 name: "EstateCategories");
