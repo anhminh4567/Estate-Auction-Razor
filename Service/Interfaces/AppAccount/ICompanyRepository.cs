@@ -5,10 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Service.Interfaces
+namespace Service.Interfaces.AppAccount
 {
-	public interface IAccountRepository : ICrud<Account>
-	{
-		Task<Account> GetByEmailPassword(string email, string password);
-	}
+    public interface ICompanyRepository : ICrud<Company>
+    {
+    }
 }

@@ -28,6 +28,8 @@ namespace Repository.Database
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Company> Companys { get; set; }
         public DbSet<AppImage> Images { get; set; }
+        public DbSet<AccountImages> AccountImages { get; set; }
+        public DbSet<EstateImages> EstateImages { get; set; }
         public DbSet<Auction> Auctions { get; set; }
         public DbSet<AuctionReceipt> AuctionReceipts { get; set; }
         public DbSet<Bid> BidLogs { get; set; }

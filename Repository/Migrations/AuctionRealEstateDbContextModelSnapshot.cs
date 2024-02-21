@@ -85,7 +85,7 @@ namespace Repository.Migrations
 
                     b.HasIndex("AccountId");
 
-                    b.ToTable("AccountImages");
+                    b.ToTable("AccountImages", (string)null);
                 });
 
             modelBuilder.Entity("Repository.Database.Model.AppImage", b =>
@@ -109,7 +109,7 @@ namespace Repository.Migrations
 
                     b.HasKey("ImageId");
 
-                    b.ToTable("Images");
+                    b.ToTable("Images", (string)null);
                 });
 
             modelBuilder.Entity("Repository.Database.Model.AuctionRelated.Auction", b =>
@@ -145,7 +145,7 @@ namespace Repository.Migrations
 
                     b.HasKey("AuctionId");
 
-                    b.ToTable("Auctions");
+                    b.ToTable("Auctions", (string)null);
                 });
 
             modelBuilder.Entity("Repository.Database.Model.AuctionRelated.AuctionReceipt", b =>
@@ -174,7 +174,7 @@ namespace Repository.Migrations
 
                     b.HasIndex("BuyerId");
 
-                    b.ToTable("AuctionReceipts");
+                    b.ToTable("AuctionReceipts", (string)null);
                 });
 
             modelBuilder.Entity("Repository.Database.Model.AuctionRelated.Bid", b =>
@@ -227,7 +227,7 @@ namespace Repository.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("Estates");
+                    b.ToTable("Estates", (string)null);
                 });
 
             modelBuilder.Entity("Repository.Database.Model.RealEstate.EstateCategories", b =>
@@ -242,7 +242,7 @@ namespace Repository.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("EstateCategories");
+                    b.ToTable("EstateCategories", (string)null);
                 });
 
             modelBuilder.Entity("Repository.Database.Model.RealEstate.EstateCategoryDetail", b =>
@@ -263,7 +263,7 @@ namespace Repository.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("EstateCategoryDetail");
+                    b.ToTable("EstateCategoryDetail", (string)null);
                 });
 
             modelBuilder.Entity("Repository.Database.Model.RealEstate.EstateImages", b =>
@@ -278,7 +278,7 @@ namespace Repository.Migrations
 
                     b.HasIndex("ImageId");
 
-                    b.ToTable("EstateImages");
+                    b.ToTable("EstateImages", (string)null);
                 });
 
             modelBuilder.Entity("Repository.Database.Model.Transaction", b =>
@@ -315,7 +315,7 @@ namespace Repository.Migrations
 
                     b.HasIndex("AccountId");
 
-                    b.ToTable("Transactions");
+                    b.ToTable("Transactions", (string)null);
                 });
 
             modelBuilder.Entity("Repository.Database.Model.AppAccount.Company", b =>
