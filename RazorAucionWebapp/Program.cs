@@ -1,8 +1,14 @@
+using Repository.Database;
+using Service.Implementation;
+using Service.Interfaces;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddAuthentication()
+builder.Services.AddDbContext<AuctionRealEstateDbContext>(opt => {});
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddAuthentication("cookie")
     .AddCookie("cookie",options => 
     {
         options.LoginPath = "/Login";
@@ -24,7 +30,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();

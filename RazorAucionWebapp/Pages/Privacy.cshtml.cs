@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace RazorAucionWebapp.Pages
 {
+    [Authorize]
     public class PrivacyModel : PageModel
     {
         private readonly ILogger<PrivacyModel> _logger;
@@ -14,6 +16,7 @@ namespace RazorAucionWebapp.Pages
 
         public void OnGet()
         {
+            var httpContext = HttpContext;
         }
     }
 }

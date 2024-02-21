@@ -9,5 +9,6 @@ namespace Service.Interfaces
 {
 	public interface IAccountRepository : ICrud<Account>
 	{
+		Task<Account> GetByEmailPassword(string email, string password);
 	}
 }

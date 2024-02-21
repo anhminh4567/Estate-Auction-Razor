@@ -54,5 +54,11 @@ namespace Service.Implementation
 			await _context.SaveChangesAsync();
 			return true;
 		}
+
+		public async Task<Account> GetByEmailPassword(string email, string password)
+		{
+			var getAccount = await _context.Accounts.FirstOrDefaultAsync(a => a.Email == email && a.Password == password);
+			return getAccount;
+		}
 	}
 }
