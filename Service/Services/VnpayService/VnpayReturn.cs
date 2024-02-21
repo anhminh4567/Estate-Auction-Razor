@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Protocols;
+using Service.Services.VnpayService.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Service.Services.VnpayService
 {
-	public class VnpayReturn
+    public class VnpayReturn
 	{
 		public VnpayReturn()
 		{

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Service.Services.VnpayService;
+using Service.Services.VnpayService.Model;
 
 namespace RazorAucionWebapp.Pages.Transaction
 {

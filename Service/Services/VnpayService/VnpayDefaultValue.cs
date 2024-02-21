@@ -14,5 +14,11 @@ namespace Service.Services.VnpayService
 		public static string Vnp_Returnurl = "https://localhost:7156/Transaction/Return";
 		public static string Vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
 		public static string Vnp_Api = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
+		
+	}
+	public static class VnpayTransactionType 
+	{
+		public const string HoanTraMotPhan = "03";
+		public const string HoanTraToanPhan = "02";
 	}
 }
