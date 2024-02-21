@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Protocols;
 using Repository.Database.Model.AppAccount;
+using Service.Services.VnpayService.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;

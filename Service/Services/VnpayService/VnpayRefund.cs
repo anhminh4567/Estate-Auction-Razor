@@ -19,9 +19,12 @@ namespace Service.Services.VnpayService
 		public VnpayRefund()
 		{
 		}
-		public void btnRefund_Click(HttpContext context , VnpayQueryResult queryResult, Account account)
+		public VnpayRefundResult? btnRefund_Click(HttpContext context , VnpayQueryResult? queryResult, Account account)
 		{
-
+			if(queryResult is null) 
+			{
+				return null;
+			}
 			var vnp_Api = VnpayDefaultValue.Vnp_Api;
 			var vnp_HashSecret = VnpayDefaultValue.Vnp_HashSecret; //Secret KEy
 			var vnp_TmnCode = VnpayDefaultValue.Vnp_TmnCode; // Terminal Id
@@ -66,10 +69,8 @@ namespace Service.Services.VnpayService
 				//vnpayClient.DefaultRequestHeaders.Add("Content-Type", "application/json");
 				HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");//(jsonData);
 				var response = vnpayClient.PostAsync(new Uri(vnp_Api), content).Result;
-				//var contentBody = response.Content.ReadFromJsonAsync<VnpayQueryResult>().Result;
-				var contentBody = response.Content.ReadAsStringAsync().Result;
-
-				//return contentBody;
+				var contentBody = response.Content.ReadFromJsonAsync<VnpayRefundResult>().Result;
+				return contentBody;
 			}
 			//var httpWebRequest = (HttpWebRequest)WebRequest.Create(vnp_Api);
 			//httpWebRequest.ContentType = "application/json";
