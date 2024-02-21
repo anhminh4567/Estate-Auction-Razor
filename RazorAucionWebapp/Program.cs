@@ -1,5 +1,7 @@
+global using Service.Interfaces.AppAccount;
 using Repository.Database;
 using Service.Implementation;
+using Service.Implementation.AppAccount;
 using Service.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);

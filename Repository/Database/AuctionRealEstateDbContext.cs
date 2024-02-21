@@ -79,7 +79,7 @@ namespace Repository.Database
             });
             builder.Entity<Auction>(a => 
             {
-                a.HasOne(a => a.Estate).WithMany(e => e.Auctions).HasForeignKey(k => k.AuctionId);
+                a.HasOne(a => a.Estate).WithMany(e => e.Auctions).HasForeignKey(k => k.EstateId);
             });
             builder.Entity<AuctionReceipt>(a => 
             {
