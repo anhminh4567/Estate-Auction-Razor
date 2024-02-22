@@ -4,9 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Service.Services
+namespace Service.Services.EmailRelated
 {
-	internal class EmailServices
+	public class EmailServices
 	{
+		public EmailServices()
+		{
+		}
+		
 	}
 }
