@@ -3,14 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Repository.Database.Model.AppAccount;
 using Repository.Database.Model.Enum;
-using Service.Interfaces;
+using Repository.Interfaces.AppAccount;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 
 namespace RazorAucionWebapp.Pages.Registration
 {
-    public class LoginModel : PageModel
+	public class LoginModel : PageModel
     {
         private readonly IAccountRepository _account;
         public LoginModel(IAccountRepository account)

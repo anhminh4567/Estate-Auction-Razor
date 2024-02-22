@@ -1,13 +1,11 @@
-global using Service.Interfaces.AppAccount;
+global using Repository.Interfaces.AppAccount;
 using RazorAucionWebapp.Configure;
 using Repository.Database;
-using Service.Implementation;
-using Service.Implementation.AppAccount;
-using Service.Implementation.Auction;
-using Service.Implementation.RealEstate;
-using Service.Interfaces;
-using Service.Interfaces.Auction;
-using Service.Interfaces.RealEstate;
+using Repository.Implementation.AppAccount;
+using Repository.Implementation.Auction;
+using Repository.Implementation.RealEstate;
+using Repository.Interfaces.Auction;
+using Repository.Interfaces.RealEstate;
 
 var builder = WebApplication.CreateBuilder(args);
 
