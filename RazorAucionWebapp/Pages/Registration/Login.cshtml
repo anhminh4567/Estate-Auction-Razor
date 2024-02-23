@@ -2,19 +2,31 @@
 @model LoginModel
 @{
 }
-<form method="post" class="">
-	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-	<div>
-		<label asp-for="Email">Email</label>
-		<input type="text" class="form-control" asp-for="Email" />
-		<span asp-validation-for="Email" class="text-danger"></span>
-	</div>
-	<div>
-		<label asp-for="Password">Password</label>
-		<input type="password" class="form-control" asp-for="Password" />
-		<span asp-validation-for="Password" class="text-danger"></span>
-	</div>
-	<div>
-		<button type="submit" class="btn btn-primary mt-3">Login</button>
-	</div>
-</form>
+<div class="wrapper">
+	<form class="inputFrm" method="post">
+		<h3>LOGIN</h3>
+		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+		<div class="inputGrp">
+			<input type="text" asp-for="Email" required/>
+			<label class="lbl" asp-for="Email">Email</label>
+			<div class="wBorder"></div>
+			@* <span asp-validation-for="Email" class="text-danger"></span> *@
+		</div>
+		<div class="inputGrp">
+			<input type="password" asp-for="Password" required />
+			<label asp-for="Password">Password</label>
+			<div class="wBorder2"></div>
+			@* <span asp-validation-for="Password" class="text-danger"></span> *@
+		</div>
+		<div class="form-check">
+			<input class="form-check-input" type="checkbox" value="" id="flexCheck" disabled>
+			<label class="form-check-label" for="flexCheck">
+				Remember Me (disabled)
+			</label>
+		</div>
+		<div>
+			<button type="submit" class="btn btn-primary">Login</button>
+			<span>Not a member? Sign up <a href="Signup">here</a></span>
+		</div>
+	</form>
+</div>

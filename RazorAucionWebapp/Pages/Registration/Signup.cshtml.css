@@ -1,0 +1,222 @@
+﻿h3 {
+    font-weight: bold;
+    letter-spacing: 0.1rem;
+    min-height: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.wrapper {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: linear-gradient(to bottom right, #18392b, #419873);
+    margin-top: -2.5rem;
+}
+
+.wrapper {
+    form {
+        box-shadow: 0rem 0.5em 3rem -1.2rem rgba(0, 0, 0, 0.45);
+        padding: 0.8rem 1.7rem;
+        text-align:center;
+        min-height: 35rem;
+        border-radius: 0.45rem;
+        width: 38rem;
+        background-color: rgba(255, 255, 255, 1);
+    }
+}
+
+.inputFrm {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.inputGrp {
+    position: relative;
+    margin-bottom: 1.3rem;
+}
+
+
+
+.inputGrp {
+    input {
+        width: 100%;
+        padding: 0.3rem 0.7rem;
+        border: 0.15rem solid rgba(0, 0, 0, 0.3);
+        border-radius: 0.25rem;
+        outline: none;
+        font-size: 1rem;
+    }
+}
+
+.inputGrp {
+    label {
+        position: absolute;
+        font-weight: bold;
+        left: 0;
+        padding: 0.6rem;
+        pointer-events: none;
+        font-size: 0.85rem;
+        color: rgba(0, 0, 0, 0.3);
+        text-transform: uppercase;
+        transition: 0.2s;
+        z-index: 2;
+    }
+}
+
+.row {
+    .inputGrp {
+        label{
+        position: absolute;
+        font-weight: bold;
+        left: 0;
+        padding: 0.6rem 1.3rem;
+        pointer-events: none;
+        font-size: 0.85rem;
+        color: rgba(0, 0, 0, 0.3);
+        text-transform: uppercase;
+        transition: 0.2s;
+        z-index: 2;
+        }
+    }
+}
+
+.wBorder {
+    position: absolute;
+    top: 0;
+    left: 1.7rem;
+    width: 3rem;
+    border-top: 0.15rem solid white;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.1s linear;
+}
+
+.wBorder2 {
+    position: absolute;
+    top: 0;
+    left: 1.7rem;
+    width: 5rem;
+    border-top: 0.15rem solid white;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.1s linear;
+}
+
+.wBorder3 {
+    position: absolute;
+    top: 0;
+    left: 1rem;
+    width: 7rem;
+    border-top: 0.15rem solid white;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.1s linear;
+}
+
+.wBorder4 {
+    position: absolute;
+    top: 0;
+    left: 1rem;
+    width: 8.3rem;
+    border-top: 0.15rem solid white;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.1s linear;
+}
+
+.wBorder5 {
+    position: absolute;
+    top: 0;
+    left: 1rem;
+    width: 9.3rem;
+    border-top: 0.15rem solid white;
+    transition: visibility 0s, opacity 0.1s linear;
+}
+
+.wBorder6 {
+    position: absolute;
+    top: 0;
+    left: 1rem;
+    width: 9rem;
+    border-top: 0.15rem solid white;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.1s linear;
+}
+
+.inputGrp {
+    input:focus ~ label, input:valid ~ label {
+        transform: translate(1rem, -0.45rem);
+        font-size: 0.6em;
+        padding: 0 0.6rem;
+        /*background: white;*/
+        letter-spacing: 0.1rem;
+    }
+    input:focus ~ .wBorder, input:valid ~ .wBorder,
+    input:focus ~ .wBorder2, input:valid ~ .wBorder2,
+    input:focus ~ .wBorder3, input:valid ~ .wBorder3,
+    input:focus ~ .wBorder4, input:valid ~ .wBorder4,
+    input:focus ~ .wBorder5, input:valid ~ .wBorder5,
+    input:focus ~ .wBorder6, input:valid ~ .wBorder6
+    {
+        visibility: visible;
+        opacity: 1;
+    }
+}
+
+.inputGrp {
+    input:focus{
+        border: 0.15rem solid rgba(95, 219, 167, 1);
+    }
+}
+
+.inputGrp {
+    input:focus ~ label{
+        color: rgba(95, 219, 167, 1);
+    }
+}
+
+.row {
+    .inputGrp {
+    input:focus ~ label, input:valid ~ label {
+        transform: translate(1.5rem, -0.45rem);
+        font-size: 0.6em;
+        padding: 0 0.6rem;
+        /*background: white;*/
+        letter-spacing: 0.1rem;
+    }
+}
+}
+
+.form-check {
+    display: flex;
+    align-items: flex-start;
+    column-gap: 0.5rem;
+    margin-top: -0.5rem;
+    margin-bottom: 1.2rem;
+    font-size: 90%;
+}
+
+.btn {
+    background-color: #3b71ca;
+    text-transform: uppercase;
+    box-shadow: 0rem 0.3rem 0.7rem -0.25rem rgba(0, 0, 0, 0.45);
+    width: 100%;
+    font-weight: bold;
+}
+
+span {
+    display: inline-block;
+    margin-top: 2rem;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.5);
+    a {
+          text-decoration: none;
+    }
+}
