@@ -1,4 +1,5 @@
-﻿using Repository.Database;
+﻿using Microsoft.EntityFrameworkCore;
+using Repository.Database;
 using Repository.Database.Model.AuctionRelated;
 using Repository.Implementation;
 using Repository.Interfaces.Auction;
@@ -14,6 +15,11 @@ namespace Repository.Implementation.Auction
 	{
 		public BidRepository(AuctionRealEstateDbContext context) : base(context)
 		{
+		}
+
+		public async Task<List<Bid>> GetByAccountId(int accountId)
+		{
+			return await _set.Where(b => b.BidderId.Equals(accountId)).ToListAsync();
 		}
 	}
 }

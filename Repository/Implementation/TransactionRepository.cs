@@ -1,4 +1,5 @@
-﻿using Repository.Database;
+﻿using Microsoft.EntityFrameworkCore;
+using Repository.Database;
 using Repository.Database.Model;
 using Repository.Interfaces;
 using System;
@@ -13,6 +14,12 @@ namespace Repository.Implementation
 	{
 		public TransactionRepository(AuctionRealEstateDbContext context) : base(context)
 		{
+		}
+
+		public async Task<Transaction?> GetFullAsync(int id)
+		{
+			return await _set.Include(t => t.Account)
+				.FirstOrDefaultAsync(t => t.TransactionId == id);
 		}
 	}
 }

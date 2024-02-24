@@ -14,7 +14,9 @@ namespace Service.Services.AppAccount
 		private readonly IAccountImageRepository _accountImageRepository;
 		private readonly ICompanyRepository _companyRepository;
 		private readonly IImagesRepository _imageRepository;
-		public CompanyServices(ICompanyRepository companyRepository, IAccountImageRepository accountImageRepository, IImagesRepository imagesRepository)
+		public CompanyServices(ICompanyRepository companyRepository, 
+			IAccountImageRepository accountImageRepository, 
+			IImagesRepository imagesRepository)
 		{
 			_accountImageRepository = accountImageRepository;
 			_companyRepository = companyRepository;
@@ -24,5 +26,10 @@ namespace Service.Services.AppAccount
 		{
 			return await _companyRepository.GetAsync(id);
 		}
+		public async Task<List<Company>> GetAllCompany() 
+		{
+			return await _companyRepository.GetAllAsync();
+		}
+
 	}
 }

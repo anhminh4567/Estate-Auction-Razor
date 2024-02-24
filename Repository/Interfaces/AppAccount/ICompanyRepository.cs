@@ -9,5 +9,6 @@ namespace Repository.Interfaces.AppAccount
 {
 	public interface ICompanyRepository : ICrud<Company>
 	{
+		//Task<Company?> GetFullAsync(int accountId);
 	}
 }

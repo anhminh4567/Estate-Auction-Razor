@@ -9,5 +9,6 @@ namespace Repository.Interfaces.Auction
 {
 	public interface IBidRepository : ICrud<Bid>
 	{
+		Task<List<Bid>> GetByAccountId(int accountId);
 	}
 }

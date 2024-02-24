@@ -24,7 +24,6 @@ namespace Service.Services
 			_vnpayRefund = vnpayRefund;
 			_vnpayBuildUrl = vnpayBuildUrl;
 			_vnpayReturn = vnpayReturn;
-
 		}
 		public string? GeneratePayUrl(HttpContext httpContext, Account account, int amount) 
 		{

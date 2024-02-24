@@ -9,5 +9,6 @@ namespace Repository.Interfaces
 {
 	public interface ITransactionRepository : ICrud<Transaction>
 	{
+		Task<Transaction?> GetFullAsync(int id);
 	}
 }

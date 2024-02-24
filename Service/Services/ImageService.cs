@@ -28,11 +28,12 @@ namespace Service.Services
 		{
 			return await _imagesRepository.DeleteAsync(await GetImage(imageId));
 		}
-		public async Task<AppImage> SaveImage(IFormFile formBodyImage, string folderPath ) //folder should be local to app, webroot path or wwwroot path
+		public async Task<AppImage> SaveImage(IFormFile formBodyImage, string folderPath, string folderType ) //folder should be local to app, webroot path or wwwroot path
 		{
+			//folder type : AccountImage or Estate Image ,....
 			var correctFilename = GenerateFilename(formBodyImage.FileName);
-			var savePath = folderPath + "\\" + correctFilename;
-			using (var s = formBodyImage.OpenReadStream()) 
+			var savePath = folderPath + "\\" + folderType+ "\\" + correctFilename;
+			using (var s = formBodyImage.OpenReadStream())
 			{
 				using(var fs = new FileStream(savePath, FileMode.Create)) 
 				{

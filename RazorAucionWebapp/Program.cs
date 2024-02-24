@@ -1,12 +1,14 @@
 global using Repository.Interfaces.AppAccount;
 using RazorAucionWebapp.Configure;
 using Repository.Database;
+using Repository.Implementation;
 using Repository.Implementation.AppAccount;
 using Repository.Implementation.Auction;
 using Repository.Implementation.RealEstate;
 using Repository.Interfaces;
 using Repository.Interfaces.Auction;
 using Repository.Interfaces.RealEstate;
+using Service.Services.AuctionService;
 using Service.Services.VnpayService.VnpayUtility;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,12 +31,13 @@ builder.Services.AddScoped<IEstateCategoriesRepository, EstateCategoriesReposito
 builder.Services.AddScoped<IEstateCategoryDetailRepository,EstateCategoryDetailRepository>();
 builder.Services.AddScoped<IEstateImagesRepository, EstateImagesRepository>();
 
-builder.Services.AddScoped<ITransactionRepository, ITransactionRepository>();
+builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 
 builder.Services.AddScoped<VnpayBuildUrl>();
 builder.Services.AddScoped<VnpayQuery>();
 builder.Services.AddScoped<VnpayRefund>();
 
+builder.Services.AddScoped<BidServices>();
 builder.Services.AddSingleton<ServerDefaultValue>();
 builder.Services.AddAuthentication("cookie")
     .AddCookie("cookie",options => 
