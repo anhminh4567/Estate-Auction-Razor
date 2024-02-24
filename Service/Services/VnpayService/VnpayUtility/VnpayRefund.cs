@@ -19,9 +19,9 @@ namespace Service.Services.VnpayService.VnpayUtility
         public VnpayRefund()
         {
         }
-        public VnpayRefundResult? btnRefund_Click(HttpContext context, VnpayQueryResult? queryResult, Account account)
+        public VnpayRefundResult? btnRefund_Click(HttpContext context, Transaction transaction, Account account)
         {
-            if (queryResult is null)
+            if (transaction is null)
             {
                 return null;
             }
@@ -33,12 +33,13 @@ namespace Service.Services.VnpayService.VnpayUtility
             var vnp_Version = VnPayLibrary.VERSION; //2.1.0
             var vnp_Command = "refund";
             var vnp_TransactionType = VnpayTransactionType.HoanTraToanPhan;
-            var vnp_Amount = Convert.ToInt64(queryResult.vnp_Amount) * 100;
-            var vnp_TxnRef = queryResult.vnp_TxnRef; // Mã giao dịch thanh toán tham chiếu
-            var vnp_OrderInfo = "Hoan tien giao dich:" + queryResult.vnp_TxnRef;
+            var vnp_Amount = Convert.ToInt64(transaction.vnp_Amount) * 100;
+            var vnp_TxnRef = transaction.vnp_TxnRef; // Mã giao dịch thanh toán tham chiếu
+            var vnp_OrderInfo = "Hoan tien giao dich:" + transaction.vnp_TxnRef;
             var vnp_TransactionNo = ""; //Giả sử giá trị của vnp_TransactionNo không được ghi nhận tại hệ thống của merchant.
-            var vnp_TransactionDate = queryResult.vnp_PayDate;
-            var vnp_CreateDate = DateTime.Now.ToString("yyyyMMddHHmmss");
+            var vnp_TransactionDate = transaction.vnp_PayDate; //queryResult.vnp_PayDate;
+
+			var vnp_CreateDate = DateTime.Now.ToString("yyyyMMddHHmmss");
             var vnp_CreateBy = account.FullName;
             var vnp_IpAddr = Utils.GetIpAddress(context);
 

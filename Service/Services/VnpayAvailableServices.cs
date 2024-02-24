@@ -34,9 +34,13 @@ namespace Service.Services
 		{
 			return _vnpayQuery.btnQuery_Click(httpContext,transaction);
 		}
-		public VnpayReturnResult PayResult(HttpContext httpContext) 
+		public VnpayReturnResult OnPayResult(HttpContext httpContext) 
 		{
 			return _vnpayReturn.OnTransactionReturn(httpContext);
+		}
+		public VnpayRefundResult? RefundVnpayTransaction(HttpContext httpContext, Transaction transaction, Account account ) 
+		{
+			return _vnpayRefund.btnRefund_Click(httpContext,transaction,account);
 		}
 	}
 }

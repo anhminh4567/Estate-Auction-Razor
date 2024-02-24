@@ -22,5 +22,6 @@ namespace Repository.Database.Model
         public string vnp_Amount { get; set; }
         public long vnp_TransactionDate { get; set; }
         public string vnp_OrderInfo { get; set; }
+        public string vnp_PayDate { get; set; }
     }
 }
