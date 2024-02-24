@@ -1,16 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Repository.Database.Model;
-using Service.Services.VnpayService;
+using Service.Services.VnpayService.VnpayUtility;
 
 namespace RazorAucionWebapp.Pages.Transaction
 {
     public class QueryModel : PageModel
     {
         private VnpayQuery _vnpayQuery;
-		public QueryModel()
+		public QueryModel(VnpayQuery query)
 		{
-            _vnpayQuery = new VnpayQuery();
+            _vnpayQuery = query;
 		}
         
 		public IActionResult OnGet()

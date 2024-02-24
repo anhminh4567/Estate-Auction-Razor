@@ -17,24 +17,24 @@ namespace Repository.Implementation
 			_context = context;
 			_set = _context.Set<T>();
 		}
-		public async Task<List<T>> GetAllAsync()
+		public virtual async Task<List<T>> GetAllAsync()
 		{
 			return await _set.ToListAsync();
 		}
 
-		public async Task<T> GetAsync(int id)
+		public virtual async Task<T> GetAsync(int id)
 		{
 			return await _set.FindAsync(id);
 		}
 
-		public async Task<T> CreateAsync(T t)
+		public virtual async Task<T> CreateAsync(T t)
 		{
 			var obj = await _set.AddAsync(t);
 			await _context.SaveChangesAsync();
 			return obj.Entity;
 		}
 
-		public async Task<bool> DeleteAsync(T t)
+		public virtual async Task<bool> DeleteAsync(T t)
 		{
 			if (t == null)
 			{
@@ -44,7 +44,7 @@ namespace Repository.Implementation
 			await _context.SaveChangesAsync();
 			return true;
 		}
-		public async Task<bool> UpdateAsync(T t)
+		public virtual async Task<bool> UpdateAsync(T t)
 		{
 			if (t == null)
 			{

@@ -4,8 +4,10 @@ using Repository.Database;
 using Repository.Implementation.AppAccount;
 using Repository.Implementation.Auction;
 using Repository.Implementation.RealEstate;
+using Repository.Interfaces;
 using Repository.Interfaces.Auction;
 using Repository.Interfaces.RealEstate;
+using Service.Services.VnpayService.VnpayUtility;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +28,12 @@ builder.Services.AddScoped<IEstateRepository, EstateRepository>();
 builder.Services.AddScoped<IEstateCategoriesRepository, EstateCategoriesRepository>();
 builder.Services.AddScoped<IEstateCategoryDetailRepository,EstateCategoryDetailRepository>();
 builder.Services.AddScoped<IEstateImagesRepository, EstateImagesRepository>();
+
+builder.Services.AddScoped<ITransactionRepository, ITransactionRepository>();
+
+builder.Services.AddScoped<VnpayBuildUrl>();
+builder.Services.AddScoped<VnpayQuery>();
+builder.Services.AddScoped<VnpayRefund>();
 
 builder.Services.AddSingleton<ServerDefaultValue>();
 builder.Services.AddAuthentication("cookie")

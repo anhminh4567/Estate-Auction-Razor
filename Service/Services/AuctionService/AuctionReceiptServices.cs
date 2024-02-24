@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Service.Services.Auction
+namespace Service.Services.AuctionService
 {
 	internal class AuctionReceiptServices
 	{

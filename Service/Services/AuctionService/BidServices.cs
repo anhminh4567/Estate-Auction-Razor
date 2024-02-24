@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Service.Services.Auction
+namespace Service.Services.AuctionService
 {
-	public class AuctionServices
+	internal class BidServices
 	{
-		public AuctionServices()
-		{
-		}
 	}
 }

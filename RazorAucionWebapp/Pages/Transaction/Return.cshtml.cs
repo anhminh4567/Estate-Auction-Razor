@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Service.Services.VnpayService;
 using Service.Services.VnpayService.Model;
+using Service.Services.VnpayService.VnpayUtility;
 
 namespace RazorAucionWebapp.Pages.Transaction
 {
@@ -9,9 +9,9 @@ namespace RazorAucionWebapp.Pages.Transaction
     {
         private VnpayReturn _vnpayReturnService;
         public VnpayReturnResult? VnpayResult { get; set; }
-		public ReturnModel()
+		public ReturnModel(VnpayReturn vnpayReturn)
 		{
-            this._vnpayReturnService = new VnpayReturn();
+            this._vnpayReturnService = vnpayReturn;
 		}
 
 		public IActionResult OnGet()

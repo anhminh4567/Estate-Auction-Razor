@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Service.Services.VnpayService;
 using Repository.Database.Model.AppAccount;
 using Service.Services.VnpayService.Model;
+using Service.Services.VnpayService.VnpayUtility;
 
 namespace RazorAucionWebapp.Pages.Transaction
 {
@@ -10,10 +10,10 @@ namespace RazorAucionWebapp.Pages.Transaction
     {
         private VnpayRefund _vnpayRefund;
         private VnpayQuery _vnpayQuery;
-		public RefundModel()
+		public RefundModel(VnpayRefund refund,VnpayQuery query)
 		{
-            this._vnpayRefund = new VnpayRefund();
-            this._vnpayQuery = new VnpayQuery();
+            this._vnpayRefund = refund;
+            this._vnpayQuery = query;
 		}
 
 		public IActionResult OnGet()

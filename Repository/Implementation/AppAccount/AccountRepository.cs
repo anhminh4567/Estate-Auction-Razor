@@ -16,10 +16,24 @@ namespace Repository.Implementation.AppAccount
         public AccountRepository(AuctionRealEstateDbContext context) : base(context)
         {
         }
-        public async Task<Account> GetByEmailPassword(string email, string password)
+
+		public async Task<Account?> GetByEmail(string email, bool isCaseSensitive)
+		{
+            return isCaseSensitive ? await _set.FirstOrDefaultAsync(a => a.Email.Equals(email,StringComparison.OrdinalIgnoreCase))
+                : await _set.FirstOrDefaultAsync(a => a.Email.Equals(email));
+		}
+
+		public async Task<Account> GetByEmailPassword(string email, string password)
         {
             var getAccount = await _set.FirstOrDefaultAsync(a => a.Email == email && a.Password == password);
             return getAccount;
         }
-    }
+
+		public async Task<Account?> GetFullAsync(int accountId)
+		{
+			return await _set
+				.Include(a => a.AccountImages).ThenInclude(img => img.Image)
+				.Include(a => a.Transactions).FirstOrDefaultAsync(a => a.AccountId == accountId);
+		}
+	}
 }

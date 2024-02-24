@@ -15,5 +15,15 @@ namespace Repository.Implementation.AppAccount
 		public AccountImageRepository(AuctionRealEstateDbContext context) : base(context)
 		{
 		}
+
+		public override async Task<AccountImages> GetAsync(int AccountId)
+		{
+			return await _set.FirstOrDefaultAsync(img => img.AccountId == AccountId);
+		}
+
+		public async Task<IList<AccountImages>> GetAllByAccountId(int AccountId)
+		{
+			return await _set.Where(img => img.AccountId.Equals(AccountId)).ToListAsync();
+		}
 	}
 }
