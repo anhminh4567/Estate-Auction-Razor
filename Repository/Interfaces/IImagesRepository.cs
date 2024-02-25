@@ -9,6 +9,6 @@ namespace Repository.Interfaces
 {
 	public interface IImagesRepository : ICrud<AppImage>
 	{
-
+		Task<List<AppImage>?> GetRange(params int[] imagesId);	
 	}
 }

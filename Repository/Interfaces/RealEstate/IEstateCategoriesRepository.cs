@@ -9,5 +9,7 @@ namespace Repository.Interfaces.RealEstate
 {
 	public interface IEstateCategoriesRepository : ICrud<EstateCategories>
 	{
+		Task<List<EstateCategories>> GetByEstateId(int id);
+		Task<List<EstateCategories>> GetByCategoryId(int categoryId);
 	}
 }

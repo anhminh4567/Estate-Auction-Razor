@@ -1,4 +1,5 @@
-﻿using Repository.Database;
+﻿using Microsoft.EntityFrameworkCore;
+using Repository.Database;
 using Repository.Database.Model.RealEstate;
 using Repository.Implementation;
 using Repository.Interfaces.RealEstate;
@@ -15,6 +16,11 @@ namespace Repository.Implementation.RealEstate
 		public EstateImagesRepository(AuctionRealEstateDbContext context) : base(context)
 		{
 
+		}
+
+		public async Task<List<EstateImages>?> GetByEstateId(int estateId)
+		{
+			return await _set.Where(e => e.EstateId == estateId).ToListAsync();
 		}
 	}
 }

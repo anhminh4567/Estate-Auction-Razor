@@ -15,13 +15,12 @@ namespace Repository.Implementation.RealEstate
 	{
 		public EstateRepository(AuctionRealEstateDbContext context) : base(context)
 		{
-		}
 
-		public async Task<Estate?> GetByCompanyId(int companyId)
+		}
+		public async Task<List<Estate>?> GetByCompanyId(int companyId)
 		{
-			return await _set.FirstOrDefaultAsync(e => e.CompanyId == companyId);
+			return await _set.Where(e => e.CompanyId == companyId).ToListAsync();
 		}
-
 		public async Task<Estate?> GetFullAsync(int id)
 		{
 			return await _set.Include(e => e.Company).Include(e => e.Auctions).FirstOrDefaultAsync(e => e.EstateId == id);

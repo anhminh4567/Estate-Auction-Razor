@@ -16,6 +16,11 @@ namespace Repository.Implementation
 		{
 		}
 
+		public async Task<List<Transaction>?> GetByAccountId(int accountId)
+		{
+			return await _set.Where(t => t.AccountId == accountId).ToListAsync();
+		}
+
 		public async Task<Transaction?> GetFullAsync(int id)
 		{
 			return await _set.Include(t => t.Account)

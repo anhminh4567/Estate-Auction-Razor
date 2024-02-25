@@ -10,6 +10,6 @@ namespace Repository.Interfaces.RealEstate
 	public interface IEstateRepository : ICrud<Estate>
 	{
 		Task<Estate> GetFullAsync(int id);
-		Task<Estate> GetByCompanyId(int id);
+		Task<List<Estate>> GetByCompanyId(int id);
 	}
 }

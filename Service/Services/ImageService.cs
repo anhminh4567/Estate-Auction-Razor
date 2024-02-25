@@ -3,6 +3,7 @@ using Repository.Database.Model;
 using Repository.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
@@ -13,43 +14,88 @@ namespace Service.Services
 	public class ImageService
 	{
 		private readonly IImagesRepository _imagesRepository;
-		private readonly string[] _validFileExtendsion = new []{ "png","jpeg"};
+		private readonly string[] _validFileExtendsion = new[] { "png", "jpeg" };
 		private readonly string[] _invalidFileCharacter = new[] { "~!@#$%^&*()-=+|\\/<>," }; //allow is _ and .
 		public ImageService(IImagesRepository imagesRepository)
 		{
 			_imagesRepository = imagesRepository;
 		}
-		
-		public async Task<AppImage> GetImage(int imageId) 
+
+		public async Task<AppImage?> GetImage(int imageId)
 		{
 			return await _imagesRepository.GetAsync(imageId);
 		}
-		public async Task<bool> DeleteImage(int imageId)
+		public async Task<List<AppImage>?> GetRangeImages(params int[] imagesId) 
 		{
-			return await _imagesRepository.DeleteAsync(await GetImage(imageId));
+			return await _imagesRepository.GetRange(imagesId);
 		}
-		public async Task<AppImage> SaveImage(IFormFile formBodyImage, string folderPath, string folderType ) //folder should be local to app, webroot path or wwwroot path
+		public async Task<bool> RemoveImage(AppImage image, string wwwroot_publicImage_folder_path) 
 		{
-			//folder type : AccountImage or Estate Image ,....
-			var correctFilename = GenerateFilename(formBodyImage.FileName);
-			var savePath = folderPath + "\\" + folderType+ "\\" + correctFilename;
-			using (var s = formBodyImage.OpenReadStream())
+			var imagePath = image.Path;
+			if (IsFileExist(wwwroot_publicImage_folder_path, imagePath) == false)
+				return false;
+			var result = await _imagesRepository.DeleteAsync(image);
+			if (result) 
 			{
-				using(var fs = new FileStream(savePath, FileMode.Create)) 
-				{
-					await s.CopyToAsync(fs);
-				}
+				//TODO delete image trong file wwwroot/publicimages
+				return true;
+			}
+			return false;
+
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="image"></param>
+		/// <param name="pathToWWWROOT"> Path nay ko the lay duoc tu day, vi no se khac nhau moi may nen 
+		///	la no se duoc pass tu thang razorWebapp xuong day, va lay path nay bang cach Lat WWWRoot path, pass IWebHostEnvironment vo trong constructor cua razor page
+		/// </param>
+		/// <returns></returns>
+		public async Task<bool> UpdateImage(AppImage image, string wwwroot_publicImage_folder_path) 
+		{
+			var imagePath = image.Path;
+			if(IsFileExist(wwwroot_publicImage_folder_path,imagePath) == false)
+				return false;
+			var result = await _imagesRepository.UpdateAsync(image);
+			if (result)
+			{
+				//TODO update image trong file wwwroot/publicimages
+				return true;
+			}
+			return false;
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="imageStream">lay tu IFormFile.OpenReadStream() , nho dispose() sau khi dung </param>
+		/// <param name="folderType"> AccountImage || EstateImage, ... kieu vay </param>
+		/// <param name="fileName">ten file</param>
+		/// <returns></returns>
+		//, string folderPath = "wwwroot\\PublicImages"
+		public async Task<AppImage?> SaveImage(Stream imageStream, string folderType, string fileName, string wwwroot_publicImage_folder_path) //folder should be local to app, webroot path or wwwroot path
+		{
+			var correctFilename = GenerateFilename(fileName);
+			var savePath =  folderType + "\\" + correctFilename;
+			using (var fs = new FileStream(savePath, FileMode.Create))
+			{
+				await imageStream.CopyToAsync(fs);
 			}
 			var saveImageData = new AppImage() { Name = correctFilename, Path = savePath, CreateDate = DateTime.Now };
-			return await _imagesRepository.CreateAsync(saveImageData);
+			var result =  await _imagesRepository.CreateAsync(saveImageData);
+			if (result is not null) 
+			{ 
+				//TODO add image vo trong file wwwroot/PublicImages
+			}
+			return null;
+
 		}
 		//not test yet
-		public string GenerateFilename(string filename) 
+		public string GenerateFilename(string filename)
 		{
-			var fileExtendsion = filename.Split('.').Last() ;
-			var nameOnly = filename.Substring(0,filename.Length - 1 - ".".Length - fileExtendsion.Length ) ;
+			var fileExtendsion = filename.Split('.').Last();
+			var nameOnly = filename.Substring(0, filename.Length - 1 - ".".Length - fileExtendsion.Length);
 			var timeNowAsLong = DateTime.Now.Ticks;
-			return nameOnly + "." + timeNowAsLong.ToString() + "." + fileExtendsion; 
+			return nameOnly + "." + timeNowAsLong.ToString() + "." + fileExtendsion;
 		}
 		public bool IsImageValid(IFormFile imageFile)
 		{
@@ -57,15 +103,15 @@ namespace Service.Services
 			if (IsFileNameContainSpecialCharacter(imageFile.FileName)) return false;
 			return true;
 		}
-		private bool IsFileExtendsionValid (string fileName) 
+		private bool IsFileExtendsionValid(string fileName)
 		{
 			var extendsion = fileName.Trim().Split('.').Last();
 			var isAllowedExtendsion = _validFileExtendsion.Contains(extendsion);
 			return isAllowedExtendsion;
 		}
-		private bool IsFileNameContainSpecialCharacter(string fileName) 
+		private bool IsFileNameContainSpecialCharacter(string fileName)
 		{
-			foreach(char c in fileName.Trim().ToCharArray()) 
+			foreach (char c in fileName.Trim().ToCharArray())
 			{
 				var isContain = _invalidFileCharacter.Contains(c.ToString());
 				if (isContain)
@@ -73,6 +119,9 @@ namespace Service.Services
 			}
 			return false;
 		}
-
+		private bool IsFileExist(string wwwroot_publicImage_folder_path,string imagePath) 
+		{
+			return File.Exists(wwwroot_publicImage_folder_path + "\\" + imagePath);
+		}
 	}
 }

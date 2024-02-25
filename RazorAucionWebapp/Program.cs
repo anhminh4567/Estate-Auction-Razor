@@ -16,22 +16,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 
-builder.Services.AddDbContext<AuctionRealEstateDbContext>(opt => {});
+builder.Services.AddMyRepositories();
 
-builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-builder.Services.AddScoped<IAccountImageRepository, AccountImageRepository>();
-builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 
-builder.Services.AddScoped<IAuctionRepository, AuctionRepository>();
-builder.Services.AddScoped<IAuctionReceiptRepository, AuctionReceiptRepository>();
-builder.Services.AddScoped<IBidRepository, BidRepository>();
-
-builder.Services.AddScoped<IEstateRepository, EstateRepository>();
-builder.Services.AddScoped<IEstateCategoriesRepository, EstateCategoriesRepository>();
-builder.Services.AddScoped<IEstateCategoryDetailRepository,EstateCategoryDetailRepository>();
-builder.Services.AddScoped<IEstateImagesRepository, EstateImagesRepository>();
-
-builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 
 builder.Services.AddScoped<VnpayBuildUrl>();
 builder.Services.AddScoped<VnpayQuery>();
@@ -39,6 +26,7 @@ builder.Services.AddScoped<VnpayRefund>();
 
 builder.Services.AddScoped<BidServices>();
 builder.Services.AddSingleton<ServerDefaultValue>();
+
 builder.Services.AddAuthentication("cookie")
     .AddCookie("cookie",options => 
     {

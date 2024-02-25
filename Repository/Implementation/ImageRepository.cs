@@ -1,4 +1,5 @@
-﻿using Repository.Database;
+﻿using Microsoft.EntityFrameworkCore;
+using Repository.Database;
 using Repository.Database.Model;
 using Repository.Interfaces;
 using System;
@@ -15,5 +16,9 @@ namespace Repository.Implementation
 		{
 		}
 
+		public async Task<List<AppImage>?> GetRange(params int[] imagesId)
+		{
+			return await _set.Where(img => imagesId.Contains(img.ImageId)).ToListAsync();
+		}
 	}
 }

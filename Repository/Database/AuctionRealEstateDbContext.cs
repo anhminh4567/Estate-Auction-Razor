@@ -75,6 +75,7 @@ namespace Repository.Database
             {
                 c.ToTable("Company");
                 c.Property(c => c.AccountId).HasColumnName("Id");
+                //c.HasOne<Account>().WithOne().HasForeignKey<Company>(c => c.AccountId).OnDelete(DeleteBehavior.Cascade);
                 //c.HasMany(c => c.OwnedEstate).WithOne(a => a.Company).HasForeignKey(e => e.CompanyId);
             });
             builder.Entity<Auction>(a => 

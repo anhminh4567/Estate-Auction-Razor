@@ -9,7 +9,7 @@ namespace Repository.Interfaces.Auction
 {
 	public interface IAuctionRepository : ICrud<Database.Model.AuctionRelated.Auction>
 	{
-		Task<Database.Model.AuctionRelated.Auction> GetFullAsync(int id);
-		Task<List<Database.Model.AuctionRelated.Auction>> GetByEstateId(int id);
+		Task<Database.Model.AuctionRelated.Auction?> GetFullAsync(int id);
+		Task<List<Database.Model.AuctionRelated.Auction>?> GetByEstateId(int id);
 	}
 }

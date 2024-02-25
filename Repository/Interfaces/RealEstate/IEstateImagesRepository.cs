@@ -9,5 +9,6 @@ namespace Repository.Interfaces.RealEstate
 {
 	public interface IEstateImagesRepository : ICrud<EstateImages>
 	{
+		Task<List<EstateImages>?> GetByEstateId(int estateId);
 	}
 }

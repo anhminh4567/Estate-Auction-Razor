@@ -481,7 +481,7 @@ namespace Repository.Migrations
                     b.HasOne("Repository.Database.Model.AppAccount.Account", null)
                         .WithOne()
                         .HasForeignKey("Repository.Database.Model.AppAccount.Company", "AccountId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
