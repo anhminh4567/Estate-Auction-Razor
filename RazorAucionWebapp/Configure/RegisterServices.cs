@@ -3,7 +3,6 @@ using Service.Services.AppAccount;
 using Service.Services.AuctionService;
 using Service.Services.RealEstate;
 using Service.Services.VnpayService.VnpayUtility;
-using Service.ServicesByRole;
 
 namespace RazorAucionWebapp.Configure
 {
@@ -15,6 +14,7 @@ namespace RazorAucionWebapp.Configure
 			services.AddScoped<VnpayBuildUrl>();
 			services.AddScoped<VnpayQuery>();
 			services.AddScoped<VnpayRefund>();
+			services.AddScoped<VnpayReturn>();
 			services.AddScoped<VnpayAvailableServices>();
 
 			services.AddScoped<BidServices>();

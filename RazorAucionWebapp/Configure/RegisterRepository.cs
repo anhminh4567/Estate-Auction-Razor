@@ -26,6 +26,7 @@ namespace RazorAucionWebapp.Configure
 			services.AddScoped<IEstateImagesRepository, EstateImagesRepository>();
 
 			services.AddScoped<ITransactionRepository, TransactionRepository>();
+			services.AddScoped<IImagesRepository, ImageRepository>();
 			return services;
 		}
 	}

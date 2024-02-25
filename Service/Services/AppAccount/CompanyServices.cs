@@ -19,18 +19,15 @@ namespace Service.Services.AppAccount
 	{
 		private readonly ICompanyRepository _companyRepository;
 		private readonly EstateServices _estateServices;
-		private readonly EstateImagesServices _estateImagesServices;
 		private readonly AuctionServices _auctionService;
 		public CompanyServices(
 			ICompanyRepository companyRepository, 
 			EstateServices estateServices,
-			AuctionServices auctionService,
-			EstateImagesServices estateImagesServices)
+			AuctionServices auctionService)
 		{
 			_companyRepository = companyRepository;
 			_estateServices = estateServices;
 			_auctionService = auctionService;
-			_estateImagesServices = estateImagesServices;
 		}
 		public async Task<Company> GetById(int id)
 		{
@@ -44,15 +41,21 @@ namespace Service.Services.AppAccount
 		{
 			return await _estateServices.GetByCompanyId(companyId);
 		}
-		public async Task<List<Auction>> GetAllAuctionsByCompanyId(int companyId) 
+		public async Task<List<Auction>?> GetAllAuctionsByCompanyId(int companyId)
 		{
-			var getAllEstateId = ( await GetAllEstateByCompanyId(companyId)).Select(e => e.EstateId);
-			var result = new List<Auction>();
-			foreach (var id in getAllEstateId) 
-			{
-				result.Concat(await _auctionService.GetAuctionsByEstateId(id));
-			}
-			return result;
+			return await _auctionService.GetByCompanyId(companyId);
+		}
+		public async Task<Company> Create(Company company) 
+		{
+			return await _companyRepository.CreateAsync(company);
+		}
+		public async Task<bool> Update(Company company)
+		{
+			return await _companyRepository.UpdateAsync(company);
+		}
+		public async Task<bool> Delete(Company company)
+		{
+			return await _companyRepository.DeleteAsync(company);
 		}
 	}
 }

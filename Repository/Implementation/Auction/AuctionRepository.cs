@@ -26,9 +26,7 @@ namespace Repository.Implementation.Auction
 		{
 			return await _set.Include(c => c.Estate).FirstOrDefaultAsync(c => c.AuctionId == id);
 		}
-		public async Task<List<Database.Model.AuctionRelated.Auction>> GetByEstatesId(int[] estateIds) 
-		{
-			 throw new NotImplementedException();
-		}
+
+
 	}
 }

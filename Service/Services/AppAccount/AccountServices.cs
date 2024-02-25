@@ -16,14 +16,9 @@ namespace Service.Services.AppAccount
 	public class AccountServices
 	{
 		private readonly IAccountRepository _accountRepository;
-		private readonly BidServices _bidService;
-		public AccountServices(IAccountRepository accountRepository, 
-			IAccountImageRepository accountImageRepository, 
-			IImagesRepository imagesRepository,
-			BidServices bidService) 
+		public AccountServices(IAccountRepository accountRepository) 
 		{
 			_accountRepository = accountRepository;
-			_bidService = bidService;
 		}
 		public async Task< Account> GetById(int id) 
 		{
@@ -36,20 +31,6 @@ namespace Service.Services.AppAccount
 		public async Task<Account> GetByEmailPassword(string email, string password) 
 		{
 			return await _accountRepository.GetByEmailPassword(email, password);
-		}
-		public async Task<List<AppImage>> GetAccountImagesPath(int accountId)
-		{
-			var accountFullDetail = await _accountRepository.GetFullAsync(accountId);
-			return accountFullDetail.AccountImages.Select(a => a.Image).ToList();
-		}
-		public async Task<List<Transaction>> GetTransaction(int accountId)
-		{
-			var accountFullDetail = await _accountRepository.GetFullAsync(accountId);
-			return accountFullDetail.Transactions.ToList();
-		}
-		public async Task<List<Bid>> GetBids(int accountId)
-		{
-			return await _bidService.GetByAccountId(accountId);
 		}
 		public async Task<bool> IsEmailExisted(string email) 
 		{
@@ -68,13 +49,6 @@ namespace Service.Services.AppAccount
 		public async Task<bool> Delete(Account account) 
 		{
 			return await _accountRepository.DeleteAsync(account);
-		}
-		public async Task<bool> Delete(int id) 
-		{
-			var result = await GetById(id);
-			if(result == null)
-				return false;	
-			return await _accountRepository.DeleteAsync(result);
 		}
 	}
 }

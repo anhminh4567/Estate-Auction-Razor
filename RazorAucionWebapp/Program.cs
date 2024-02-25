@@ -16,15 +16,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 
+builder.Services.AddDbContext<AuctionRealEstateDbContext>();
+
 builder.Services.AddMyRepositories();
+builder.Services.AddMyServices();
 
-
-
-builder.Services.AddScoped<VnpayBuildUrl>();
-builder.Services.AddScoped<VnpayQuery>();
-builder.Services.AddScoped<VnpayRefund>();
-
-builder.Services.AddScoped<BidServices>();
 builder.Services.AddSingleton<ServerDefaultValue>();
 
 builder.Services.AddAuthentication("cookie")
@@ -34,8 +30,7 @@ builder.Services.AddAuthentication("cookie")
         options.LogoutPath = "/Logout";
         options.AccessDeniedPath = "/Unauthorized";
         options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-    });
-var app = builder.Build();
+    });var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
