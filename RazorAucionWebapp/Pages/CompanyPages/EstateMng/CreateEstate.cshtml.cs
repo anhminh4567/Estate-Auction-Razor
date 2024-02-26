@@ -9,50 +9,107 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Repository.Database;
 using Repository.Database.Model.RealEstate;
+using Service.Services.AuctionService;
+using Service.Services.RealEstate;
 
 namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
 {
     public class CreateModel : PageModel
     {
-        private readonly Repository.Database.AuctionRealEstateDbContext _context;
-
-        public CreateModel(Repository.Database.AuctionRealEstateDbContext context)
+        private readonly EstateServices _estateServices;
+        private readonly EstateCategoriesServices _estateCategoriesServices;
+        private readonly EstateCategoryDetailServices _estateCategoryDetailServices;
+        public CreateModel(
+            EstateServices estateServices,
+            EstateCategoryDetailServices estateCategoryDetailServices,
+            EstateCategoriesServices estateCategoriesServices)
         {
-            _context = context;
+            _estateServices = estateServices;
+            _estateCategoryDetailServices = estateCategoryDetailServices;
+            _estateCategoriesServices = estateCategoriesServices;
         }
 
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGet()
         {
-        ViewData["CompanyId"] = new SelectList(_context.Companys, "AccountId", "CMND");
+            //ViewData["CompanyId"] = new SelectList(_context.Companys, "AccountId", "CMND");
+            await PopulateData();
             return Page();
         }
 
         [BindProperty]
-        public Estate Estate { get; set; } = default!;
-
+        [Required]
+        public string Name { get; set; }
+        [BindProperty]
+        [Required]
+        public string Description { get; set; }
+        [BindProperty]
+        [Required]
+        public float Width { get; set; }
+        [BindProperty]
+        [Required]
+        public float Length { get; set; }
         // added property
         [BindProperty]
         [Required]
-        public string EstateCategories { get; set; }
-
+        public List<string> SeletedEstateCategoriesOptions { get; set; }
+        public List<SelectListItem> EstateCategoriesOptions { get; set; }
         [BindProperty]
         [Required]
         public string ImageUrl { get; set; }
-
+        private int CompanyId { get; set; }
+        private Estate Estate { get; set; } = new Estate();
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.Estates == null || Estate == null)
+            await PopulateData();
+            if (!ModelState.IsValid || Estate == null)
             {
                 return Page();
             }
-
-            _context.Estates.Add(Estate);
-            await _context.SaveChangesAsync();
-
-            //return RedirectToPage("./Index");
-            return Page();
+            Estate.Width = Width;
+            Estate.Length = Length;
+            Estate.Description = Description;
+            Estate.Name = Name;
+            Estate.CompanyId = CompanyId;
+            var estateResult = await _estateServices.Create(Estate);
+            if (estateResult == null)
+            {
+                ModelState.AddModelError(string.Empty, "something wrong when create");
+                return Page();
+            }
+            foreach (var item in SeletedEstateCategoriesOptions)
+            {
+                var newCategories = new EstateCategories()
+                {
+                    CategoryId = int.Parse(item),
+                    EstateId = estateResult.EstateId,
+                };
+                var estateCategoriesResult = await _estateCategoriesServices.CreateEstateCategories(newCategories);
+                if (estateCategoriesResult is null)
+                {
+                    ModelState.AddModelError(string.Empty, "something wrong when adding categories");
+                    return Page();
+                }
+            }
+            return RedirectToPage("./Index");
+        }
+        private async Task PopulateData()
+        {
+            var getCategoryList = await _estateCategoryDetailServices.GetAll();
+            if (getCategoryList.Count > 0)
+            {
+                EstateCategoriesOptions = new List<SelectListItem>();
+                foreach (var category in getCategoryList)
+                {
+                    EstateCategoriesOptions.Add(new SelectListItem(category.CategoryName, category.CategoryId.ToString()));
+                }
+            }
+            var result = int.TryParse(HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("Id"))?.Value, out var companyId);
+            if (result is false)
+                throw new Exception("thsi user is not company id, create an account first to create this, very simple, go to admin page and do so");
+            CompanyId = companyId;
+            
         }
     }
 }

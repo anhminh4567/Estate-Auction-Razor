@@ -3,7 +3,20 @@
 @{
     ViewData["Title"] = "Home page";
 }
-
+@{
+    var result = TempData.TryGetValue("SuccessSignUp", out var message);
+    if(result){
+        <div class="text-center">
+            <p class="text-success"> @message</p>
+        </div>
+    }
+    else if (result = TempData.TryGetValue("SuccessLogin", out message))
+    {
+        <div class="text-center">
+            <p class="text-success"> @message</p>
+        </div>
+    }
+}
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>

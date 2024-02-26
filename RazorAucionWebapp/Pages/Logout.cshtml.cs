@@ -9,7 +9,7 @@ namespace RazorAucionWebapp.Pages
         public async Task<IActionResult> OnGet()
         {
             await HttpContext.SignOutAsync("cookie");
-            return LocalRedirect("/Login");
+            return RedirectToPage("/Index");
         }
     }
 }

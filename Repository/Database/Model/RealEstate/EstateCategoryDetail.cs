@@ -15,6 +15,6 @@ namespace Repository.Database.Model.RealEstate
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
         public string Description { get; set; }
-        public IList<EstateCategories> Categories { get; set; }
+        public IList<EstateCategories>? Categories { get; set; }
     }
 }

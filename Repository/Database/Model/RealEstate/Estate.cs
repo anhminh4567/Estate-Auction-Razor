@@ -13,9 +13,9 @@ namespace Repository.Database.Model.RealEstate
         public int EstateId { get; set; }
         public int CompanyId { get; set; }
         public Company Company { get; set; }
-        public IList<EstateCategories> EstateCategory { get; set; }
-        public IList<Auction> Auctions { get; set; }
-        public IList<EstateImages> Images { get; set; }
+        public IList<EstateCategories>? EstateCategory { get; set; }
+        public IList<Auction>? Auctions { get; set; }
+        public IList<EstateImages>? Images { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public float Width { get; set; }

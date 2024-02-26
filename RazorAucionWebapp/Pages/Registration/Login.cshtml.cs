@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Repository.Database.Model.AppAccount;
 using Repository.Database.Model.Enum;
 using Repository.Interfaces.AppAccount;
+using Service.Services.AppAccount;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
@@ -12,36 +13,35 @@ namespace RazorAucionWebapp.Pages.Registration
 {
 	public class LoginModel : PageModel
     {
-        private readonly IAccountRepository _account;
-        public LoginModel(IAccountRepository account)
+        private readonly AccountServices _accountServices;
+        public LoginModel(AccountServices account)
         {
-            _account = account;
+            _accountServices = account;
         }
 
         [BindProperty]
         [Required]
         [DataType(DataType.EmailAddress)]
-        public string Email { get; set; }
+        public string? Email { get; set; }
         [BindProperty]
         [Required]
-        public string Password { get; set; }
+        public string? Password { get; set; }
         public void OnGet()
         {
         }
         public async Task<IActionResult> OnPostAsync()
         {
-            var flag = ModelState.IsValid;
-            if (flag)
+            if (ModelState.IsValid)
             {
-                var tryGetAccount = await _account.GetByEmailPassword(Email, Password);
-                if (tryGetAccount is null)
+                var getAccount = await _accountServices.GetByEmailPassword(Email, Password);
+                if (getAccount is null)
                 {
                     ModelState.AddModelError(string.Empty, "user not found in database, try again");
                     return Page();
                 }
-                //var tryGetAccount = new Account() { Email = Email, Password = Password, Role = Role.CUSTOMER };
-                await SetUserIdentity(tryGetAccount);
-                return LocalRedirect("/Index");
+                await SetUserIdentity(getAccount);
+                TempData["SuccessLogin"] = "Login Success for user " + getAccount.Email;
+                return RedirectToPage("/Index");
             }
             else
             {
@@ -55,6 +55,10 @@ namespace RazorAucionWebapp.Pages.Registration
             {
                 new Claim(ClaimTypes.Email,account.Email),
                 new Claim(ClaimTypes.Role, account.Role.ToString()),
+                new Claim(ClaimTypes.Name,account.FullName),
+                new Claim("IsVerified", account.IsVerified == 0 ? "false" : "true"),
+                new Claim("Status",account.Status.ToString()),
+                new Claim("Id",account.AccountId.ToString()),
             };
             var claimIdentity = new ClaimsIdentity(claims, "cookie", ClaimTypes.Email, ClaimTypes.Role);
             var claimPrinciple = new ClaimsPrincipal(claimIdentity);

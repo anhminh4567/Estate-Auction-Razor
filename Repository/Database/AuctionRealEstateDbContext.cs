@@ -35,6 +35,7 @@ namespace Repository.Database
         public DbSet<Bid> BidLogs { get; set; }
         public DbSet<Estate> Estates { get; set; }
         public DbSet<EstateCategories> EstateCategories { get; set; }
+        public DbSet<EstateCategoryDetail> EstateCategoryDetails { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
