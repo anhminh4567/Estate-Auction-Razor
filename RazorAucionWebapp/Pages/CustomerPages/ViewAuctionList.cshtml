@@ -1,0 +1,79 @@
+﻿@page
+@model RazorAucionWebapp.Pages.CustomerPages.ViewAuctionListModel
+
+@{
+    ViewData["Title"] = "ViewAuctionList";
+}
+
+<div class="container">
+    <h1>Auction List</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Auction[0].Estate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Auction[0].RegistrationDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Auction[0].StartDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Auction[0].EndDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Auction[0].WantedPrice)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Auction[0].IncrementPrice)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Auction[0].MaxParticipant)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Auction[0].Status)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Auction)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Estate.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RegistrationDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.WantedPrice)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IncrementPrice)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MaxParticipant)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+                        @* <a asp-page="./Edit" asp-route-id="@item.AuctionId">Edit</a> |
+                        <a asp-page="./Details" asp-route-id="@item.AuctionId">Details</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.AuctionId">Delete</a> *@
+                        <a asp-page="./BidAuction" asp-route-id="@item.AuctionId">Bid</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

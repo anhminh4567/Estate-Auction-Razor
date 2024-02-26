@@ -1,0 +1,76 @@
+﻿@page
+@model RazorAucionWebapp.Pages.CompanyPages.EstateMng.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="container">
+    <h4>Create new estate</h4>
+    <hr />
+    <form method="post" id="create_estate_frm">
+        @* <div asp-validation-summary="ModelOnly" class="text-danger"></div> *@
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Estate.Name" class="control-label">Name of estate</label>
+                    <input asp-for="Estate.Name" class="form-control" />
+                    <span asp-validation-for="Estate.Name" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="EstateCategories" class="control-label">Estate categories</label>
+                    <select class="form-select form-select-sm" asp-for="EstateCategories" asp-items="ViewBag.EstateCadtegories"></select>
+                    <span asp-validation-for="Estate.Length" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Estate.Width" class="control-label">Width of the estate (m)</label>
+                    <input asp-for="Estate.Width" class="form-control" />
+                    <span asp-validation-for="Estate.Width" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Estate.Length" class="control-label">Length of the estate (m)</label>
+                    <input asp-for="Estate.Length" class="form-control" />
+                    <span asp-validation-for="Estate.Length" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="ImageUrl" class="control-label">Estate images</label>
+            <input asp-for="ImageUrl" class="form-control" disabled value="~/wwwroot/PublicImages/estate01.jpg" />
+            <span asp-validation-for="Estate.Length" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Estate.Description" class="control-label">Description</label>
+            <textarea asp-for="Estate.Description" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Estate.Description" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-primary" />
+        </div>
+    </form>
+
+@* 
+    <div>
+        <a asp-page="Index">Back to List</a>
+    </div> *@
+</div>
+
+
+</div>
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
