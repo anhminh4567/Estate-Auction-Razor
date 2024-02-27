@@ -65,38 +65,45 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-            await PopulateData();
-            SeletedEstateCategoriesOptions = new List<string>(CheckedCategoriesBoxes.Split(','));
-            if (!ModelState.IsValid || Estate == null)
+            try
             {
-                return Page();
-            }
-            Estate.Width = Width;
-            Estate.Length = Length;
-            Estate.Description = Description;
-            Estate.Name = Name;
-            Estate.CompanyId = CompanyId;
-            var estateResult = await _estateServices.Create(Estate);
-            if (estateResult == null)
-            {
-                ModelState.AddModelError(string.Empty, "something wrong when create");
-                return Page();
-            }
-            foreach (var item in SeletedEstateCategoriesOptions)
-            {
-                var newCategories = new EstateCategories()
+                await PopulateData();
+                SeletedEstateCategoriesOptions = new List<string>(CheckedCategoriesBoxes.Split(','));
+                if (!ModelState.IsValid || Estate == null)
                 {
-                    CategoryId = int.Parse(item),
-                    EstateId = estateResult.EstateId,
-                };
-                var estateCategoriesResult = await _estateCategoriesServices.CreateEstateCategories(newCategories);
-                if (estateCategoriesResult is null)
-                {
-                    ModelState.AddModelError(string.Empty, "something wrong when adding categories");
                     return Page();
                 }
+                Estate.Width = Width;
+                Estate.Length = Length;
+                Estate.Description = Description;
+                Estate.Name = Name;
+                Estate.CompanyId = CompanyId;
+                var estateResult = await _estateServices.Create(Estate);
+                if (estateResult == null)
+                {
+                    ModelState.AddModelError(string.Empty, "something wrong when create");
+                    return Page();
+                }
+                foreach (var item in SeletedEstateCategoriesOptions)
+                {
+                    var newCategories = new EstateCategories()
+                    {
+                        CategoryId = int.Parse(item),
+                        EstateId = estateResult.EstateId,
+                    };
+                    var estateCategoriesResult = await _estateCategoriesServices.CreateEstateCategories(newCategories);
+                    if (estateCategoriesResult is null)
+                    {
+                        ModelState.AddModelError(string.Empty, "something wrong when adding categories");
+                        return Page();
+                    }
+                }
+                return RedirectToPage("./Index");
+            }catch(Exception ex) 
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return Page();
             }
-            return RedirectToPage("./Index");
         }
         private async Task PopulateData()
         {

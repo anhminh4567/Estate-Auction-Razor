@@ -20,10 +20,15 @@ namespace RazorAucionWebapp.Pages.CustomerPages
             _auctionServices = auctionServices;
         }
 
-        public IList<Auction> Auction { get;set; } = default!;
+        public IList<Auction> Auctions { get;set; } = default!;
 
         public async Task OnGetAsync()
         {
+            await PopulateData();   
         }
+        private async Task PopulateData() 
+        {
+            Auctions = await _auctionServices.GetAll();
+		}
     }
 }

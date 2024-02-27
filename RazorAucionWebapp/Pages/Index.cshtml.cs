@@ -25,7 +25,7 @@ namespace RazorAucionWebapp.Pages
         {
             // 2 so nay la static, mot frontend sua lai, bind 2 so nay 
             PageStart = 0;
-            DisplayAmount = 2;
+            DisplayAmount = 3;
             // 2 so nay la static, mot frontend sua lai, bind 2 so nay 
             int correctStartValue = PageStart * 10;
             await PopulateData(correctStartValue, DisplayAmount);
@@ -33,7 +33,7 @@ namespace RazorAucionWebapp.Pages
         }
         private async Task PopulateData(int start, int amount ) 
         {
-            Auctions = await _auctionServices.GetRangeIncludeEstate(start,amount);
+            Auctions = await _auctionServices.GetRangeInclude_Estate_Company(start,amount);
         }
     }
 }

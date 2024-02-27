@@ -24,7 +24,7 @@ namespace Repository.Implementation.RealEstate
 
 		public async Task<List<EstateCategories>> GetByEstateId(int estateId)
 		{
-			return await _set.Where(e => e.EstateId == estateId).ToListAsync();
+			return await _set.Where(e => e.EstateId == estateId).Include(e => e.CategoryDetail).ToListAsync();
 		}
 	}
 }

@@ -70,6 +70,13 @@
 							<p class="">Estate Name: @estate.Name</p>
 							<p class="">Estate Width: @estate.Width </p>
 							<p class="">Estate Length: @estate.Length</p>
+							@foreach (var auc in estate.Auctions)
+							{
+								if (auc.Status != Repository.Database.Model.Enum.AuctionStatus.CANCELLED)
+								{
+									<p class="text-danger">this estate has had an auction goin on, cant create for this one, should not pick this one</p>
+								}
+							}
 						</div>
 					</div>
 				}
