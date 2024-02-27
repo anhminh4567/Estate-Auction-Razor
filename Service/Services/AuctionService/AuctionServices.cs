@@ -25,11 +25,11 @@ namespace Service.Services.AuctionService
 		{
 			return await _auctionRepository.GetAsync(id);
 		}
-		public async Task<List<Auction>?> GetByCompanyId(int companyId)
+		public async Task<List<Auction>> GetByCompanyId(int companyId)
 		{
 			var getEstates = (await _estateServices.GetByCompanyId(companyId)).Select(e => e.EstateId).ToArray();
-			if (getEstates is null || getEstates.Any() == false)
-				return null;
+			if (getEstates is null)
+				throw new Exception("something wrong with get estate, it should never be null, only empty list or so");
 			var result = new List<Auction>();	
 			foreach(var estate in getEstates) 
 			{
@@ -37,13 +37,23 @@ namespace Service.Services.AuctionService
 				if (tryGetAuctions is not null)
 					result.Concat(tryGetAuctions);
 			}
-			return (result.Count == 0) 
-				? null 
-				: result;
+			return result;
 		}
 		public async Task<List<Auction>> GetAll()
 		{
 			return await _auctionRepository.GetAllAsync();
+		}
+		public async Task<List<Auction>> GetRange(int start, int amount) 
+		{
+			if (start < 0 || amount <= 0)
+				throw new ArgumentException("start, amount must > 0");
+			return await _auctionRepository.GetRange(start,amount);
+		}
+		public async Task<List<Auction>> GetRangeIncludeEstate(int start, int amount) 
+		{
+            if (start < 0 || amount <= 0)
+                throw new ArgumentException("start, amount must > 0");
+			return await _auctionRepository.GetRange_IncludeEstate(start,amount);
 		}
 		public async Task<List<Auction>> GetByEstateId(int estateId)
 		{

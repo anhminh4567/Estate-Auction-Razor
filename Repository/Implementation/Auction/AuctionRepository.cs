@@ -27,6 +27,14 @@ namespace Repository.Implementation.Auction
 			return await _set.Include(c => c.Estate).FirstOrDefaultAsync(c => c.AuctionId == id);
 		}
 
+        public async Task<List<Database.Model.AuctionRelated.Auction>> GetRange(int start, int amount)
+        {
+            return await _set.Skip(start).Take(amount).ToListAsync();
+        }
 
-	}
+        public async Task<List<Database.Model.AuctionRelated.Auction>> GetRange_IncludeEstate(int start, int amount)
+        {
+            return await _set.Include(a => a.Estate).Skip(start).Take(amount).ToListAsync();
+        }
+    }
 }

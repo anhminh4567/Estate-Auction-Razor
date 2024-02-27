@@ -32,6 +32,7 @@ namespace Repository.Database
         public DbSet<EstateImages> EstateImages { get; set; }
         public DbSet<Auction> Auctions { get; set; }
         public DbSet<AuctionReceipt> AuctionReceipts { get; set; }
+        public DbSet<JoinedAuction> JoinedAuctions { get; set; }
         public DbSet<Bid> BidLogs { get; set; }
         public DbSet<Estate> Estates { get; set; }
         public DbSet<EstateCategories> EstateCategories { get; set; }
@@ -88,6 +89,15 @@ namespace Repository.Database
                 a.HasOne(a => a.Auction).WithMany(a => a.AuctionReceipt).HasForeignKey(a => a.AuctionId).OnDelete(DeleteBehavior.SetNull);
                 a.HasOne(a=> a.Buyer).WithMany(a => a.AuctionsReceipt).HasForeignKey(a => a.BuyerId).OnDelete(DeleteBehavior.SetNull);
             });
+            builder.Entity<JoinedAuction>(j =>
+			{
+				var statusConverter = new EnumToStringConverter<JoinedAuctionStatus>();
+				j.HasKey(k => new { k.AccountId, k.AuctionId });
+				j.HasOne(j => j.Auction).WithMany(a => a.JoinedAccounts).HasForeignKey(j => j.AuctionId).OnDelete(DeleteBehavior.Cascade);
+				j.HasOne(j => j.Account).WithMany(a => a.JoinedAuctions).HasForeignKey(j => j.AccountId).OnDelete(DeleteBehavior.Cascade);
+                j.HasOne(j => j.Transaction).WithOne(t => t.RegisterAuction).HasForeignKey<JoinedAuction>(t => t.TransactionId).IsRequired(false);
+				j.Property(j => j.Status).HasConversion(statusConverter);
+			});
             builder.Entity<Bid>(b => 
             {
                 b.ToTable("Bids");
