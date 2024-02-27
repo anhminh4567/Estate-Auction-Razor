@@ -1,0 +1,57 @@
+﻿@page
+@model DetailModel
+
+@{
+    ViewData["Title"] = "Detail";
+}
+
+
+<p>
+    <a asp-page="./Index">Go back to Categories</a>
+</p>
+<div>
+    <div>
+        @Html.DisplayNameFor(model => model.EstateCategoryDetail.CategoryId)
+    </div>
+    <div>
+        @Html.DisplayFor(model => model.EstateCategoryDetail.CategoryId)
+    </div>
+    <div>
+        @Html.DisplayNameFor(model => model.EstateCategoryDetail.CategoryName)
+    </div>
+    <div>
+        @Html.DisplayFor(model => model.EstateCategoryDetail.CategoryName)
+    </div>
+    <div>
+        @Html.DisplayNameFor(model => model.EstateCategoryDetail.Description)
+    </div>
+    <div>
+        @Html.DisplayFor(model => model.EstateCategoryDetail.Description)
+    </div>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.EstateCategoryDetail.CategoryId">Edit</a>
+    <a class="del" data-bs-toggle="modal" data-bs-target="#delModal">Delete</a>
+</div>
+
+<div class="modal fade" id="delModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Confirmation
+            </div>
+            <div class="modal-body">
+                <div class="d-flex">
+                    Are you sure to remove&nbsp<p name="delDesc" class="text-danger fw-bolder">@Model.EstateCategoryDetail.CategoryName</p><div>?</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form method="post">
+                    <input type="hidden" name="delId" value="@Model.EstateCategoryDetail.CategoryId" />
+                    <input type="submit" class="btn btn-success" value="Confirm"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,18 +1,45 @@
 ﻿@page
-@model 			IndexModel
+@model IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Estate Categories";
 }
 
 <h1>Index</h1>
-
+<div>
+    @if (TempData["AddSuccess"] is not null)
+    {
+        <div class="alert alert-success">
+            @TempData["AddSuccess"]
+        </div>
+    }
+    @if (TempData["UpdateSuccess"] is not null)
+    {
+        <div class="alert alert-success">
+            @TempData["UpdateSuccess"]
+        </div>
+    }
+    @if (TempData["DelSuccess"] is not null)
+    {
+        <div class="alert alert-success">
+            @TempData["DelSuccess"]
+        </div>
+    }
+    @if (TempData["DelFail"] is not null){
+        <div class="alert alert-danger">
+            @TempData["DelFail"]
+        </div>
+    }
+</div>
 <p>
     <a asp-page="Create">Create New</a>
 </p>
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.EstateCategoryDetail[0].CategoryId)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.EstateCategoryDetail[0].CategoryName)
             </th>
@@ -26,17 +53,49 @@
 @foreach (var item in Model.EstateCategoryDetail) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.CategoryName)
+                @Html.DisplayFor(modelItem => item.CategoryId)
             </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CategoryName)
+                </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.CategoryId">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.CategoryId">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.CategoryId">Delete</a>
+                <a asp-page="./Detail" asp-route-id="@item.CategoryId">Detail</a> |
+                <a class="del" data-bs-toggle="modal" data-bs-target="#delModal" estateName="@item.CategoryName" estateId="@item.CategoryId">Delete</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+<script>
+    Array.from(document.getElementsByClassName("del")).forEach(function (p) {
+        p.addEventListener("click", function () {
+            document.getElementsByName("delDesc")[0].innerHTML = p.getAttribute("estateName");
+            document.getElementsByName("delId")[0].value = p.getAttribute("estateId");
+        })
+    });
+</script>
+<div class="modal fade" id="delModal" tabindex="-1">
+    <div class="modal-dialog">
+       <div class="modal-content">
+           <div class="modal-header">
+               Confirmation
+           </div>
+            <div class="modal-body">
+                <div class="d-flex">
+                    Are you sure to remove&nbsp<p name="delDesc" class="text-danger fw-bolder" /><div>?</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form method="post">
+                    <input type="hidden" name="delId" />
+                    <input type="submit" class="btn btn-success" value="Confirm" />
+                </form>
+            </div>
+       </div>
+    </div>
+</div>

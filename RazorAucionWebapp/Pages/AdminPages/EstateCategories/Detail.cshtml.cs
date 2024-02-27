@@ -1,36 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Asn1.Ocsp;
-using Repository.Database;
 using Repository.Database.Model.RealEstate;
-using Repository.Implementation.RealEstate;
 using Service.Services.RealEstate;
 
 namespace RazorAucionWebapp.Pages.AdminPages.EstateCategories
 {
-    public class IndexModel : PageModel
+    public class DetailModel : PageModel
     {
         private readonly EstateCategoryDetailServices _estateCategoryDetailRepository;
         private readonly EstateCategoriesServices _estateCategoriesRepository;
-
-        public IndexModel(EstateCategoryDetailServices estateCategoryDetailRepository, EstateCategoriesServices estateCategoriesRepository)
+        public DetailModel(EstateCategoryDetailServices estateCategoryDetailRepository, EstateCategoriesServices estateCategoriesRepository)
         {
             _estateCategoryDetailRepository = estateCategoryDetailRepository;
             _estateCategoriesRepository = estateCategoriesRepository;
         }
-        public IList<EstateCategoryDetail> EstateCategoryDetail { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync()
+        public EstateCategoryDetail EstateCategoryDetail { get; set; } = default!;
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
-            EstateCategoryDetail = await _estateCategoryDetailRepository.GetAll();
+            if(id == null)
+            {
+                return RedirectToPage("./Index");
+            }
+            EstateCategoryDetail = await _estateCategoryDetailRepository.GetById(id.Value);
             return Page();
         }
-
         public async Task<IActionResult> OnPostAsync(int delId)
         {
             var flag = await DeleteCategory(delId);

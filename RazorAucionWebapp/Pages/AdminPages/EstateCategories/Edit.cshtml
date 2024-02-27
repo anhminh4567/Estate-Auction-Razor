@@ -1,25 +1,29 @@
 ﻿@page
-@model 			CreateModel
-
+@model EditModel
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Update";
 }
 
-<h1>Create</h1>
-<div>
-    @if (TempData["AddFail"] is not null)
-    {
-        <div class="alert alert-danger">
-            @TempData["AddFail"]
-            </div>
-    }
-</div>
-<h4>EstateCategoryDetail</h4>
-<hr />
 <div class="row">
+    <div>
+        @if(TempData["UpdateFail"] is not null)
+        {
+            <div class="alert alert-danger">
+                @TempData["UpdateFail"]
+            </div>
+        }
+        @if (TempData["DelFail"] is not null)
+        {
+            <div class="alert alert-danger">
+                @TempData["DelFail"]
+            </div>
+        }
+    </div>
     <div class="col-md-4">
-        <form method="post" id="add">
+        <a asp-page="./Index">Go back to Categories</a>
+        <form method="post" id="edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="EstateCategoryDetail.CategoryId" type="hidden"/>
             <div class="form-group">
                 <label asp-for="EstateCategoryDetail.CategoryName" class="control-label">Name</label>
                 <input asp-for="EstateCategoryDetail.CategoryName" class="form-control" />
@@ -31,16 +35,12 @@
                 <span asp-validation-for="EstateCategoryDetail.Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <a class="del" data-bs-toggle="modal" data-bs-target="#addModal">Create</a>
+                <a class="del" data-bs-toggle="modal" data-bs-target="#updateModal">Update</a>
             </div>
         </form>
     </div>
 </div>
-
-<div>
-    <a asp-page="Index">Back to List</a>
-</div>
-<div class="modal fade" id="addModal" tabindex="-1">
+<div class="modal fade" id="updateModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -48,17 +48,20 @@
             </div>
             <div class="modal-body">
                 <div class="d-flex">
-                    Are you sure to update this category
+                    Are you sure to update this category 
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <input type="submit" form="add" class="btn btn-success" value="Confirm" />
+                 <input type="submit" form="edit" class="btn btn-success" value="Confirm" />
             </div>
         </div>
     </div>
 </div>
 
+
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

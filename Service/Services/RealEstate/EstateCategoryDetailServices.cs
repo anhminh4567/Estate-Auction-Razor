@@ -30,12 +30,19 @@ namespace Service.Services.RealEstate
 		}
 		public async Task<bool> UpdateCategoryDetail(EstateCategoryDetail estateCategoryDetail) 
 		{
-			return await _estateCategoryDetailRepository.UpdateAsync(estateCategoryDetail);
+			var item = await _estateCategoryDetailRepository.GetAsync(estateCategoryDetail.CategoryId);
+			item.CategoryName = estateCategoryDetail.CategoryName;
+			item.Description = estateCategoryDetail.Description;
+			return await _estateCategoryDetailRepository.UpdateAsync(item);
 		}
 		public async Task<bool> DeleteCategoryDetail(EstateCategoryDetail estateCategoryDetail) 
 		{
 			return await _estateCategoryDetailRepository.DeleteAsync(estateCategoryDetail);
 		}
-
+		public async Task<bool> CheckForDuplicateName(EstateCategoryDetail estateCategoryDetail)
+		{
+			var list = await _estateCategoryDetailRepository.GetAllAsync();
+			return list.Where(p => p.CategoryId != estateCategoryDetail.CategoryId && p.CategoryName.ToLower().Equals(estateCategoryDetail.CategoryName.ToLower())).Any();
+		}
 	}
 }

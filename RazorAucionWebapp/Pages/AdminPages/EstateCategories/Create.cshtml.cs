@@ -33,8 +33,20 @@ namespace RazorAucionWebapp.Pages.AdminPages.EstateCategories
             {
                 return Page();
             }
-            await _estateCategoryDetailRepository.Create(EstateCategoryDetail);
-            return RedirectToPage("./Index");
+            else
+            {
+				try
+				{
+					await _estateCategoryDetailRepository.Create(EstateCategoryDetail);
+                    TempData["AddSuccess"] = String.Format("Category {0} created!", EstateCategoryDetail.CategoryName);
+			        return RedirectToPage("./Index");
+                }
+                catch
+                {
+                    ModelState.AddModelError("CreateFail", "Can't create detail!");
+                    return Page();
+                }
+		    }
         }
     }
 }

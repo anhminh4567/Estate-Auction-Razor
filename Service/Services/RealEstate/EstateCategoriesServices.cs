@@ -36,5 +36,10 @@ namespace Service.Services.RealEstate
 		{
 			return await _estateCategoriesRepository.DeleteAsync(estateCategories);
 		}
+		public async Task<bool> CheckForCategoryDetailInUsed(int categoryId)
+		{
+			var list = await _estateCategoriesRepository.GetByCategoryId(categoryId);
+			return list.Any();
+		}
 	}
 }
