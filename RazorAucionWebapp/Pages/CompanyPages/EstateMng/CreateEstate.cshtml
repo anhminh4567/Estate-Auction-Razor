@@ -21,19 +21,11 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label asp-for="SeletedEstateCategoriesOptions" class="control-label">Estate categories</label>
-                    <select class="form-select form-select-sm " asp-for="SeletedEstateCategoriesOptions" multiple>
-                        @{
-                            foreach (var item in Model.EstateCategoriesOptions)
-                            {
-                                <option value="@item.Value" selected="@item.Selected">
-                                    @item.Text
-                                </option>   
-                            }
-                        }   
-                    </select>
-                    <span asp-validation-for="SeletedEstateCategoriesOptions" class="text-danger"></span>
+                    <label asp-for="ImageUrl" class="control-label">Estate images</label>
+                    <input asp-for="ImageUrl" class="form-control" readonly value="~/wwwroot/PublicImages/estate01.jpg" />
+                    <span asp-validation-for="ImageUrl" class="text-danger"></span>
                 </div>
+               
             </div>
         </div>
         <div class="row">
@@ -53,9 +45,23 @@
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="ImageUrl" class="control-label">Estate images</label>
-            <input asp-for="ImageUrl" class="form-control" readonly value="~/wwwroot/PublicImages/estate01.jpg" />
-            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+            <label asp-for="CheckedCategoriesBoxes" class="control-label">Estate categories</label>
+            <div class="row">
+                @foreach (var item in Model.EstateCategoriesOptions)
+                {
+                    <div class="col-md-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="@item.Value" name="cateOptions" value="@item.Value" onchange="updateValue()">
+                            <label class="form-check-label" for="@item.Value">
+                                @item.Text
+                            </label>
+                        </div>
+                    </div>
+                    
+                }
+            </div>
+            <span asp-validation-for="CheckedCategoriesBoxes" class="text-danger"></span>
+            <input id="inputtedCates" asp-for="CheckedCategoriesBoxes" style="visibility: hidden; height: 0;"/></br>
         </div>
         <div class="form-group">
             <label asp-for="Description" class="control-label">Description</label>
@@ -76,7 +82,15 @@
 
 </div>
 
-
+<script>
+    function updateValue() {
+        var checkedBoxes = document.querySelectorAll('input[name="cateOptions"]:checked');
+        var selectedCates = Array.from(checkedBoxes).map((checkbox) => {
+            return checkbox.value;
+        });
+        document.getElementById('inputtedCates').value = selectedCates.join(',');
+    }
+</script>
 
 @section Scripts {
     @{

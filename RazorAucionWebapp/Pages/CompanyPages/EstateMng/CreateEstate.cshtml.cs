@@ -50,7 +50,10 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
         public float Length { get; set; }
         // added property
         [BindProperty]
-        [Required]
+        [Required(ErrorMessage = "At least one estate category must be selected!")]
+        public string CheckedCategoriesBoxes { get; set; }
+        //[BindProperty]
+        //[Required]
         public List<string> SeletedEstateCategoriesOptions { get; set; }
         public List<SelectListItem> EstateCategoriesOptions { get; set; }
         [BindProperty]
@@ -63,6 +66,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
         public async Task<IActionResult> OnPostAsync()
         {
             await PopulateData();
+            SeletedEstateCategoriesOptions = new List<string>(CheckedCategoriesBoxes.Split(','));
             if (!ModelState.IsValid || Estate == null)
             {
                 return Page();
@@ -107,7 +111,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
             }
             var result = int.TryParse(HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("Id"))?.Value, out var companyId);
             if (result is false)
-                throw new Exception("thsi user is not company id, create an account first to create this, very simple, go to admin page and do so");
+                throw new Exception("this user is not company id, create an account first to create this, very simple, go to admin page and do so");
             CompanyId = companyId;
             
         }

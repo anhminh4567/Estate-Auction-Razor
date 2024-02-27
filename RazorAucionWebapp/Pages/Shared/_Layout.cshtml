@@ -29,19 +29,39 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="#">About Us</a>
                         </li>
+                        @{
+                            if (Context.User.Identity.IsAuthenticated && (Context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Role)).Value == "COMPANY"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-page="#">My Auction</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-page="#">My Estate</a>
+                                </li>
+                            }
+                        }
                     </ul>
                     <ul class="navbar-nav flex-grow-1 justify-content-end">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Registration/Login">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark signUpBtn" asp-area="" asp-page="/Registration/Signup">Sign Up</a>
-                        </li>
                         @{
                             if (Context.User.Identity.IsAuthenticated)
                             {
                                 <li class="nav-item">
+                                    <a class="navbar-brand" href="#">
+                                        <img src="~/lib/assets/user_icon.png" width="40" height="40" />
+                                        <span style="font-size: 0.8rem;">@Context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Name))?.Value</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-page="/Logout">Logout</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-page="/Registration/Login">Login</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark signUpBtn" asp-area="" asp-page="/Registration/Signup">Sign Up</a>
                                 </li>
                             }
                         }
