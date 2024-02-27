@@ -2,91 +2,100 @@
 @model RazorAucionWebapp.Pages.CompanyPages.AuctionMng.CreateModel
 
 @{
-    ViewData["Title"] = "Create";
+	ViewData["Title"] = "Create";
 }
 
 <<div class="container">
-    <h4>Create new auction</h4>
-    <hr />
+	<h4>Create new auction</h4>
+	<hr />
 
-    <form method="post">
-        @* <div asp-validation-summary="ModelOnly" class="text-danger"></div> *@
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label asp-for="Auction.EstateId" class="control-label">Estate id</label>
-                    <select asp-for="Auction.EstateId" class="form-control" asp-items="ViewBag.EstateId"></select>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label asp-for="Auction.RegistrationDate" class="control-label">Registration Date</label>
-                    <input asp-for="Auction.RegistrationDate" class="form-control" />
-                    <span asp-validation-for="Auction.RegistrationDate" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label asp-for="Auction.StartDate" class="control-label">Start Date</label>
-                    <input asp-for="Auction.StartDate" class="form-control" />
-                    <span asp-validation-for="Auction.StartDate" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label asp-for="Auction.EndDate" class="control-label">End Date</label>
-                    <input asp-for="Auction.EndDate" class="form-control" />
-                    <span asp-validation-for="Auction.EndDate" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label asp-for="Auction.WantedPrice" class="control-label">Wanted price</label>
-                    <input asp-for="Auction.WantedPrice" class="form-control" />
-                    <span asp-validation-for="Auction.WantedPrice" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label asp-for="Auction.IncrementPrice" class="control-label">Bid increment price</label>
-                    <input asp-for="Auction.IncrementPrice" class="form-control" />
-                    <span asp-validation-for="Auction.IncrementPrice" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-        <div class="form-group mb-3">
-            <label asp-for="Auction.MaxParticipant" class="control-label">Max participants</label>
-            <input asp-for="Auction.MaxParticipant" class="form-control" />
-            <span asp-validation-for="Auction.MaxParticipant" class="text-danger"></span>
-        </div>
-        
-        
-        
-        
-        
-        @*  <div class="form-group">
-        <label asp-for="Auction.Status" class="control-label"></label>
-        <select asp-for="Auction.Status" class="form-control"></select>
-        <span asp-validation-for="Auction.Status" class="text-danger"></span>
-        </div> *@
-        <div class="form-group">
-            <input type="submit" value="Create" class="btn btn-primary" />
-        </div>
-    </form>
+	<form method="post">
+		 <div asp-validation-summary="ModelOnly" class="text-danger"></div> 
+@*		<div class="row mb-3">
+			<div class="col-md-6">
+				<div class="form-group">
+					<label asp-for="RegistrationDate" class="control-label">Registration Date</label>
+					<input asp-for="RegistrationDate" class="form-control" />
+					<span asp-validation-for="RegistrationDate" class="text-danger"></span>
+				</div>
+			</div>
+		</div>*@
+		<div class="row mb-3">
+			<div class="col-md-6">
+				<div class="form-group">
+					<label asp-for="StartDate" class="control-label">Start Date</label>
+					<input asp-for="StartDate" class="form-control" />
+					<span asp-validation-for="StartDate" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label asp-for="EndDate" class="control-label">End Date</label>
+					<input asp-for="EndDate" class="form-control" />
+					<span asp-validation-for="EndDate" class="text-danger"></span>
+				</div>
+			</div>
+		</div>
+		<div class="row mb-3">
+			<div class="col-md-6">
+				<div class="form-group">
+					<label asp-for="WantedPrice" class="control-label">Wanted price</label>
+					<input asp-for="WantedPrice" class="form-control" />
+					<span asp-validation-for="WantedPrice" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label asp-for="IncrementPrice" class="control-label">Bid increment price</label>
+					<input asp-for="IncrementPrice" class="form-control" />
+					<span asp-validation-for="IncrementPrice" class="text-danger"></span>
+				</div>
+			</div>
+		</div>
+		<div class="form-group mb-3">
+			<label asp-for="MaxParticipant" class="control-label">Max participants</label>
+			<input asp-for="MaxParticipant" class="form-control" />
+			<span asp-validation-for="MaxParticipant" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="SelectedEstate" class="control-label">Estate for this Auction</label>
+			<span asp-validation-for="SelectedEstate" class="text-danger"></span>
+			@{
+				foreach (var estate in Model.CompanyEstates)
+				{
+					<div>
+						<input class="" type="radio" name="SelectedEstate" value="@estate.EstateId" />
+						<div>
+							<p>THIS PART SHOULD PUT AN IMAGE, LIKE SHOPPING, TAKE 1st Img IN table and display, since there are none, use text, later use image</p>
+							<p class="">Estate Name: @estate.Name</p>
+							<p class="">Estate Width: @estate.Width </p>
+							<p class="">Estate Length: @estate.Length</p>
+							@foreach (var auc in estate.Auctions)
+							{
+								if (auc.Status != Repository.Database.Model.Enum.AuctionStatus.CANCELLED)
+								{
+									<p class="text-danger">this estate has had an auction goin on, cant create for this one, should not pick this one</p>
+								}
+							}
+						</div>
+					</div>
+				}
+			}
+		</div>
+		<div class="form-group">
+			<input type="submit" value="Create" class="btn btn-primary" />
+		</div>
+	</form>
 
 
-   @*  <div>
-        <a asp-page="Index">Back to List</a>
-    </div> *@
+	@*  <div>
+	<a asp-page="Index">Back to List</a>
+	</div> *@
 </div>
 
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
 }

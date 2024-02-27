@@ -1,23 +1,61 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+	ViewData["Title"] = "Home page";
 }
 @{
-    var result = TempData.TryGetValue("SuccessSignUp", out var message);
-    if(result){
-        <div class="text-center">
-            <p class="text-success"> @message</p>
-        </div>
-    }
-    else if (result = TempData.TryGetValue("SuccessLogin", out message))
-    {
-        <div class="text-center">
-            <p class="text-success"> @message</p>
-        </div>
-    }
+	var result = TempData.TryGetValue("SuccessSignUp", out var message);
+	if (result)
+	{
+		<div class="text-center">
+			<p class="text-success"> @message</p>
+		</div>
+	}
+	else if (result = TempData.TryGetValue("SuccessLogin", out message))
+	{
+		<div class="text-center">
+			<p class="text-success"> @message</p>
+		</div>
+	}
 }
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+	<h1 class="display-4">Welcome</h1>
+	<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+<div>
+	@{
+		foreach (var auc in Model.Auctions)
+		{
+			<form method="post">
+				<div class="border border-1 m-5 p-3">
+					<div class="company-and-estate-data">
+						<p>@auc.Estate.Name</p>
+						<p>@auc.Estate.Length</p>
+						<p>@auc.Estate.Width</p>
+						<div class="text-danger">
+							image should go here
+						</div>
+						@foreach (var cate in auc.Estate.EstateCategory)
+						{
+							<div class="d-inline border border-1 m-3">
+								<span class=" m-2 text-primary">@cate.CategoryDetail.CategoryName</span>
+							</div>
+						}
+
+						<p>@auc.Estate.Company.CompanyName</p>
+						<p>@auc.Estate.Company.EstablishDate</p>
+						<p>@auc.Estate.Company.Email</p>
+					</div>
+					<div class="auction-data">
+						<p>@auc.StartDate</p>
+						<p>@auc.EndDate</p>
+						<p>@auc.MaxParticipant</p>
+						<p>@auc.WantedPrice</p>
+						<p>@auc.IncrementPrice</p>
+					</div>
+					<button type="button" class="btn btn-primary"> detail</button>
+				</div>
+			</form>
+		}
+	}
 </div>

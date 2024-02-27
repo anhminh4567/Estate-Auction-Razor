@@ -7,27 +7,28 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Repository.Database;
 using Repository.Database.Model.AuctionRelated;
+using Service.Services.AuctionService;
 
 namespace RazorAucionWebapp.Pages.CustomerPages
 {
     public class ViewAuctionListModel : PageModel
     {
-        private readonly Repository.Database.AuctionRealEstateDbContext _context;
+        private readonly AuctionServices _auctionServices;
 
-        public ViewAuctionListModel(Repository.Database.AuctionRealEstateDbContext context)
+        public ViewAuctionListModel(AuctionServices auctionServices)
         {
-            _context = context;
+            _auctionServices = auctionServices;
         }
 
-        public IList<Auction> Auction { get;set; } = default!;
+        public IList<Auction> Auctions { get;set; } = default!;
 
         public async Task OnGetAsync()
         {
-            if (_context.Auctions != null)
-            {
-                Auction = await _context.Auctions
-                .Include(a => a.Estate).ToListAsync();
-            }
+            await PopulateData();   
         }
+        private async Task PopulateData() 
+        {
+            Auctions = await _auctionServices.GetAll();
+		}
     }
 }

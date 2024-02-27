@@ -6,44 +6,44 @@
 }
 
 <div class="container">
-    <h1>Auction List</h1>
+    <h1>Auction List That Customer Has Joined, The Original Is In Index Page</h1>
     <table class="table">
         <thead>
             <tr>
+@*                <th>
+                    @Html.DisplayNameFor(model => model.Auctions[0].Estate)
+                </th>*@
                 <th>
-                    @Html.DisplayNameFor(model => model.Auction[0].Estate)
+                    @Html.DisplayNameFor(model => model.Auctions[0].RegistrationDate)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Auction[0].RegistrationDate)
+                    @Html.DisplayNameFor(model => model.Auctions[0].StartDate)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Auction[0].StartDate)
+                    @Html.DisplayNameFor(model => model.Auctions[0].EndDate)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Auction[0].EndDate)
+                    @Html.DisplayNameFor(model => model.Auctions[0].WantedPrice)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Auction[0].WantedPrice)
+                    @Html.DisplayNameFor(model => model.Auctions[0].IncrementPrice)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Auction[0].IncrementPrice)
+                    @Html.DisplayNameFor(model => model.Auctions[0].MaxParticipant)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Auction[0].MaxParticipant)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Auction[0].Status)
+                    @Html.DisplayNameFor(model => model.Auctions[0].Status)
                 </th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.Auction)
+            @foreach (var item in Model.Auctions)
             {
                 <tr>
-                    <td>
+                    @*<td>
                         @Html.DisplayFor(modelItem => item.Estate.Description)
-                    </td>
+                    </td>*@
                     <td>
                         @Html.DisplayFor(modelItem => item.RegistrationDate)
                     </td>

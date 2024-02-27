@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Repository.Database.Model.Enum
 {
-    public enum AuctionStatus
-    {
-        NOT_STARTED,PENDING, SUCCESS, CANCELLED
-    }
+	public enum JoinedAuctionStatus
+	{
+		PENDING,REGISTERED, QUIT, BANNED
+	}
 }

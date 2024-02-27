@@ -17,6 +17,7 @@ namespace Repository.Database.Model
         public int TransactionId { get; set; }
         public int? AccountId { get; set; }
         public Account? Account { get; set; }
+        public JoinedAuction? RegisterAuction { get; set; }
         public TransactionStatus Status { get; set; }
         public string vnp_TxnRef { get; set; }
         public string vnp_Amount { get; set; }
