@@ -25,5 +25,20 @@ namespace Repository.Implementation.RealEstate
 		{
 			return await _set.Include(e => e.Company).Include(e => e.Auctions).FirstOrDefaultAsync(e => e.EstateId == id);
 		}
-	}
+
+        public async Task<Estate?> GetFullDetail(int id)
+        {
+			return await _set.Include(e => e.EstateCategory)?.ThenInclude(e => e.CategoryDetail)
+				.Include(e => e.Auctions).FirstOrDefaultAsync(e => e.EstateId == id);
+        }
+		public async Task<Estate?> GetInclude(int id,params string[] includes) 
+		{
+			var query = _set.AsQueryable();
+			foreach(var properties in includes) 
+			{
+                query = query.Include(properties);
+			}
+			return await query.FirstOrDefaultAsync(e => e.EstateId.Equals(id));
+		}
+    }
 }

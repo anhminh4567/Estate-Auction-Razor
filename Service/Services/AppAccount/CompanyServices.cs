@@ -10,8 +10,8 @@ using Repository.Database.Model.RealEstate;
 using Repository.Interfaces.RealEstate;
 using Repository.Database.Model.AuctionRelated;
 using Repository.Interfaces.Auction;
-using Service.Services.AuctionService;
 using Service.Services.RealEstate;
+using Service.Services.Auction;
 
 namespace Service.Services.AppAccount
 {
@@ -41,7 +41,7 @@ namespace Service.Services.AppAccount
 		{
 			return await _estateServices.GetByCompanyId(companyId);
 		}
-		public async Task<List<Auction>?> GetAllAuctionsByCompanyId(int companyId)
+		public async Task<List<Repository.Database.Model.AuctionRelated.Auction>?> GetAllAuctionsByCompanyId(int companyId)
 		{
 			return await _auctionService.GetByCompanyId(companyId);
 		}

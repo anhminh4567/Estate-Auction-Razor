@@ -3,7 +3,6 @@ using Repository.Database.Model.AppAccount;
 using Repository.Database.Model.AuctionRelated;
 using Repository.Interfaces;
 using Repository.Interfaces.AppAccount;
-using Service.Services.AuctionService;
 using System;
 using System.Collections.Generic;
 using System.Linq;

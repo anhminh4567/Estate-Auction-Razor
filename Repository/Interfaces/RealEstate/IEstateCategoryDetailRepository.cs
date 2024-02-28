@@ -9,5 +9,6 @@ namespace Repository.Interfaces.RealEstate
 {
 	public interface IEstateCategoryDetailRepository : ICrud<EstateCategoryDetail>
 	{
+		public Task<List<EstateCategoryDetail>> GetRange(params int[] ids);
 	}
 }

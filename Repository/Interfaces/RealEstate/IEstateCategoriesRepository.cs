@@ -11,5 +11,6 @@ namespace Repository.Interfaces.RealEstate
 	{
 		Task<List<EstateCategories>> GetByEstateId(int id);
 		Task<List<EstateCategories>> GetByCategoryId(int categoryId);
+		
 	}
 }

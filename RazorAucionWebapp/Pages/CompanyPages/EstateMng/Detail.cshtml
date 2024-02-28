@@ -1,0 +1,85 @@
+﻿@page
+@model RazorAucionWebapp.Pages.CompanyPages.EstateMng.DetailModel
+
+@{
+    ViewData["Title"] = "Detail";
+}
+
+<h1>Detail</h1>
+
+<div>
+    <h4>Estate</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Estate.Company)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Estate.Company.CMND)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Estate.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Estate.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Estate.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Estate.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Estate.Width)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Estate.Width)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Estate.Length)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Estate.Length)
+        </dd>
+        @{
+            <p class="text-success"> Category</p>
+            if (Model.Estate.EstateCategory is not null && Model.Estate.EstateCategory.Count > 0)
+            {
+                foreach (var categoryDetail in Model.Estate.EstateCategory)
+                {
+                    <div class="d-inline">@categoryDetail.CategoryDetail.CategoryName</div>
+                }
+            }
+            else
+            {
+                <p class="text-danger">No Category, something wrong</p>
+            }
+        }
+        @{
+            <p class="text-success"> Auction</p>
+            if (Model.Estate.Auctions is not null && Model.Estate.Auctions.Count > 0)
+            {
+                foreach (var auction in Model.Estate.Auctions)
+                {
+                    <div class="m-3 border border-1 p-3">
+                        <p>@auction.AuctionId</p>
+                        <p>@auction.RegistrationDate</p>
+                        <p>@auction.StartDate</p>
+                        <p>@auction.EndDate</p>
+                        <p class="text-danger">@auction.Status</p>
+                        <p>@auction.WantedPrice</p>
+                        <p>@auction.IncrementPrice</p>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-danger">No Auction, Go Create</p>
+            }
+        }
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.Estate?.EstateId">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

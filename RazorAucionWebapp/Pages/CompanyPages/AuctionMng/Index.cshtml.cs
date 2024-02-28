@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Repository.Database;
 using Repository.Database.Model.AuctionRelated;
-using Service.Services.AuctionService;
+using Service.Services.Auction;
 
 namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
 {

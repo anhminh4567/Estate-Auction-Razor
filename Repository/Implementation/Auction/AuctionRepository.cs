@@ -36,7 +36,7 @@ namespace Repository.Implementation.Auction
 
         public async Task<List<Database.Model.AuctionRelated.Auction>> GetRange_IncludeEstate_Company(int start, int amount)
         {
-            return await _set.Include(a => a.Estate).ThenInclude(e => e.Company).Where(a => a.Status == Database.Model.Enum.AuctionStatus.NOT_STARTED && a.Status == Database.Model.Enum.AuctionStatus.ONGOING).Skip(start).Take(amount).ToListAsync();
+            return await _set.Include(a => a.Estate).ThenInclude(e => e.Company).Skip(start).Take(amount).ToListAsync();
         }
     }
 }

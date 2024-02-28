@@ -3,12 +3,14 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Org.BouncyCastle.Asn1.X509;
 using Repository.Database.Model.AuctionRelated;
 using Service.Services.AppAccount;
+using Service.Services.Auction;
 
 namespace RazorAucionWebapp.Pages.CustomerPages
 {
     public class JoinAuctionModel : PageModel
     {
         private readonly JoinedAuctionServices _joinedAuctionServices;
+        private readonly AuctionServices _auctionServices;
         public JoinAuctionModel(JoinedAuctionServices joinedAuctionServices)
         {
             _joinedAuctionServices = joinedAuctionServices;
@@ -31,7 +33,7 @@ namespace RazorAucionWebapp.Pages.CustomerPages
         }
         private async Task GetJoinAuction(int id)
         {
-            Auction = await _joinedAuctionServices.GetAuction(id);
+            Auction = await _auctionServices.GetById(id);
         }
     }
 }

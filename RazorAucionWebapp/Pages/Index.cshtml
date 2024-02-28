@@ -26,38 +26,38 @@
 			<form method="post">
 				<div class="border border-1 m-5 p-3">
 					<div class="company-and-estate-data">
-						<p>@auc.Auction.Estate.Name</p>
-						<p>@auc.Auction.Estate.Length</p>
-						<p>@auc.Auction.Estate.Width</p>
+						<p>@auc.Estate.Name</p>
+						<p>@auc.Estate.Length</p>
+						<p>@auc.Estate.Width</p>
 						<div class="text-danger">
 							image should go here
 						</div>
-						@foreach (var cate in auc.Auction.Estate.EstateCategory)
+						@foreach (var cate in auc.Estate.EstateCategory)
 						{
 							<div class="d-inline border border-1 m-3">
 								<span class=" m-2 text-primary">@cate.CategoryDetail.CategoryName</span>
 							</div>
 						}
-						<p>@auc.Auction.Estate.Company.CompanyName</p>
-						<p>@auc.Auction.Estate.Company.EstablishDate</p>
-						<p>@auc.Auction.Estate.Company.Email</p>
+						<p>@auc.Estate.Company.CompanyName</p>
+						<p>@auc.Estate.Company.EstablishDate</p>
+						<p>@auc.Estate.Company.Email</p>
 					</div>
 					<div class="auction-data">
-						<p>@auc.Auction.StartDate</p>
-						<p>@auc.Auction.EndDate</p>
-						<p>@auc.Auction.MaxParticipant</p>
-						<p>@auc.Auction.WantedPrice</p>
-						<p>@auc.Auction.IncrementPrice</p>
+						<p>@auc.StartDate</p>
+						<p>@auc.EndDate</p>
+						<p>@auc.MaxParticipant</p>
+						<p>@auc.WantedPrice</p>
+						<p>@auc.IncrementPrice</p>
 					</div>
-					@if (auc.isJoined)
+					@*@if (auc.isJoined)
 					{
 						<div class="text-secondary h3">Joined</div>
 					}
 					else
 					{
 						<a asp-page="./CustomerPages/JoinAuction" asp-route-id="@auc.Auction.AuctionId" class="btn btn-outline-info">Join</a>
-					}
-					<a asp-page="./CustomerPages/DetailAuction" asp-route-id="@auc.Auction.AuctionId" class="btn btn-primary">See detail</a>
+					}*@
+					<a asp-page="./CustomerPages/DetailAuction" asp-route-id="@auc.AuctionId" class="btn btn-primary">See detail</a>
 				</div>
 			</form>
 		}

@@ -20,7 +20,15 @@ namespace Service.Services.RealEstate
 		{
 			return await _estateRepository.GetAsync(id);
 		}
-		public async Task<List<Estate>> GetByCompanyId(int companyId) 
+		public async Task<Estate?> GetFullDetail(int id) 
+		{
+			return await _estateRepository.GetFullDetail(id);
+		}
+        public async Task<Estate?> GetIncludes(int id, params string[] attributeName)
+        {
+            return await _estateRepository.GetInclude(id,attributeName);
+        }
+        public async Task<List<Estate>> GetByCompanyId(int companyId) 
 		{
 			return await _estateRepository.GetByCompanyId(companyId);
 		}

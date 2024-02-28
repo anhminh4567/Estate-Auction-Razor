@@ -13,7 +13,7 @@ using Repository.Database;
 using Repository.Database.Model.AuctionRelated;
 using Repository.Database.Model.Enum;
 using Repository.Database.Model.RealEstate;
-using Service.Services.AuctionService;
+using Service.Services.Auction;
 using Service.Services.RealEstate;
 
 namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng

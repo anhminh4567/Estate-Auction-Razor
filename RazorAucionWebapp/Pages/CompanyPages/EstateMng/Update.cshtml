@@ -1,0 +1,100 @@
+﻿@page
+@model RazorAucionWebapp.Pages.CompanyPages.EstateMng.UpdateModel
+
+@{
+    ViewData["Title"] = "Update";
+}
+
+<h1>Update</h1>
+
+<h4>Estate</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="EstateId" />
+            <input type="hidden" asp-for="CompanyId" />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Width" class="control-label"></label>
+                <input asp-for="Width" class="form-control" />
+                <span asp-validation-for="Width" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Length" class="control-label"></label>
+                <input asp-for="Length" class="form-control" />
+                <span asp-validation-for="Length" class="text-danger"></span>
+            </div>
+            <div>
+                <div class="list-group">
+                    @{
+                        if (Model.Categories is not null && Model.Categories.Count>0)
+                        {
+                            foreach (var cate in Model.Categories)
+                            {
+                                <label class="list-group-item">
+                                    @if (Model.CurrentEstateCategories.FirstOrDefault(c => c.CategoryId == cate.CategoryId) is not null)
+                                    {
+                                        <input class="form-check-input me-1" type="checkbox" name="SelectedCategories" value="@cate.CategoryId" checked aria-label="...">
+                                    }
+                                    else
+                                    {
+                                        <input class="form-check-input me-1" type="checkbox" name="SelectedCategories" value="@cate.CategoryId" aria-label="...">
+                                    }
+                                    <span>@cate.CategoryName</span>
+                                </label>
+                            }
+                        }
+                        else
+                        {
+                            <p class="text-danger">no category something wrong</p>
+                        }
+
+                    }
+                </div>
+            </div>
+            <div class="form-group">
+                @{
+                    if (Model.EstateImages.Count > 0)
+                    {
+                        foreach (var img in Model.EstateImages)
+                        {
+                            <div class="img-fluid">
+                                <input type="checkbox" value="@img.ImageId" />
+                                <img src="" alt="No Image Found" />
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="text-danger">
+                            No Image yet, please insert
+                        </div>
+                    }
+                    
+                }
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -12,7 +12,7 @@ namespace Repository.Database.Model.RealEstate
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int EstateId { get; set; }
         public int CompanyId { get; set; }
-        public Company Company { get; set; }
+        public Company? Company { get; set; }
         public IList<EstateCategories>? EstateCategory { get; set; }
         public IList<Auction>? Auctions { get; set; }
         public IList<EstateImages>? Images { get; set; }

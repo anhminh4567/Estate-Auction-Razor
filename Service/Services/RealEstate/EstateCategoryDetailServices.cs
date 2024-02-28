@@ -24,6 +24,10 @@ namespace Service.Services.RealEstate
 		{
 			return await _estateCategoryDetailRepository.GetAllAsync();
 		}
+		public async Task<List<EstateCategoryDetail>> GetRange(params int[] categoryDetailIds) 
+		{
+			return await _estateCategoryDetailRepository.GetRange(categoryDetailIds);
+		}
 		public async Task<EstateCategoryDetail> Create(EstateCategoryDetail estateCategoryDetail) 
 		{
 			return await _estateCategoryDetailRepository.CreateAsync(estateCategoryDetail);

@@ -1,4 +1,5 @@
-﻿using Repository.Database;
+﻿using Microsoft.EntityFrameworkCore;
+using Repository.Database;
 using Repository.Database.Model.RealEstate;
 using Repository.Implementation;
 using Repository.Interfaces.RealEstate;
@@ -15,5 +16,10 @@ namespace Repository.Implementation.RealEstate
 		public EstateCategoryDetailRepository(AuctionRealEstateDbContext context) : base(context)
 		{
 		}
-	}
+
+        public async Task<List<EstateCategoryDetail>> GetRange(params int[] ids)
+        {
+            return await _set.Where(e => ids.Contains(e.CategoryId)).ToListAsync();
+        }
+    }
 }

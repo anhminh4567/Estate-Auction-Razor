@@ -8,7 +8,6 @@ using Repository.Implementation.RealEstate;
 using Repository.Interfaces;
 using Repository.Interfaces.Auction;
 using Repository.Interfaces.RealEstate;
-using Service.Services.AuctionService;
 using Service.Services.VnpayService.VnpayUtility;
 
 var builder = WebApplication.CreateBuilder(args);

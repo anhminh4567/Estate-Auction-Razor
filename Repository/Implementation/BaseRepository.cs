@@ -3,6 +3,7 @@ using Repository.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,21 +27,54 @@ namespace Repository.Implementation
 		{
 			return await _set.FindAsync(id);
 		}
+        public Task<List<T>> GetByCondition(Expression<Func<T, bool>> expression = null,
+            Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+            string includeProperties = "")
+		{
+            IQueryable<T> query = _context.Set<T>();
+            if (expression != null)
+            {
+                query = query.Where(expression);
+            }
 
-		public virtual async Task<T> CreateAsync(T t)
+            foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(includeProperty);
+            }
+
+            if (orderBy != null)
+            {
+                return orderBy(query).ToListAsync();
+            }
+            else
+            {
+                return query.ToListAsync();
+            }
+        }
+        public virtual async Task<T> CreateAsync(T t)
 		{
 			var obj = await _set.AddAsync(t);
 			await _context.SaveChangesAsync();
 			return obj.Entity;
 		}
 
-		public virtual async Task<bool> DeleteAsync(T t)
+        public virtual async Task<bool> DeleteAsync(T t)
 		{
 			if (t == null)
 			{
 				return false;
 			}
 			_set.Remove(t);
+			await _context.SaveChangesAsync();
+			return true;
+		}
+		public virtual async Task<bool> DeleteRange(List<T> ts) 
+		{
+			if (ts is null) 
+			{
+				return false;
+			}
+			_set.RemoveRange(ts);
 			await _context.SaveChangesAsync();
 			return true;
 		}

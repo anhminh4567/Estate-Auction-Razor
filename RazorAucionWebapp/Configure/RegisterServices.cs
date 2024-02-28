@@ -1,6 +1,6 @@
 ﻿using Service.Services;
 using Service.Services.AppAccount;
-using Service.Services.AuctionService;
+using Service.Services.Auction;
 using Service.Services.RealEstate;
 using Service.Services.VnpayService.VnpayUtility;
 
@@ -27,12 +27,14 @@ namespace RazorAucionWebapp.Configure
 			services.AddScoped<EstateCategoryDetailServices>();
 			services.AddScoped<EstateCategoriesServices>();
 
-			services.AddScoped<AuctionServices>();
+            services.AddScoped<JoinedAuctionServices>();
+            services.AddScoped<AuctionServices>();
 			services.AddScoped<AuctionReceiptServices>();	
 
 			services.AddScoped<CompanyServices>();
 			services.AddScoped<AccountServices>();
 
+			
 
 			return services;
 		}
