@@ -1,6 +1,7 @@
 ﻿using Repository.Database.Model.AuctionRelated;
 using Repository.Interfaces.Auction;
 using Repository.Interfaces.RealEstate;
+using Service.Services.AppAccount;
 using Service.Services.RealEstate;
 using System;
 using System.Collections.Generic;
@@ -10,29 +11,45 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Service.Services.AuctionService
+namespace Service.Services.Auction
 {
 	public class AuctionServices
 	{
 		private readonly IAuctionRepository _auctionRepository;
 		private readonly EstateServices _estateServices;
 		private readonly EstateCategoriesServices _estateCategoriesServices;
-		public AuctionServices(IAuctionRepository auctionRepository, EstateServices estateService, EstateCategoriesServices estateCategoriesServices)
+		private readonly JoinedAuctionServices _joinedAuctionServices;
+		public AuctionServices(
+			IAuctionRepository auctionRepository, 
+			EstateServices estateService, 
+			EstateCategoriesServices estateCategoriesServices,
+			JoinedAuctionServices joinedAuctionServices
+			)
 		{
 			_auctionRepository = auctionRepository;
 			_estateServices = estateService;
 			_estateCategoriesServices = estateCategoriesServices;
+			_joinedAuctionServices = joinedAuctionServices;
 		}
-		public async Task<Auction> GetById(int id)
+		public async Task<bool> CheckForJoinedAuction(int accountId, int auctionId)
+		{
+			return await _joinedAuctionServices.IsJoined(accountId, auctionId);
+		}
+		public async Task<List<Repository.Database.Model.AuctionRelated.Auction>> GetActiveAuctions()
+		{
+			return await _auctionRepository.GetActiveAuctions();
+		}
+
+        public async Task<Repository.Database.Model.AuctionRelated.Auction> GetById(int id)
 		{
 			return await _auctionRepository.GetAsync(id);
 		}
-		public async Task<List<Auction>> GetByCompanyId(int companyId)
+		public async Task<List<Repository.Database.Model.AuctionRelated.Auction>> GetByCompanyId(int companyId)
 		{
 			var getEstates = (await _estateServices.GetByCompanyId(companyId)).Select(e => e.EstateId).ToArray();
 			if (getEstates is null)
 				throw new Exception("something wrong with get estate, it should never be null, only empty list or so");
-			var result = new List<Auction>();	
+			var result = new List<Repository.Database.Model.AuctionRelated.Auction>();	
 			foreach(var estate in getEstates) 
 			{
 				var tryGetAuctions = await _auctionRepository.GetByEstateId(estate);
@@ -41,17 +58,17 @@ namespace Service.Services.AuctionService
 			}
 			return result;
 		}
-		public async Task<List<Auction>> GetAll()
+		public async Task<List<Repository.Database.Model.AuctionRelated.Auction>> GetAll()
 		{
 			return await _auctionRepository.GetAllAsync();
 		}
-		public async Task<List<Auction>> GetRange(int start, int amount) 
+		public async Task<List<Repository.Database.Model.AuctionRelated.Auction>> GetRange(int start, int amount) 
 		{
 			if (start < 0 || amount <= 0)
 				throw new ArgumentException("start, amount must > 0");
 			return await _auctionRepository.GetRange(start,amount);
 		}
-		public async Task<List<Auction>> GetRangeInclude_Estate_Company(int start, int amount) 
+		public async Task<List<Repository.Database.Model.AuctionRelated.Auction>> GetRangeInclude_Estate_Company(int start, int amount) 
 		{
             if (start < 0 || amount <= 0)
                 throw new ArgumentException("start, amount must > 0");
@@ -63,11 +80,11 @@ namespace Service.Services.AuctionService
 			}
 			return result;
 		}
-		public async Task<List<Auction>> GetByEstateId(int estateId)
+		public async Task<List<Repository.Database.Model.AuctionRelated.Auction>> GetByEstateId(int estateId)
 		{
 			return await _auctionRepository.GetByEstateId(estateId);
 		}
-		public async Task<Auction?> Create(Auction auction) 
+		public async Task<Repository.Database.Model.AuctionRelated.Auction?> Create(Repository.Database.Model.AuctionRelated.Auction auction) 
 		{
 			var getEstate = await _estateServices.GetById(auction.EstateId);
 			if(getEstate is not null) 
@@ -81,11 +98,11 @@ namespace Service.Services.AuctionService
 			}
 			return await _auctionRepository.CreateAsync(auction);
 		}
-		public async Task<bool> Delete(Auction auction)
+		public async Task<bool> Delete(Repository.Database.Model.AuctionRelated.Auction auction)
 		{
 			return await _auctionRepository.DeleteAsync(auction);
 		}
-		public async Task<bool> Update(Auction auction)
+		public async Task<bool> Update(Repository.Database.Model.AuctionRelated.Auction auction)
 		{
 			return await _auctionRepository.UpdateAsync(auction);
 		}

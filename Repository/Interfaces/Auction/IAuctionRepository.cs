@@ -13,5 +13,6 @@ namespace Repository.Interfaces.Auction
 		Task<List<Database.Model.AuctionRelated.Auction>> GetByEstateId(int id);
 		Task<List<Database.Model.AuctionRelated.Auction>> GetRange(int start, int amount);
 		Task<List<Database.Model.AuctionRelated.Auction>> GetRange_IncludeEstate_Company(int start, int amount);
+		Task<List<Database.Model.AuctionRelated.Auction>> GetActiveAuctions();
 	}
 }

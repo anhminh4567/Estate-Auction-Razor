@@ -7,10 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Repository.Database;
 using Repository.Database.Model.AuctionRelated;
-using Service.Services.AuctionService;
+using Service.Services.Auction;
 
 namespace RazorAucionWebapp.Pages.CustomerPages
 {
+   
     public class ViewAuctionListModel : PageModel
     {
         private readonly AuctionServices _auctionServices;
@@ -26,9 +27,17 @@ namespace RazorAucionWebapp.Pages.CustomerPages
         {
             await PopulateData();   
         }
+		private int UserId { get; set; }
+
+		private void GetUserId()
+        {
+            var result = int.TryParse(HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("Id"))?.Value, out int userId);
+            if(result is false) throw new Exception("Unauthorized User");
+            UserId = userId;
+        }
         private async Task PopulateData() 
         {
-            Auctions = await _auctionServices.GetAll();
+            Auctions = await _auctionServices.GetActiveAuctions();
 		}
     }
 }

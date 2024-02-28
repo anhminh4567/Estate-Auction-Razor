@@ -22,6 +22,7 @@ namespace Repository.Database.Model.AuctionRelated
         public DateTime RegistrationDate { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public decimal EntranceFee { get; set; }
         public decimal WantedPrice { get; set; }
         public decimal IncrementPrice { get; set; }
         public int MaxParticipant { get; set; }

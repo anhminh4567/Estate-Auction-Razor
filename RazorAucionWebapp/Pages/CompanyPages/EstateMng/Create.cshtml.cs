@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Repository.Database;
 using Repository.Database.Model.RealEstate;
-using Service.Services.AuctionService;
 using Service.Services.RealEstate;
 
 namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
@@ -32,6 +31,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
         public async Task<IActionResult> OnGet()
         {
             //ViewData["CompanyId"] = new SelectList(_context.Companys, "AccountId", "CMND");
+            GetCompanyId();
             await PopulateData();
             return Page();
         }
@@ -67,6 +67,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
         {
             try
             {
+                GetCompanyId();
                 await PopulateData();
                 SeletedEstateCategoriesOptions = new List<string>(CheckedCategoriesBoxes.Split(','));
                 if (!ModelState.IsValid || Estate == null)
@@ -116,11 +117,15 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
                     EstateCategoriesOptions.Add(new SelectListItem(category.CategoryName, category.CategoryId.ToString()));
                 }
             }
-            var result = int.TryParse(HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("Id"))?.Value, out var companyId);
+        
+        }
+
+        private void GetCompanyId()
+        {
+            var result = int.TryParse(HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("Id"))?.Value, out int companyId);
             if (result is false)
                 throw new Exception("this user is not company id, create an account first to create this, very simple, go to admin page and do so");
-            CompanyId = companyId;
-            
+            else CompanyId = companyId;
         }
     }
 }
