@@ -3,14 +3,6 @@ using RazorAucionWebapp.BackgroundServices;
 using RazorAucionWebapp.Configure;
 using Repository.Database;
 using Repository.Database.Model.Enum;
-using Repository.Implementation;
-using Repository.Implementation.AppAccount;
-using Repository.Implementation.Auction;
-using Repository.Implementation.RealEstate;
-using Repository.Interfaces;
-using Repository.Interfaces.Auction;
-using Repository.Interfaces.RealEstate;
-using Service.Services.VnpayService.VnpayUtility;
 using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,7 +12,7 @@ builder.Services.AddRazorPages(opt =>
 {
     //opt.Conventions.AuthorizeFolder("/AdminPages", "Admin");
     //opt.Conventions.AuthorizeFolder("/CompanyPages", "Company");
-    //opt.Conventions.AuthorizeFolder("/Customer", "Customer");
+    //opt.Conventions.AuthorizeFolder("/CustomerPages", "Customer");
 
 });
 
