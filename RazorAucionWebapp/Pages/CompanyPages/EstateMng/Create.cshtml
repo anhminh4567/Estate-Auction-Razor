@@ -7,75 +7,97 @@
 }
 
 <div class="container">
-    <h4>Create new estate</h4>
-    <hr />
-    <form method="post" id="create_estate_frm">
-        @* <div asp-validation-summary="ModelOnly" class="text-danger"></div> *@
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label asp-for="Name" class="control-label">Name of estate</label>
-                    <input asp-for="Name" class="form-control" />
-                    <span asp-validation-for="Name" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label asp-for="ImageUrl" class="control-label">Estate images</label>
-                    <input asp-for="ImageUrl" class="form-control" readonly value="~/wwwroot/PublicImages/estate01.jpg" />
-                    <span asp-validation-for="ImageUrl" class="text-danger"></span>
-                </div>
-               
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label asp-for="Width" class="control-label">Width of the estate (m)</label>
-                    <input asp-for="Width" class="form-control" />
-                    <span asp-validation-for="Width" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label asp-for="Length" class="control-label">Length of the estate (m)</label>
-                    <input asp-for="Length" class="form-control" />
-                    <span asp-validation-for="Length" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="SelectedEstateCategoriesOptions" class="control-label">Estate categories</label>
-            <input type="hidden" asp-for="SelectedEstateCategoriesOptions" />
-            <div class="row">
-                @foreach (var item in Model.EstateCategoriesOptions)
-                {
-                    <div class="col-md-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="@item.Value" name="SelectedEstateCategoriesOptions" value="@item.Value">
-                            <label class="form-check-label" for="@item.Value">
-                                @item.Text
-                            </label>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">Home</li>
+            <li class="breadcrumb-item">Company account</li>
+            <li class="breadcrumb-item">My estate</li>
+            <li class="breadcrumb-item"><a href="#">Create new</a></li>
+        </ol>
+    </nav>
+    <div class="row form_wrapper">
+        <div class="col-md-4 form_img"></div>
+        <div class="col-md-8">
+            <div class="create_form">
+                <h4 class="form_header">Create new estate</h4>
+                <hr />
+                <form method="post" id="create_estate_frm">
+                    @* <div asp-validation-summary="ModelOnly" class="text-danger"></div> *@
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="Name" class="control-label">Name of estate</label>
+                                <input asp-for="Name" class="form-control" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="Width" class="control-label">Width of the estate (m)</label>
+                                <input asp-for="Width" class="form-control" />
+                                <span asp-validation-for="Width" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="Length" class="control-label">Length of the estate (m)</label>
+                                <input asp-for="Length" class="form-control" />
+                                <span asp-validation-for="Length" class="text-danger"></span>
+                            </div>
                         </div>
                     </div>
-                }
-            </div>
-            <span asp-validation-for="SelectedEstateCategoriesOptions" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="Description" class="control-label">Description</label>
-            <textarea asp-for="Description" class="form-control" rows="3"></textarea>
-            <span asp-validation-for="Description" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <input type="submit" value="Create" class="btn btn-primary" />
-        </div>
-    </form>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Description" class="control-label">Description</label>
+                                <textarea asp-for="Description" class="form-control" rows="3" placeholder="Estate description...."></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="SelectedEstateCategoriesOptions" class="control-label" style="margin-bottom: .5rem">Estate categories</label>
+                                <input type="hidden" asp-for="SelectedEstateCategoriesOptions" />
+                                <div class="row">
+                                    @foreach (var item in Model.EstateCategoriesOptions)
+                                    {
+                                        <div class="col-md-4 cates">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="@item.Value" name="SelectedEstateCategoriesOptions" value="@item.Value">
+                                                <label class="form-check-label" for="@item.Value">
+                                                    @item.Text
+                                                </label>
+                                            </div>
+                                        </div>
+                                    }
+                                    <span asp-validation-for="SelectedEstateCategoriesOptions" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-@* 
+                    <div class="form-group add_img_form">
+                        <label asp-for="ImageUrl" class="control-label">Estate images</label>
+                                <input type="file" asp-for="ImageUrl" class="form-control" style="display: none;"/>
+                                <label for="ImageUrl" class="add_img_btn"></label>
+                        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                    </div>
+
+
+                    <div class="form-group create_btn">
+                        <input type="submit" value="Create" class="btn btn-primary"/>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    
+
+    
     <div>
-        <a asp-page="Index">Back to List</a>
-    </div> *@
+    <a asp-page="Index">Back to List</a>
+    </div>
 </div>
 
 

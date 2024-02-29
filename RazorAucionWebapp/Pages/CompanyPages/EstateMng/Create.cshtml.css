@@ -1,0 +1,92 @@
+﻿body {
+}
+.breadcrumb {
+    margin: 2.5rem 0 1.5rem;
+    a {
+    pointer-events: none;
+    text-decoration: none;
+    color: black;
+    }
+}
+
+.breadcrumb-item {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.breadcrumb-item {
+    font-size: .9rem;
+}
+
+.row {
+    margin-bottom: 1.4rem;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.form_wrapper {
+    box-shadow: .3rem 0 2.5rem -1rem rgba(0, 0, 0, 0.35);
+    width: 90%;
+    margin: 2rem auto;
+    min-height: 50vh;
+    border-radius: .5rem;
+}
+
+.create_form {
+    padding: 2rem 1rem;
+    position: relative;
+    height: 98%;
+}
+
+.form_header {
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.form-check-label {
+    font-size: .85rem;
+    color: rgba(0, 0, 0, 0.45);
+}
+
+.cates {
+    label {
+        font-size: .8rem;
+    }
+}
+
+.form_img {
+    background: url(https://i.ibb.co/PQ9L8MK/etienne-beauregard-riverin-B0a-Cv-AVSX8-E-unsplash-1.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    border-radius: .5rem 0 0 .5rem;
+}
+
+.add_img_form {
+    margin-bottom: 1.5rem;
+}
+
+.add_img_btn {
+    display: block;
+    border-radius: .2rem;
+    width: 100%;
+    height: 6.5rem;
+    background: url(https://i.ibb.co/cT0HBvh/new.png);
+    background-size: 3.5rem auto;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: rgba(0, 0, 0, 0.15);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgba(0, 0, 0, 0.3);
+    position: relative;
+    padding: 0 !important;
+}
+
+.add_img_btn:after {
+    content: "Add image";
+    position: absolute;
+    top: 67%;
+    left: 44%;
+    font-size: .8rem;
+}

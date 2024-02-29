@@ -1,0 +1,19 @@
+﻿body {
+}
+
+.breadcrumb {
+    margin: 2.5rem 0 1.5rem;
+    a {
+          pointer-events: none;
+          text-decoration: none;
+          color: black;
+      }
+}
+
+.breadcrumb-item {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.breadcrumb-item {
+    font-size: .9rem;
+}
