@@ -14,11 +14,9 @@ namespace Repository.Database.Model.AppAccount
             public Account? Account { get; set; }
             public int? AuctionId { get; set; }
             public Auction? Auction { get; set; }
-            public int ? TransactionId { get; set; }
-            public Transaction? Transaction { get; set; }
             public JoinedAuctionStatus Status { get; set; }
             public DateTime RegisterDate { get; set; }
-            public decimal RegiisterFee { get; set; }
+            //public decimal RegiisterFee { get; set; }
 
         }
 }

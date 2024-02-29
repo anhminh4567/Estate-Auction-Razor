@@ -1,0 +1,124 @@
+﻿@page
+@model RazorAucionWebapp.Pages.CompanyPages.AuctionMng.DetailModel
+
+@{
+	ViewData["Title"] = "Detail";
+}
+
+<h1>Detail</h1>
+
+<div>
+	<h4>Auction</h4>
+	<hr />
+	<dl class="row">
+		@*        <dt class="col-sm-2">
+		@Html.DisplayNameFor(model => model.Auction.Estate)
+		</dt>
+		<dd class="col-sm-10">
+		@Html.DisplayFor(model => model.Auction.Estate.Description)
+		</dd>*@
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Auction.RegistrationDate)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Auction.RegistrationDate)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Auction.StartDate)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Auction.StartDate)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Auction.EndDate)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Auction.EndDate)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Auction.EntranceFee)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Auction.EntranceFee)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Auction.WantedPrice)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Auction.WantedPrice)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Auction.IncrementPrice)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Auction.IncrementPrice)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Auction.MaxParticipant)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Auction.MaxParticipant)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Auction.Status)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Auction.Status)
+		</dd>
+	</dl>
+	<hr />
+	<div class="estate">
+		<ul>
+			<li>@Model.Auction.Estate.EstateId</li>
+			<li>@Model.Auction.Estate.Name</li>
+			<li>@Model.Auction.Estate.Description</li>
+			<li>@Model.Auction.Estate.Width</li>
+			<li>@Model.Auction.Estate.Length</li>
+		</ul>
+		<button class="btn btn-primary"></button>
+	</div>
+	<div class="joinAuction">
+		<ul>
+			@{
+				if (Model.Auction.JoinedAccounts is not null && Model.Auction.JoinedAccounts.Count > 0)
+					foreach (var acc in Model.Auction.JoinedAccounts)
+					{
+						<li>
+							<p>@acc.Account.FullName</p>
+							<p>@acc.Account.Email</p>
+							<p>@acc.Status</p>
+							<p>@acc.RegisterDate</p>
+							@*<p>@acc.RegiisterFee</p>*@
+							<button class="btn btn-primary">detail</button>
+						</li>
+					}
+			}
+		</ul>
+	</div>
+	<div class="AuctionReceipt">
+		<ul>
+			@{
+				if (Model.Auction.AuctionReceipt is not null && Model.Auction.JoinedAccounts.Count > 0)
+					foreach (var acc in Model.Auction.JoinedAccounts)
+					{
+						<li>
+							<p>@acc.Account.FullName</p>
+							<p>@acc.Account.Email</p>
+							<p>@acc.Status</p>
+							<p>@acc.RegisterDate</p>
+							@*<p>@acc.RegiisterFee</p>*@
+							<button class="btn btn-primary">detail</button>
+						</li>
+					}
+			}
+		</ul>
+	</div>
+	<div class="bids">
+		<p>total bid: @Model.Auction.Bids.Count</p>
+		<button btn btn-primary>detail</button>
+	</div>
+</div>
+<div>
+	<a asp-page="./Update" asp-route-id="@Model.Auction?.AuctionId">Update</a> |
+	<a asp-page="./Index">Back to List</a>
+</div>

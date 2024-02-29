@@ -46,7 +46,13 @@ namespace Service.Services.RealEstate
 		}
 		public async Task<bool> Delete(Estate estate)
 		{
-			return await _estateRepository.DeleteAsync(estate);
+			estate.Status = Repository.Database.Model.Enum.EstateStatus.REMOVED;
+			return await _estateRepository.UpdateAsync(estate);
+		}
+		public async Task<bool> Banned(Estate estate) 
+		{
+			estate.Status = Repository.Database.Model.Enum.EstateStatus.BANNDED;
+			return await _estateRepository.UpdateAsync(estate) ;	
 		}
 	}
 }

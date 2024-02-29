@@ -68,7 +68,11 @@ namespace Service.Services.Auction
 				throw new ArgumentException("start, amount must > 0");
 			return await _auctionRepository.GetRange(start,amount);
 		}
-		public async Task<List<Repository.Database.Model.AuctionRelated.Auction>> GetRangeInclude_Estate_Company(int start, int amount) 
+        public async Task<Repository.Database.Model.AuctionRelated.Auction?> GetInclude(int auctionId,  string includes)
+        {
+			return (await _auctionRepository.GetByCondition(a => a.AuctionId == auctionId, includeProperties: includes)).FirstOrDefault() ;
+        }
+        public async Task<List<Repository.Database.Model.AuctionRelated.Auction>> GetRangeInclude_Estate_Company(int start, int amount) 
 		{
             if (start < 0 || amount <= 0)
                 throw new ArgumentException("start, amount must > 0");

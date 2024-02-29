@@ -82,20 +82,27 @@ namespace Repository.Database
             });
             builder.Entity<Auction>(a => 
             {
-                a.HasOne(a => a.Estate).WithMany(e => e.Auctions).HasForeignKey(k => k.EstateId);
-            });
+                a.HasOne(a => a.Estate).WithMany(e => e.Auctions).HasForeignKey(k => k.EstateId); 
+				a.HasOne(a => a.AuctionReceipt).WithOne(a => a.Auction).HasForeignKey<AuctionReceipt>(a => a.AuctionId).IsRequired(true).OnDelete(DeleteBehavior.SetNull);
+			});
             builder.Entity<AuctionReceipt>(a => 
             {
-                a.HasOne(a => a.Auction).WithMany(a => a.AuctionReceipt).HasForeignKey(a => a.AuctionId).OnDelete(DeleteBehavior.SetNull);
                 a.HasOne(a=> a.Buyer).WithMany(a => a.AuctionsReceipt).HasForeignKey(a => a.BuyerId).OnDelete(DeleteBehavior.SetNull);
             });
+            builder.Entity<AuctionReceiptPayment>(a => 
+            {
+                a.HasKey(k => new { k.AccountId, k.ReceiptId });
+                a.HasOne(a => a.Account).WithMany(a => a.ReceiptPayments).HasForeignKey(a => a.AccountId);
+				a.HasOne(a => a.Receipt).WithMany(r => r.Payments).HasForeignKey(a => a.ReceiptId);
+                a.Property(a => a.PayTime).HasDefaultValue(DateTime.Now);
+			});
             builder.Entity<JoinedAuction>(j =>
 			{
 				var statusConverter = new EnumToStringConverter<JoinedAuctionStatus>();
 				j.HasKey(k => new { k.AccountId, k.AuctionId });
 				j.HasOne(j => j.Auction).WithMany(a => a.JoinedAccounts).HasForeignKey(j => j.AuctionId).OnDelete(DeleteBehavior.Cascade);
 				j.HasOne(j => j.Account).WithMany(a => a.JoinedAuctions).HasForeignKey(j => j.AccountId).OnDelete(DeleteBehavior.Cascade);
-                j.HasOne(j => j.Transaction).WithOne(t => t.RegisterAuction).HasForeignKey<JoinedAuction>(t => t.TransactionId).IsRequired(false);
+                //j.HasOne(j => j.Transaction).WithOne(t => t.RegisterAuction).HasForeignKey<JoinedAuction>(t => t.TransactionId).IsRequired(false);
 				j.Property(j => j.Status).HasConversion(statusConverter);
 			});
             builder.Entity<Bid>(b => 
@@ -107,7 +114,9 @@ namespace Repository.Database
             });
             builder.Entity<Estate>(e => 
             {
-                e.HasOne(e => e.Company).WithMany(c => c.OwnedEstate).HasForeignKey(k => k.CompanyId).OnDelete(DeleteBehavior.Restrict);
+				var statusConverter = new EnumToStringConverter<EstateStatus>();
+                e.Property(e => e.Status).HasConversion(statusConverter);
+				e.HasOne(e => e.Company).WithMany(c => c.OwnedEstate).HasForeignKey(k => k.CompanyId).OnDelete(DeleteBehavior.Restrict);
             });
             builder.Entity<EstateImages>(e => 
             {

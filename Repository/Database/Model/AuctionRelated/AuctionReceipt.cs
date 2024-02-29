@@ -18,7 +18,9 @@ namespace Repository.Database.Model.AuctionRelated
         public Auction? Auction { get; set; }
         public int? BuyerId { get; set; }
         public Account? Buyer { get; set; }
+        public IList<AuctionReceiptPayment>? Payments { get; set; }
         public decimal Amount { get; set; }
+        public decimal RemainAmount { get; set; }
         public decimal Commission { get; set; }
     }
 }

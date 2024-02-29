@@ -1,0 +1,75 @@
+﻿@page
+@model RazorAucionWebapp.Pages.CompanyPages.AuctionMng.UpdateModel
+
+@{
+    ViewData["Title"] = "Update";
+}
+
+<h1>Update</h1>
+
+<h4>Auction</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Auction.AuctionId" />
+            <div class="form-group">
+                <label asp-for="Auction.EstateId" class="control-label"></label>
+                <select asp-for="Auction.EstateId" class="form-control" asp-items="ViewBag.EstateId"></select>
+                <span asp-validation-for="Auction.EstateId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Auction.RegistrationDate" class="control-label"></label>
+                <input asp-for="Auction.RegistrationDate" class="form-control" />
+                <span asp-validation-for="Auction.RegistrationDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Auction.StartDate" class="control-label"></label>
+                <input asp-for="Auction.StartDate" class="form-control" />
+                <span asp-validation-for="Auction.StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Auction.EndDate" class="control-label"></label>
+                <input asp-for="Auction.EndDate" class="form-control" />
+                <span asp-validation-for="Auction.EndDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Auction.EntranceFee" class="control-label"></label>
+                <input asp-for="Auction.EntranceFee" class="form-control" />
+                <span asp-validation-for="Auction.EntranceFee" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Auction.WantedPrice" class="control-label"></label>
+                <input asp-for="Auction.WantedPrice" class="form-control" />
+                <span asp-validation-for="Auction.WantedPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Auction.IncrementPrice" class="control-label"></label>
+                <input asp-for="Auction.IncrementPrice" class="form-control" />
+                <span asp-validation-for="Auction.IncrementPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Auction.MaxParticipant" class="control-label"></label>
+                <input asp-for="Auction.MaxParticipant" class="form-control" />
+                <span asp-validation-for="Auction.MaxParticipant" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Auction.Status" class="control-label"></label>
+                <select asp-for="Auction.Status" class="form-control"></select>
+                <span asp-validation-for="Auction.Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

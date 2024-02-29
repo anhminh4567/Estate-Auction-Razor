@@ -53,17 +53,16 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
             {
                 return NotFound();
             }
-            var estate = await _estateServices.GetById(id.Value);
-            if (estate is not null)
-            {
-                Estate = estate;
-                var result = await _estateServices.Delete(Estate);
+            try {
+                var getEstate = await _estateServices.GetById(id.Value);
+                var result = await _estateServices.Delete(getEstate);
                 if(result is false)
-                {
-                    ModelState.AddModelError(string.Empty, "something wrong when delete");
-                    return Page();
-                }
-            }
+                    throw new Exception("something wrong when delete, it result in false");
+            }catch(Exception ex) 
+            {
+                Console.WriteLine(ex.Message);
+                return NotFound();
+            }            
             return RedirectToPage("./Index");
         }
     }
