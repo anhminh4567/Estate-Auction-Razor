@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using RazorAucionWebapp.MyAttributes;
 using Repository.Database;
 using Repository.Database.Model.RealEstate;
 using Service.Services.RealEstate;
@@ -48,13 +49,10 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
         [BindProperty]
         [Required]
         public float Length { get; set; }
-        // added property
+
         [BindProperty]
         [Required(ErrorMessage = "At least one estate category must be selected!")]
-        public string CheckedCategoriesBoxes { get; set; }
-        //[BindProperty]
-        //[Required]
-        public List<string> SeletedEstateCategoriesOptions { get; set; }
+        public List<string> SelectedEstateCategoriesOptions { get; set; }
         public List<SelectListItem> EstateCategoriesOptions { get; set; }
         [BindProperty]
         [Required]
@@ -69,7 +67,6 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
             {
                 GetCompanyId();
                 await PopulateData();
-                SeletedEstateCategoriesOptions = new List<string>(CheckedCategoriesBoxes.Split(','));
                 if (!ModelState.IsValid || Estate == null)
                 {
                     return Page();
@@ -85,7 +82,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
                     ModelState.AddModelError(string.Empty, "something wrong when create");
                     return Page();
                 }
-                foreach (var item in SeletedEstateCategoriesOptions)
+                foreach (var item in SelectedEstateCategoriesOptions)
                 {
                     var newCategories = new EstateCategories()
                     {

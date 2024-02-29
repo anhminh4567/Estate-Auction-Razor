@@ -45,13 +45,14 @@
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="CheckedCategoriesBoxes" class="control-label">Estate categories</label>
+            <label asp-for="SelectedEstateCategoriesOptions" class="control-label">Estate categories</label>
+            <input type="hidden" asp-for="SelectedEstateCategoriesOptions" />
             <div class="row">
                 @foreach (var item in Model.EstateCategoriesOptions)
                 {
                     <div class="col-md-3">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="@item.Value" name="cateOptions" value="@item.Value" onchange="updateValue()">
+                            <input class="form-check-input" type="checkbox" id="@item.Value" name="SelectedEstateCategoriesOptions" value="@item.Value">
                             <label class="form-check-label" for="@item.Value">
                                 @item.Text
                             </label>
@@ -59,8 +60,7 @@
                     </div>
                 }
             </div>
-            <span asp-validation-for="CheckedCategoriesBoxes" class="text-danger"></span>
-            <input id="inputtedCates" asp-for="CheckedCategoriesBoxes" style="visibility: hidden; height: 0;"/></br>
+            <span asp-validation-for="SelectedEstateCategoriesOptions" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label asp-for="Description" class="control-label">Description</label>
