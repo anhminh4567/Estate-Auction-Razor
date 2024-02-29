@@ -37,6 +37,13 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
             {
                 return NotFound();
             }
+            try {
+                await PopulateData(id.Value);
+            }catch (Exception ex) { 
+                Console.WriteLine(ex.Message);
+                //ModelState.AddModelError(string.Empty, ex.Message);
+                return NotFound();
+            }
             var getAuctionDetail = await _auctionService.GetInclude(id.Value, "Estate,Bids,AuctionReceipt.Account,JoinedAccounts.Account");
             if (getAuctionDetail is null) 
             {
@@ -44,6 +51,12 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
             }
             Auction = getAuctionDetail;
             return Page();
+        }
+        private async Task PopulateData(int id) 
+        {
+            var getAuctonDetail = await _auctionService.GetInclude(id, "Bids,JoinedAccounts,Estate");
+            if (getAuctonDetail is null)
+                throw new Exception("cant find Auctoin with such id");
         }
     }
 }

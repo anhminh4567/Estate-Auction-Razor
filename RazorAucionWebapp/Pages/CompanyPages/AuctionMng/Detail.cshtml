@@ -89,7 +89,7 @@
 							<p>@acc.Status</p>
 							<p>@acc.RegisterDate</p>
 							@*<p>@acc.RegiisterFee</p>*@
-							<button class="btn btn-primary">detail</button>
+							<button class="btn btn-primary">detail JoinedAccount</button>
 						</li>
 					}
 			}
@@ -98,18 +98,19 @@
 	<div class="AuctionReceipt">
 		<ul>
 			@{
-				if (Model.Auction.AuctionReceipt is not null && Model.Auction.JoinedAccounts.Count > 0)
-					foreach (var acc in Model.Auction.JoinedAccounts)
-					{
-						<li>
-							<p>@acc.Account.FullName</p>
-							<p>@acc.Account.Email</p>
-							<p>@acc.Status</p>
-							<p>@acc.RegisterDate</p>
-							@*<p>@acc.RegiisterFee</p>*@
-							<button class="btn btn-primary">detail</button>
-						</li>
-					}
+				if (Model.Auction.AuctionReceipt is not null)
+				{
+					var acc = Model.Auction.AuctionReceipt;
+					<li>
+						<p>@acc.Buyer.FullName</p>
+						<p>@acc.Buyer.Email</p>
+						<p>@acc.Commission</p>
+						<p>@acc.Amount</p>
+						<p>@acc.RemainAmount</p>
+						@*<p>@acc.RegiisterFee</p>*@
+						<button class="btn btn-primary">detail auctionReceipt</button>
+					</li>
+				}
 			}
 		</ul>
 	</div>

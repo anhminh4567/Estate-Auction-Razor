@@ -8,6 +8,6 @@ namespace Repository.Database.Model.Enum
 {
     public enum AuctionStatus
     {
-        NOT_STARTED, ONGOING, PENDING, SUCCESS, CANCELLED
+        NOT_STARTED, ONGOING, PENDING_PAYMENT, SUCCESS, CANCELLED
     }
 }

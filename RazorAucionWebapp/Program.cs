@@ -1,6 +1,8 @@
 global using Repository.Interfaces.AppAccount;
+using RazorAucionWebapp.BackgroundServices;
 using RazorAucionWebapp.Configure;
 using Repository.Database;
+using Repository.Database.Model.Enum;
 using Repository.Implementation;
 using Repository.Implementation.AppAccount;
 using Repository.Implementation.Auction;
@@ -9,11 +11,18 @@ using Repository.Interfaces;
 using Repository.Interfaces.Auction;
 using Repository.Interfaces.RealEstate;
 using Service.Services.VnpayService.VnpayUtility;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(opt => 
+{
+    //opt.Conventions.AuthorizeFolder("/AdminPages", "Admin");
+    //opt.Conventions.AuthorizeFolder("/CompanyPages", "Company");
+    //opt.Conventions.AuthorizeFolder("/Customer", "Customer");
+
+});
 
 builder.Services.AddDbContext<AuctionRealEstateDbContext>();
 
@@ -21,6 +30,8 @@ builder.Services.AddMyRepositories();
 builder.Services.AddMyServices();
 
 builder.Services.AddSingleton<ServerDefaultValue>();
+
+builder.Services.AddHostedService<CheckAuctionTimeWorker>();
 
 builder.Services.AddAuthentication("cookie")
     .AddCookie("cookie",options => 
@@ -31,6 +42,28 @@ builder.Services.AddAuthentication("cookie")
         options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
     });var app = builder.Build();
 
+//builder.Services.AddAuthorization(config =>
+//{
+//    config.AddPolicy("Admin", c =>
+//    {
+//        c.RequireAuthenticatedUser();
+//        c.RequireRole("ADMIN");
+//    });
+//    config.AddPolicy("Customer", c =>
+//    {
+//        c.RequireAuthenticatedUser();
+//        c.RequireRole("CUSTOMER");
+//    });
+//    config.AddPolicy("Company", c =>
+//    {
+//        c.RequireAuthenticatedUser();
+//        c.RequireRole("COMPANY");
+//    });
+//    config.AddPolicy("VerifiedUser", c =>
+//    {
+//        c.RequireClaim("IsVerified", "true");
+//    });
+//});
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

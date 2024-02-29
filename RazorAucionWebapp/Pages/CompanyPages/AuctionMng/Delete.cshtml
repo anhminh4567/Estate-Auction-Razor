@@ -12,12 +12,12 @@
     <h4>Auction</h4>
     <hr />
     <dl class="row">
-        <dt class="col-sm-2">
+        @*<dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Auction.Estate)
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Auction.Estate.Description)
-        </dd>
+        </dd>*@
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Auction.RegistrationDate)
         </dt>
@@ -66,11 +66,36 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Auction.Status)
         </dd>
+        <div>
+            <div>Status is: @Model.Auction.Status</div>
+            @{
+                if (Model.Auction.Status.Equals(Repository.Database.Model.Enum.AuctionStatus.CANCELLED))
+                {
+                    <div class="text-danger">You have alreay cancelled this auction, no more action is required</div>
+                }
+                else if (Model.Auction.Status.Equals(Repository.Database.Model.Enum.AuctionStatus.SUCCESS))
+                {
+                    <div class="text-danger">CANNOT DELETE, THIS AUCTION IS FINISHED</div>
+                }
+                else if (Model.Auction.Status.Equals(Repository.Database.Model.Enum.AuctionStatus.PENDING_PAYMENT))
+                {
+                    <div class="text-danger">This auction is being paid by someone, please consult him/her before delete</div>
+                }
+                else if (Model.Auction.Status.Equals(Repository.Database.Model.Enum.AuctionStatus.ONGOING))
+                {
+                    <div class="text-danger">This auction is on going by bidder, end this will result in your repuational damage</div>
+                }
+                else
+                {
+                    <div class="text-danger">are you sure want to stop this auction, it hasn't begun yet</div>
+                }
+            }
+            <form method="post">
+                <input type="hidden" asp-for="Auction.AuctionId" />
+                <input type="submit" value="Delete" class="btn btn-danger" /> |
+                <a asp-page="./Index">Back to List</a>
+            </form>
+        </div>
+
     </dl>
-    
-    <form method="post">
-        <input type="hidden" asp-for="Auction.AuctionId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-page="./Index">Back to List</a>
-    </form>
 </div>

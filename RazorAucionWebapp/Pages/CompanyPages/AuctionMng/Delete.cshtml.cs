@@ -7,57 +7,75 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Repository.Database;
 using Repository.Database.Model.AuctionRelated;
+using Service.Services.Auction;
+using Service.Services.RealEstate;
 
 namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
 {
     public class DeleteModel : PageModel
     {
-        private readonly Repository.Database.AuctionRealEstateDbContext _context;
+        private readonly AuctionServices _auctionServices;
+        private readonly EstateServices _estateServices;
 
-        public DeleteModel(Repository.Database.AuctionRealEstateDbContext context)
+        public DeleteModel(AuctionServices auctionServices, EstateServices estateServices)
         {
-            _context = context;
+            _auctionServices = auctionServices;
+            _estateServices = estateServices;
         }
 
         [BindProperty]
-      public Auction Auction { get; set; } = default!;
-
+        public Auction Auction { get; set; } = default!;
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Auctions == null)
+            if (id == null)
             {
                 return NotFound();
             }
-
-            var auction = await _context.Auctions.FirstOrDefaultAsync(m => m.AuctionId == id);
-
-            if (auction == null)
+            try
             {
-                return NotFound();
+                var auction = await _auctionServices.GetById(id.Value);
+                if (auction is null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    Auction = auction;
+                }
             }
-            else 
+            catch (Exception ex) 
             {
-                Auction = auction;
+                Console.WriteLine(ex.Message);
+                return BadRequest(ex.Message);
             }
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (id == null || _context.Auctions == null)
+            if (id is null)
             {
                 return NotFound();
             }
-            var auction = await _context.Auctions.FindAsync(id);
-
-            if (auction != null)
+            try 
             {
+                var auction = await _auctionServices.GetById(id.Value);
+                if (auction is null)
+                {
+                    return NotFound();
+                }
                 Auction = auction;
-                _context.Auctions.Remove(Auction);
-                await _context.SaveChangesAsync();
+                var result = await _auctionServices.Delete(Auction);
+                if (result is false)
+                    throw new Exception("cannot set new status for this one, something wrong with it");
+                return RedirectToPage("./Index");
             }
-
-            return RedirectToPage("./Index");
+            catch(Exception ex) 
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest();
+            }
+            
         }
     }
 }
