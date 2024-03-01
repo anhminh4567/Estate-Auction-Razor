@@ -2,3 +2,109 @@
 @model DetailAuctionModel
 @{
 }
+<div class="container">
+	<h4>Auction Detail</h4>
+	<div>
+		<div class="text-danger" asp-validation-summary="ModelOnly"></div>
+		<div class="auction">
+			<p>start: @Model.Auction.StartDate</p>
+			<p>end: @Model.Auction.EndDate</p>
+			<p>bid jump: @Model.Auction.IncrementPrice</p>
+			<p>wanted price: @Model.Auction.WantedPrice</p>
+			<p>max joined : @Model.Auction.MaxParticipant</p>
+			<p class="text-danger fw-bold">@Model.Auction.Status.ToString()</p>
+		</div>
+		<h4>Estate Detail</h4>
+		<div class="Estate">
+			<p>name: @Model.Auction.Estate.Name</p>
+			<p>des: @Model.Auction.Estate.Description</p>
+			<p>width: @Model.Auction.Estate.Width</p>
+			<p>length: @Model.Auction.Estate.Length</p>
+			<p>category:</p>
+			@{
+				if (Model.Auction.Estate.EstateCategory is not null && Model.Auction.Estate.EstateCategory.Count > 0)
+				{
+					foreach (var categoryDetail in Model.Auction.Estate.EstateCategory)
+					{
+						<div class="d-inline">
+							<p class=" p-3 m-3 text-primary border border-2 d-inline">@categoryDetail.CategoryDetail.CategoryName</p>
+						</div>
+					}
+				}
+				else
+				{
+					<div>
+						<p class="text-danger">No Category, something wrong</p>
+					</div>
+				}
+			}
+			<p class="text-danger">Images: GO HERE, FRONTEND TAKE CARE DISPLAYING </p>
+			@{
+
+			}
+		</div>
+		<h4>Bids Detail</h4>
+		<div class="Bids">
+			@{
+				if (Model.Auction.Bids is not null && Model.Auction.Bids.Count > 0)
+				{
+					foreach (var bid in Model.Auction.Bids)
+					{
+						<div class="bidder-and-bid">
+							<p class="d-inline p-3 m-3 text-primary">amount: @bid.Amount</p>
+							<p class="d-inline p-3 m-3 text-primary">amount: @bid.Time</p>
+							<p class="d-inline p-3 m-3 text-primary">amount: @bid.Bidder.FullName</p>
+						</div>
+					}
+				}
+				else
+				{
+					<div>
+						<p class="text-danger">no bid is placed yet</p>
+					</div>
+				}
+			}
+		</div>
+		<h4>Joined Detail</h4>
+		<div class="JoinedAccount">
+			@{
+				if (Model.Auction.JoinedAccounts is not null && Model.Auction.JoinedAccounts.Count > 0)
+				{
+					foreach (var joinedAccount in Model.Auction.JoinedAccounts)
+					{
+						<div class="bidder-and-bid">
+							<p class="d-inline p-3 m-3 text-primary">name: @joinedAccount.Account.FullName</p>
+							<p class="d-inline p-3 m-3 text-primary">amount: @joinedAccount.Account.Email</p>
+							<p class="d-inline p-3 m-3 text-primary">amount: @joinedAccount.RegisterDate</p>
+							<p class="d-inline p-3 m-3 text-primary">amount: @joinedAccount.Status.ToString()</p>
+						</div>
+					}
+				}
+				else
+				{
+					<div>
+						<p class="text-danger">no one join yet</p>
+					</div>
+				}
+			}
+		</div>
+	</div>
+	<hr />
+	<div class="row">
+		<div class="d-inline">
+			<a class="d-inline btn btn-primary p-2" asp-page="./BidAuction" asp-route-auctionId="@Model.Auction.AuctionId">Go to bid page</a>
+			<a class="d-inline btn btn-secondary p-2" asp-page="./JoinAuction" asp-route-id="@Model.Auction.AuctionId">Join Auction !</a>
+		</div>
+	</div>
+</div>
+
+
+@* <div>
+    <a asp-page="Index">Back to List</a>
+</div> *@
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

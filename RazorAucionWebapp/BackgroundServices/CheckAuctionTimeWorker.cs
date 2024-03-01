@@ -41,7 +41,7 @@ namespace RazorAucionWebapp.BackgroundServices
                 a.Status.Equals(AuctionStatus.ONGOING));
                 foreach ( var auc in getAll ) 
                 { 
-                    if(auc.Status.Equals(AuctionStatus.NOT_STARTED) && auc.StartDate.CompareTo(DateTime.Now) >= 0) 
+                    if(auc.Status.Equals(AuctionStatus.NOT_STARTED) && auc.StartDate.CompareTo(DateTime.Now) <= 0) 
                     {
                         auc.Status = AuctionStatus.ONGOING; // chane from not started to ready 
                     }
@@ -60,6 +60,7 @@ namespace RazorAucionWebapp.BackgroundServices
                             auc.Status = AuctionStatus.PENDING_PAYMENT; //waiting for payment
                         }
                     }
+                    var tryUpdte = await auctionService.Update( auc );  
                 }
             }
         }

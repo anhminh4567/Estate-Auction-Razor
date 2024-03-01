@@ -19,7 +19,7 @@ namespace RazorAucionWebapp.MyAttributes
 			if (value is null) return false;
 			var tryParseDate = DateTime.TryParse(value.ToString(),out var parsedDate);
 			if (tryParseDate is false) return false;
-			var compareResult = DateTime.Compare(parsedDate.Date, DateTime.Now.Date);
+			var compareResult = DateTime.Compare(parsedDate, DateTime.Now);
 			switch (compareResult) 
 			{
 				case <= 0:
@@ -30,7 +30,7 @@ namespace RazorAucionWebapp.MyAttributes
 			}
 			if(IsAfterThisDate is not null) 
 			{
-				var compareResult2 = DateTime.Compare(parsedDate.Date, IsAfterThisDate.Value.Date);
+				var compareResult2 = DateTime.Compare(parsedDate, IsAfterThisDate.Value);
 				switch (compareResult2)
 				{
 					case <= 0:

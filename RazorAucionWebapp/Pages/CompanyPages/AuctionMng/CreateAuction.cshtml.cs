@@ -49,7 +49,10 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
 		[BindProperty]
 		[Required]
 		public decimal IncrementPrice { get; set; }
-		[BindProperty]
+        [BindProperty]
+        [Required]
+        public decimal EntranceFee { get; set; }
+        [BindProperty]
 		[Required]
 		public int MaxParticipant { get; set; }
 		[BindProperty]
@@ -73,7 +76,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
 				{
 					return Page();
 				}
-				int comparison = DateTime.Compare(EndDate.Date, StartDate.Date);
+				int comparison = DateTime.Compare(EndDate, StartDate);
 				if (comparison <= 0)
 				{
 					ModelState.AddModelError(string.Empty, "EndDate is <= StartDate");
@@ -86,6 +89,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
 					EndDate = EndDate,
 					EstateId = SelectedEstate,
 					IncrementPrice = IncrementPrice,
+					EntranceFee = EntranceFee,
 					MaxParticipant = MaxParticipant,
 					WantedPrice = WantedPrice,
 					Status = AuctionStatus.NOT_STARTED,

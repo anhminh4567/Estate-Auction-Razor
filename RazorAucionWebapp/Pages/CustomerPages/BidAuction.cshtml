@@ -2,84 +2,114 @@
 @model RazorAucionWebapp.Pages.CustomerPages.BidAuctionModel
 
 @{
-    ViewData["Title"] = "BidAuction";
+	ViewData["Title"] = "BidAuction";
 }
 
 <div class="container">
-    <h4>Auction Detail</h4>
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Auction.Estate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Auction.Estate.Description)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Auction.RegistrationDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Auction.RegistrationDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Auction.StartDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Auction.StartDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Auction.EndDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Auction.EndDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Auction.WantedPrice)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Auction.WantedPrice)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Auction.IncrementPrice)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Auction.IncrementPrice)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Auction.MaxParticipant)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Auction.MaxParticipant)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Auction.Status)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Auction.Status)
-        </dd>
-    </dl>
+	<h4>Auction Detail</h4>
+	<div>
+		<div class="text-danger" asp-validation-summary="ModelOnly"></div>
+		<input type="hidden" asp-for="AuctionID"/>
+		<div class="auction">
+			<p>start: @Model.Auction.StartDate</p>
+			<p>end: @Model.Auction.EndDate</p>
+			<p>bid jump: @Model.Auction.IncrementPrice</p>
+			<p>wanted price: @Model.Auction.WantedPrice</p>
+			<p>max joined : @Model.Auction.MaxParticipant</p>
+			<p class="text-danger fw-bold">@Model.Auction.Status.ToString()</p>
+		</div>
+		<h4>Estate Detail</h4>
+		<div class="Estate">
+			<p>name: @Model.Auction.Estate.Name</p>
+			<p>des: @Model.Auction.Estate.Description</p>
+			<p>width: @Model.Auction.Estate.Width</p>
+			<p>length: @Model.Auction.Estate.Length</p>
+			<p>category:</p>
+			@{
+				if (Model.Auction.Estate.EstateCategory is not null && Model.Auction.Estate.EstateCategory.Count > 0)
+				{
+					foreach (var categoryDetail in Model.Auction.Estate.EstateCategory)
+					{
+						<div class="d-inline">
+							<p class=" p-3 m-3 text-primary border border-2 d-inline">@categoryDetail.CategoryDetail.CategoryName</p>
+						</div>
+					}
+				}
+				else
+				{
+					<div>
+						<p class="text-danger">No Category, something wrong</p>
+					</div>
+				}
+			}
+			<p class="text-danger">Images: GO HERE, FRONTEND TAKE CARE DISPLAYING </p>
+			@{
 
-    <h4>Bidding</h4>
-    <hr />
-    <div class="row">
-        <div class="col-md-4">
-            <form method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group mb-3">
-                    <label asp-for="Bid.Amount" class="control-label"></label>
-                    <input asp-for="Bid.Amount" class="form-control" />
-                    <span asp-validation-for="Bid.Amount" class="text-danger"></span>
-                </div>
-                <div class="form-group mb-3">
-                    <label asp-for="Bid.Time" class="control-label"></label>
-                    <input asp-for="Bid.Time" class="form-control" disabled value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffff")" />
-                    <span asp-validation-for="Bid.Time" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Place Bid" class="btn btn-primary" />
-                </div>
-            </form>
-        </div>
-    </div>
+			}
+		</div>
+		<h4>Bids Detail</h4>
+		<div class="Bids">
+			@{
+				if (Model.Auction.Bids is not null && Model.Auction.Bids.Count > 0)
+				{
+					foreach (var bid in Model.Auction.Bids)
+					{
+						<div class="bidder-and-bid">
+							<p class="d-inline p-3 m-3 text-primary">amount: @bid.Amount</p>
+							<p class="d-inline p-3 m-3 text-primary">amount: @bid.Time</p>
+							<p class="d-inline p-3 m-3 text-primary">amount: @bid.Bidder.FullName</p>
+						</div>
+					}
+				}
+				else
+				{
+					<div>
+						<p class="text-danger">no bid is placed yet</p>
+					</div>
+				}
+			}
+		</div>
+		<h4>Joined Detail</h4>
+		<div class="JoinedAccount">
+			@{
+				if (Model.Auction.JoinedAccounts is not null && Model.Auction.JoinedAccounts.Count > 0)
+				{
+					foreach (var joinedAccount in Model.Auction.JoinedAccounts)
+					{
+						<div class="bidder-and-bid">
+							<p class="d-inline p-3 m-3 text-primary">name: @joinedAccount.Account.FullName</p>
+							<p class="d-inline p-3 m-3 text-primary">amount: @joinedAccount.Account.Email</p>
+							<p class="d-inline p-3 m-3 text-primary">amount: @joinedAccount.RegisterDate</p>
+							<p class="d-inline p-3 m-3 text-primary">amount: @joinedAccount.Status.ToString()</p>
+						</div>
+					}
+				}
+				else
+				{
+					<div>
+						<p class="text-danger">no one join yet</p>
+					</div>
+				}
+			}
+		</div>
+	</div>
+	<h4>Bidding</h4>
+	<hr />
+	<div class="row">
+		<div class="col-md-4 border border-3 p-3 m-3">
+			<form method="post">
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+				<div class="form-group mb-3">
+					<label asp-for="Amount" class="control-label"></label>
+					<input asp-for="Amount" class="form-control" />
+					<span asp-validation-for="Amount" class="text-danger"></span>
+				</div>
+				<div class="form-group">
+					<input type="submit" value="Place Bid" class="btn btn-primary" />
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
 
 
@@ -88,5 +118,7 @@
 </div> *@
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
 }

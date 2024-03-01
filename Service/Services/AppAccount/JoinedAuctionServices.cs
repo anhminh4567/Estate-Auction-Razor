@@ -18,9 +18,12 @@ namespace Service.Services.AppAccount
         {
             _joinedAuctionRepository = joinedAuctionRepository;
         }
-        public async Task<List<JoinedAuction>> GetByAuctionId(int auctionId) 
+        public async Task<List<JoinedAuction>> GetByAuctionId(int auctionId, bool isInclude = false, string includeProperties = null) 
         {
-            return await _joinedAuctionRepository.GetByCondition(j => j.AuctionId == auctionId);
+            if (isInclude && string.IsNullOrEmpty(includeProperties) == false) 
+                return await _joinedAuctionRepository.GetByCondition(j => j.AuctionId == auctionId,includeProperties:  includeProperties);
+            else 
+                return await _joinedAuctionRepository.GetByCondition(j => j.AuctionId == auctionId);
         }
         public async Task<List<JoinedAuction>> GetByAuctionId_Status(int auctionId, JoinedAuctionStatus status)
         {

@@ -16,15 +16,5 @@ namespace Repository.Implementation.Auction
 		public BidRepository(AuctionRealEstateDbContext context) : base(context)
 		{
 		}
-
-		public async Task<List<Bid>> GetByAccountId(int accountId)
-		{
-			return await _set.Where(b => b.BidderId.Equals(accountId)).ToListAsync();
-		}
-
-		public async Task<List<Bid>> GetByAuctionId(int auctionId)
-		{
-			return await _set.Where(b => b.AuctionId == auctionId).ToListAsync();
-		}
 	}
 }

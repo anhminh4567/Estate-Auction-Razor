@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Service.Services.VnpayService.Model;
 using Service.Services.VnpayService.VnpayUtility;
 
-namespace RazorAucionWebapp.Pages.Transaction
+namespace RazorAucionWebapp.Pages.Vnpay
 {
     public class ReturnModel : PageModel
     {

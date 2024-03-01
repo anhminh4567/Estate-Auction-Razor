@@ -28,6 +28,8 @@ namespace RazorAucionWebapp.Configure
 
 			services.AddScoped<ITransactionRepository, TransactionRepository>();
 			services.AddScoped<IImagesRepository, ImageRepository>();
+
+			services.AddScoped<IAuctionReceiptPaymentRepository, AuctionReceiptPaymentRepository>();
 			return services;
 		}
 	}

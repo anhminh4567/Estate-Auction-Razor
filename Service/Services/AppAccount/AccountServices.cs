@@ -31,6 +31,12 @@ namespace Service.Services.AppAccount
 		{
 			return await _accountRepository.GetByEmailPassword(email, password);
 		}
+		public async Task<Account?> GetInclude(int accountId, string includeProperties = "")
+		{
+			if (accountId == 0) 
+				throw new ArgumentNullException(nameof(accountId));
+			return (await _accountRepository.GetByCondition(a => a.AccountId == accountId, includeProperties: includeProperties)).FirstOrDefault();
+		}
 		public async Task<bool> IsEmailExisted(string email) 
 		{
 			var getAcc = await GetByEmail(email);

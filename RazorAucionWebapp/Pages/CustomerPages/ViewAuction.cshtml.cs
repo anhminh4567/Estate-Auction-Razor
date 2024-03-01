@@ -32,7 +32,8 @@ namespace RazorAucionWebapp.Pages.CustomerPages
 		private void GetUserId()
         {
             var result = int.TryParse(HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("Id"))?.Value, out int userId);
-            if(result is false) throw new Exception("Unauthorized User");
+            if(result is false) 
+                throw new Exception("Unauthorized User");
             UserId = userId;
         }
         private async Task PopulateData() 

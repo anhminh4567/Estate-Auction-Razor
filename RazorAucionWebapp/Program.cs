@@ -26,13 +26,13 @@ builder.Services.AddSingleton<ServerDefaultValue>();
 builder.Services.AddHostedService<CheckAuctionTimeWorker>();
 
 builder.Services.AddAuthentication("cookie")
-    .AddCookie("cookie",options => 
+    .AddCookie("cookie", options =>
     {
-        options.LoginPath = "/Login";
+        options.LoginPath = "/Registration/Login";
         options.LogoutPath = "/Logout";
         options.AccessDeniedPath = "/Unauthorized";
         options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-    });var app = builder.Build();
+    });
 
 //builder.Services.AddAuthorization(config =>
 //{
@@ -56,6 +56,7 @@ builder.Services.AddAuthentication("cookie")
 //        c.RequireClaim("IsVerified", "true");
 //    });
 //});
+ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -68,6 +69,12 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.Use( async (context, next) => 
+{
+    await next(context);
+    if (context.Response.StatusCode == StatusCodes.Status401Unauthorized)
+        context.Response.Redirect("/Unauthorized");
+});
 app.UseAuthentication();
 app.UseAuthorization();
 

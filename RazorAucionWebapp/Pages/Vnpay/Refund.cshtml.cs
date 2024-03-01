@@ -5,7 +5,7 @@ using Service.Services.VnpayService.Model;
 using Service.Services.VnpayService.VnpayUtility;
 using System.Diagnostics;
 
-namespace RazorAucionWebapp.Pages.Transaction
+namespace RazorAucionWebapp.Pages.Vnpay
 {
     public class RefundModel : PageModel
     {

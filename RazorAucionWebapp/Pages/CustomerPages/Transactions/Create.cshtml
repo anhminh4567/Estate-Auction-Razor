@@ -1,0 +1,63 @@
+﻿@page
+@model RazorAucionWebapp.Pages.CustomerPages.Transactions.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Transaction</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Transaction.AccountId" class="control-label"></label>
+                <select asp-for="Transaction.AccountId" class ="form-control" asp-items="ViewBag.AccountId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Transaction.Status" class="control-label"></label>
+                <select asp-for="Transaction.Status" class="form-control"></select>
+                <span asp-validation-for="Transaction.Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Transaction.vnp_TxnRef" class="control-label"></label>
+                <input asp-for="Transaction.vnp_TxnRef" class="form-control" />
+                <span asp-validation-for="Transaction.vnp_TxnRef" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Transaction.vnp_Amount" class="control-label"></label>
+                <input asp-for="Transaction.vnp_Amount" class="form-control" />
+                <span asp-validation-for="Transaction.vnp_Amount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Transaction.vnp_TransactionDate" class="control-label"></label>
+                <input asp-for="Transaction.vnp_TransactionDate" class="form-control" />
+                <span asp-validation-for="Transaction.vnp_TransactionDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Transaction.vnp_OrderInfo" class="control-label"></label>
+                <input asp-for="Transaction.vnp_OrderInfo" class="form-control" />
+                <span asp-validation-for="Transaction.vnp_OrderInfo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Transaction.vnp_PayDate" class="control-label"></label>
+                <input asp-for="Transaction.vnp_PayDate" class="form-control" />
+                <span asp-validation-for="Transaction.vnp_PayDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

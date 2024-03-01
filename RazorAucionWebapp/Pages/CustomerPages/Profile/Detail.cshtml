@@ -1,0 +1,36 @@
+﻿@page
+@model RazorAucionWebapp.Pages.CustomerPages.Profile.DetailModel
+
+@{
+	ViewData["Title"] = "Detail";
+}
+
+<h1>Detail</h1>
+
+<div class="border border-2 m-3 p-3">
+	<h4>Account</h4>
+	<hr />
+	<div>
+		<p>Email: @Model.Account.Email</p>
+		<p>Fullname: @Model.Account.FullName</p>
+		<p>CMND: @Model.Account.CMND</p>
+		<p>DOB: @Model.Account.Dob</p>
+		<p>Status:@Model.Account.Status.ToString()</p>
+		@if(Model.Account.IsVerified == 0)
+		{
+			<p>verified: IS VERIFIED</p>
+		}
+		else
+		{
+			<p>verified: IS NOT VERIFIED (unable to do anything unless verified)</p>
+		}
+
+		<p>Balance in account: @Model.Account.Balance</p>
+	</div>
+</div>
+<div class="border border-2 m-3 p-3">
+	<a href="#" class="btn btn-primary">Previous Auction Joined</a> |
+	<a href="#" class="btn btn-primary">Fill Your Waller (transaction) </a>
+	<a href="#" class="btn btn-primary">Edit</a> |
+	<a asp-page="../../Index" class="btn btn-primary">Back to view</a>
+</div>
