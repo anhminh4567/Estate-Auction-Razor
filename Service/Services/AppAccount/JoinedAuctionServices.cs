@@ -47,6 +47,8 @@ namespace Service.Services.AppAccount
 		}
 		public async Task<bool> CheckIfUserIsQualifiedToJoin(Account account, Repository.Database.Model.AuctionRelated.Auction auction) //supplement the above function
 		{
+			if (account.Role.Equals(Role.CUSTOMER) is false)
+				return false;
 			if ((await CheckIfUserHasJoinedTheAuction(account, auction)) is false)
 				return true;
 			// CHECK USER ACCOUNT STATUS
