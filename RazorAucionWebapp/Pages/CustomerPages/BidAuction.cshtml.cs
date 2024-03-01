@@ -75,18 +75,35 @@ namespace RazorAucionWebapp.Pages.CustomerPages
                     ModelState.AddModelError(string.Empty, "user has not joined auction yet to bid");
                     return Page();
                 }
+                ////////////// HIGHER THAN TOP BID /////////////
                 if (Amount <= HighestBid?.Amount)
                 {
                     ModelState.AddModelError(string.Empty, "your cannot place a bit lower than the top dog");
                     return Page();
                 }
-                var compareToBidJump = (Amount - HighestBid?.Amount) >= Auction.IncrementPrice;
-                if(compareToBidJump is false) 
+				////////////// CHECK IF BID IS VALID AGAINST AUCTION CONDITION /////////////
+				if (HighestBid is not null)
                 {
-                    ModelState.AddModelError(string.Empty, "your bid must match increament price condition");
-                    return Page();
+					var compareToBidJump = (Amount - HighestBid?.Amount) >= Auction.IncrementPrice;
+					if (compareToBidJump is false)
+					{
+						ModelState.AddModelError(string.Empty, "your bid must match increament price condition");
+						return Page();
+					}
                 }
-                var createResult = await _bidServices.Create(new Bid()
+                else
+                {
+                    var compareToBidJump_FirstBidder = Amount >= Auction.IncrementPrice;
+					if (compareToBidJump_FirstBidder is false)
+					{
+						ModelState.AddModelError(string.Empty, "your bid must match increament price condition");
+						return Page();
+					}
+				}
+				////////////// CHECK IF BID IS VALID AGAINST AUCTION CONDITION /////////////
+
+				///////////// ADD TO DB /////////////
+				var createResult = await _bidServices.Create(new Bid()
                 {
                     BidderId = _bidderId,
                     AuctionId = AuctionID,

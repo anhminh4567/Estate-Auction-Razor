@@ -8,6 +8,6 @@ namespace Repository.Database.Model.Enum
 {
 	public enum JoinedAuctionStatus
 	{
-		PENDING, REGISTERED, QUIT, BANNED
+		 REGISTERED, QUIT, BANNED
 	}
 }

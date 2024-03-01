@@ -1,10 +1,18 @@
-﻿@page
+﻿@page "{handler?}"
 @model RazorAucionWebapp.Pages.Vnpay.ReturnModel
 @{
 }
 <div class="text-danger" asp-validation-summary="ModelOnly">
 </div>
+
 @{
+	var messageTeestReesult = ViewBag.SuccessTransactionTest;
+	if (messageTeestReesult is not null)
+	{
+		<div>
+			<p class="text-success">@messageTeestReesult</p>
+		</div>
+	}
 	var result = Model.VnpayResult;
 	if (result is not null)
 	{

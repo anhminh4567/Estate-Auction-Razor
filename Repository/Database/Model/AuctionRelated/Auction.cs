@@ -28,6 +28,7 @@ namespace Repository.Database.Model.AuctionRelated
         public int MaxParticipant { get; set; }
         public AuctionStatus Status { get; set; }
         public IList<Bid> Bids { get; set; }
+        public int? ReceiptId { get; set; }
         public AuctionReceipt? AuctionReceipt { get; set; }
         public IList<JoinedAuction>? JoinedAccounts { get; set;}
     }

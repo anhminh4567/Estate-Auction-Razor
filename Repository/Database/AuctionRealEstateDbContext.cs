@@ -108,7 +108,7 @@ namespace Repository.Database
             builder.Entity<Bid>(b => 
             {
                 b.ToTable("Bids");
-                b.HasKey(ck => new { ck.BidderId, ck.AuctionId});
+                //b.HasAlternateKey(ck => new { ck.BidderId, ck.AuctionId});
                 b.HasOne(b =>b.Bidder).WithMany(a => a.Bids).HasForeignKey(b => b.BidderId).OnDelete(DeleteBehavior.Cascade);
                 b.HasOne(b=> b.Auction).WithMany(a => a.Bids).HasForeignKey(b => b.AuctionId).OnDelete(DeleteBehavior.Cascade);
             });

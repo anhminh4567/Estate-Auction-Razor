@@ -18,11 +18,13 @@ namespace Service.Services
 		{
 			_transactionRepository = transactionRepository;
 		}
-		public async Task<Transaction?> Get(int id, bool includeAccountDetails = false) 
+		public async Task<Transaction?> GetById(int id) 
 		{
-			if(includeAccountDetails is false) 
-				return await _transactionRepository.GetAsync(id);
-			return await _transactionRepository.GetFullAsync(id); 
+			return await _transactionRepository.GetAsync(id);
+		}
+		public async Task<Transaction?> GetInclude(int id, string includeProperties) 
+		{
+			return (await _transactionRepository.GetByCondition(t => t.TransactionId == id,includeProperties: includeProperties)).FirstOrDefault();
 		}
 		public  async Task<List<Transaction>?> GetByAccountId(int accountId) 
 		{
@@ -46,7 +48,7 @@ namespace Service.Services
 		}
 		public async Task<bool> Delete(int id) 
 		{
-			var getTransaction = await Get(id);
+			var getTransaction = await GetById(id);
 			if (getTransaction is null) 
 				return false;
 			return await Delete(getTransaction);

@@ -29,14 +29,24 @@ namespace RazorAucionWebapp.Configure
 
             services.AddScoped<JoinedAuctionServices>();
             services.AddScoped<AuctionServices>();
-			services.AddScoped<AuctionReceiptServices>();	
+			services.AddScoped<AuctionReceiptServices>();
 
+			services.AddScoped<TransactionServices>();
 
 			services.AddScoped<CompanyServices>();
 			services.AddScoped<AccountServices>();
-
 			
+			services.AddVnpayServices();
 
+			return services;
+		}
+		private static IServiceCollection AddVnpayServices(this IServiceCollection services) {
+			services.AddScoped<VnpayBuildUrl>();
+			services.AddScoped<VnpayQuery>();
+			services.AddScoped<VnpayRefund>();
+			services.AddScoped<VnpayReturn>();
+
+			services.AddScoped<VnpayAvailableServices>();
 			return services;
 		}
 	}
