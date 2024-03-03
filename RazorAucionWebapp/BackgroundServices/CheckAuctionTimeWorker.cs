@@ -1,4 +1,5 @@
 ﻿using Repository.Database;
+using Repository.Database.Model.AuctionRelated;
 using Repository.Database.Model.Enum;
 using Service.Services.Auction;
 
@@ -36,7 +37,9 @@ namespace RazorAucionWebapp.BackgroundServices
             using (var scope = ServiceProvider.CreateScope()) 
             {
                 var auctionService = scope.ServiceProvider.GetRequiredService<AuctionServices>();
-                var getAll = await auctionService.GetWithCondition(a =>
+				var bidServices = scope.ServiceProvider.GetRequiredService<BidServices>();
+                var auctionRecieptService = scope.ServiceProvider.GetRequiredService<AuctionReceiptServices>();
+				var getAll = await auctionService.GetWithCondition(a =>
                 a.Status.Equals(AuctionStatus.NOT_STARTED) ||
                 a.Status.Equals(AuctionStatus.ONGOING));
                 foreach ( var auc in getAll ) 
@@ -45,9 +48,9 @@ namespace RazorAucionWebapp.BackgroundServices
                     {
                         auc.Status = AuctionStatus.ONGOING; // chane from not started to ready 
                     }
-                    if(auc.Status.Equals(AuctionStatus.ONGOING) && auc.EndDate.CompareTo(DateTime.Now) >= 0) 
+                    if(auc.Status.Equals(AuctionStatus.ONGOING) && auc.EndDate.CompareTo(DateTime.Now) <= 0) 
                     {
-                        var getFullDetail = await auctionService.GetInclude(auc.AuctionId, "JoinedAccounts,Bids");
+                        var getFullDetail = await auctionService.GetInclude(auc.AuctionId, "JoinedAccounts,Bids,Estate");
                         if(getFullDetail.Bids is null ||
                             getFullDetail.JoinedAccounts is null ||
                             getFullDetail.Bids.Count() == 0 ||
@@ -58,6 +61,24 @@ namespace RazorAucionWebapp.BackgroundServices
                         else 
                         {
                             auc.Status = AuctionStatus.PENDING_PAYMENT; //waiting for payment
+                            var getHighestBid = await bidServices.GetHighestBids(auctionId: auc.AuctionId);
+                            if (getHighestBid is null)
+                                auc.Status = AuctionStatus.CANCELLED;// cancelled if no bid is placed
+                            else
+                            {
+                                var newWinnder = new AuctionReceipt()
+                                {
+                                    AuctionId = auc.AuctionId,
+                                    BuyerId = getHighestBid.BidderId,
+                                    Amount = getHighestBid.Amount,
+                                    RemainAmount = getHighestBid.Amount - 0,
+                                    Commission = getHighestBid.Amount * (1 / 100), // GET THIS FROM APPSETTING.JSON
+                                };
+                                var createResult = await auctionRecieptService.Create(newWinnder);
+                                if (createResult is null)
+                                    throw new Exception("something wrong when creating new reciept, in backgroundService");
+                               // auc.Estate.Status = EstateStatus.FINISHED;
+                            }
                         }
                     }
                     var tryUpdte = await auctionService.Update( auc );  

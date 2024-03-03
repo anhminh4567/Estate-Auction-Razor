@@ -59,6 +59,11 @@ namespace RazorAucionWebapp.Pages.CustomerPages
 						ModelState.AddModelError(string.Empty, "auction is not happening");
 						return Page();
 					}
+					if(Auction.JoinedAccounts.Count >= Auction.MaxParticipant)
+					{
+						ModelState.AddModelError(string.Empty, "reach max participant");
+						return Page();
+					}
 					var isValidToJoin = await _joinedAuctionServices.CheckIfUserIsQualifiedToJoin(Account,Auction);
 					if(isValidToJoin == false)
 					{

@@ -32,13 +32,13 @@ namespace Repository.Database
         public DbSet<EstateImages> EstateImages { get; set; }
         public DbSet<Auction> Auctions { get; set; }
         public DbSet<AuctionReceipt> AuctionReceipts { get; set; }
+        public DbSet<AuctionReceiptPayment> AuctionReceiptPayments { get; set; }
         public DbSet<JoinedAuction> JoinedAuctions { get; set; }
         public DbSet<Bid> BidLogs { get; set; }
         public DbSet<Estate> Estates { get; set; }
         public DbSet<EstateCategories> EstateCategories { get; set; }
         public DbSet<EstateCategoryDetail> EstateCategoryDetails { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
@@ -91,9 +91,9 @@ namespace Repository.Database
             });
             builder.Entity<AuctionReceiptPayment>(a => 
             {
-                a.HasKey(k => new { k.AccountId, k.ReceiptId });
-                a.HasOne(a => a.Account).WithMany(a => a.ReceiptPayments).HasForeignKey(a => a.AccountId);
-				a.HasOne(a => a.Receipt).WithMany(r => r.Payments).HasForeignKey(a => a.ReceiptId);
+                //a.HasKey(k => new { k.AccountId, k.ReceiptId });
+                a.HasOne(a => a.Account).WithMany(a => a.ReceiptPayments).HasForeignKey(a => a.AccountId).OnDelete(DeleteBehavior.Cascade); 
+				a.HasOne(a => a.Receipt).WithMany(r => r.Payments).HasForeignKey(a => a.ReceiptId).OnDelete(DeleteBehavior.Cascade);
                 a.Property(a => a.PayTime).HasDefaultValue(DateTime.Now);
 			});
             builder.Entity<JoinedAuction>(j =>

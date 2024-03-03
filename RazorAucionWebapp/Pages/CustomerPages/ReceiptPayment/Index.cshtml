@@ -1,0 +1,63 @@
+﻿@page
+@model RazorAucionWebapp.Pages.CustomerPages.ReceiptPayment.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    @{
+        if (Model.AuctionReceipt is not null) // you can only create nwe payment IF ONLY the receipt exist, means you win this
+        {
+            <a class="btn btn-primary" asp-page="Create" asp-route-receiptId="@Model.AuctionReceipt.ReceiptId">Create New</a>
+        }
+        else
+        {
+            <a class="btn btn-primary disabled">Create New</a>
+        }
+    }
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AuctionReceiptPayment[0].Account)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AuctionReceiptPayment[0].Receipt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AuctionReceiptPayment[0].PayAmount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AuctionReceiptPayment[0].PayTime)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.AuctionReceiptPayment) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Account.CMND)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Receipt.ReceiptId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PayAmount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PayTime)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

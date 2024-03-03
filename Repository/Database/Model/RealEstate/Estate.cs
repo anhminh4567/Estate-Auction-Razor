@@ -22,6 +22,10 @@ namespace Repository.Database.Model.RealEstate
         public string Description { get; set; }
         public float Width { get; set; }
         public float Length { get; set; }
+        public float Area { get; set; }
+        public int Floor { get; set; }
+        public string Location { get; set; }
+        public string Coordinate { get; set; }
         
     }
 }

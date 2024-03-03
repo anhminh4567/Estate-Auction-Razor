@@ -1,4 +1,6 @@
 ﻿using Repository.Database.Model.AuctionRelated;
+using Repository.Database.Model.Enum;
+using Repository.Interfaces.AppAccount;
 using Repository.Interfaces.Auction;
 using Repository.Interfaces.RealEstate;
 using Service.Services.AppAccount;
@@ -18,11 +20,13 @@ namespace Service.Services.Auction
     public class AuctionServices
     {
         private readonly IAuctionRepository _auctionRepository;
+        private readonly IAccountRepository _accountRepository;
         private readonly EstateServices _estateServices;
         private readonly EstateCategoriesServices _estateCategoriesServices;
         private readonly JoinedAuctionServices _joinedAuctionServices;
         public AuctionServices(
             IAuctionRepository auctionRepository,
+            IAccountRepository accountRepository,
             EstateServices estateService,
             EstateCategoriesServices estateCategoriesServices,
             JoinedAuctionServices joinedAuctionServices
@@ -32,6 +36,7 @@ namespace Service.Services.Auction
             _estateServices = estateService;
             _estateCategoriesServices = estateCategoriesServices;
             _joinedAuctionServices = joinedAuctionServices;
+            _accountRepository = accountRepository;
         }
         public async Task<bool> CheckForJoinedAuction(int accountId, int auctionId)
         {
@@ -41,7 +46,6 @@ namespace Service.Services.Auction
         {
             return await _auctionRepository.GetActiveAuctions();
         }
-
         public async Task<Repository.Database.Model.AuctionRelated.Auction> GetById(int id)
         {
             return await _auctionRepository.GetAsync(id);
@@ -105,7 +109,8 @@ namespace Service.Services.Auction
                 var tryGetEstateAuctionStatus = await _auctionRepository.GetByEstateId(getEstate.EstateId);
                 foreach (var auc in tryGetEstateAuctionStatus)
                 {
-                    if (auction.Status != Repository.Database.Model.Enum.AuctionStatus.CANCELLED) // nghia la auction cho mieng dat nay chua bi huy, neu v thi ko duoc tao auction moi cho no
+                    if (auc.Status != Repository.Database.Model.Enum.AuctionStatus.CANCELLED &&
+						auc.Status != Repository.Database.Model.Enum.AuctionStatus.FAILED_TO_PAY) // nghia la auction cho mieng dat nay chua bi huy, neu v thi ko duoc tao auction moi cho no
                         throw new Exception("error in creeate auction, this is because the estate you select has already been in auction");
                 }
             }
@@ -113,6 +118,9 @@ namespace Service.Services.Auction
         }
         public async Task<bool> Delete(Repository.Database.Model.AuctionRelated.Auction auction)
         {
+            if (auction.Status.Equals(AuctionStatus.NOT_STARTED) is false ||
+                auction.Status.Equals(AuctionStatus.ONGOING) is false)
+                return false;
             auction.Status = Repository.Database.Model.Enum.AuctionStatus.CANCELLED;
             return await _auctionRepository.UpdateAsync(auction);
         }

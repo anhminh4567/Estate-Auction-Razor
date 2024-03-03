@@ -33,6 +33,12 @@
 			@Html.DisplayNameFor(model => model.Auction.EndDate)
 		</dt>
 		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Auction.EndPayDate)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Auction.EndPayDate)
+		</dt>
+		<dd class="col-sm-10">
 			@Html.DisplayFor(model => model.Auction.EndDate)
 		</dd>
 		<dt class="col-sm-2">
@@ -75,7 +81,7 @@
 			<li>@Model.Auction.Estate.Width</li>
 			<li>@Model.Auction.Estate.Length</li>
 		</ul>
-		<button class="btn btn-primary"></button>
+		<button class="btn btn-primary">Detail</button>
 	</div>
 	<div class="joinAuction">
 		<ul>
@@ -108,7 +114,7 @@
 						<p>@acc.Amount</p>
 						<p>@acc.RemainAmount</p>
 						@*<p>@acc.RegiisterFee</p>*@
-						<button class="btn btn-primary">detail auctionReceipt</button>
+						<a class="btn btn-primary" asp-page="./Receipts/Detail" asp-route-auctionId="@Model.Auction.AuctionId">detail auctionReceipt</a>
 					</li>
 				}
 			}

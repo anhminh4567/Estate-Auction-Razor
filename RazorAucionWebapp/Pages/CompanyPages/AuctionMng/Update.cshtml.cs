@@ -7,36 +7,52 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Repository.Database;
+using Repository.Database.Model.AppAccount;
 using Repository.Database.Model.AuctionRelated;
+using Repository.Database.Model.Enum;
+using Service.Services.AppAccount;
+using Service.Services.Auction;
+using Service.Services.RealEstate;
 
 namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
 {
     public class UpdateModel : PageModel
     {
-        private readonly Repository.Database.AuctionRealEstateDbContext _context;
+        private readonly AuctionServices _auctionServices;
+        private readonly EstateServices _estateServices;
+        private readonly JoinedAuctionServices _joinedAuctionServices;
+		private readonly BidServices _bidServices;
 
-        public UpdateModel(Repository.Database.AuctionRealEstateDbContext context)
-        {
-            _context = context;
-        }
+		public UpdateModel(AuctionServices auctionServices, EstateServices estateServices, JoinedAuctionServices joinedAuctionServices, BidServices bidServices)
+		{
+			_auctionServices = auctionServices;
+			_estateServices = estateServices;
+			_joinedAuctionServices = joinedAuctionServices;
+			_bidServices = bidServices;
+		}
 
-        [BindProperty]
-        public Auction Auction { get; set; } = default!;
-
+		[BindProperty]
+		public bool IsCancelled { get; set; }
+        
+		public Auction Auction { get; set; } = default!;
+        public AuctionReceipt AuctionReceipt { get; set; }
+		public List<Account?> AllJoinedAccount { get; set; }// total Joined
+		public List<Account?> JoinedAccounts { get;set; }// those who haven't quit or banned 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Auctions == null)
+            if (id == null)
             {
                 return NotFound();
             }
-
-            var auction =  await _context.Auctions.FirstOrDefaultAsync(m => m.AuctionId == id);
-            if (auction == null)
+            try
             {
-                return NotFound();
+                await PopulateData(id.Value);
+			}
+			catch(Exception ex) 
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest();
             }
-            Auction = auction;
-           ViewData["EstateId"] = new SelectList(_context.Estates, "EstateId", "Description");
             return Page();
         }
 
@@ -48,31 +64,32 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
             {
                 return Page();
             }
-
-            _context.Attach(Auction).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
+				await PopulateData(Auction.AuctionId);
+                var maxParticipant = Auction.MaxParticipant;
+                var status = Auction.Status;
+			}
+            catch (DbUpdateConcurrencyException ex)
             {
-                if (!AuctionExists(Auction.AuctionId))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                Console.WriteLine(ex.Message);
+                return BadRequest();
             }
 
             return RedirectToPage("./Index");
         }
 
-        private bool AuctionExists(int id)
+        private async Task PopulateData(int id)
         {
-          return (_context.Auctions?.Any(e => e.AuctionId == id)).GetValueOrDefault();
-        }
+            var tryGetAuction = await _auctionServices.GetInclude(id, "Estate,JoinedAccounts.Account,AuctionReceipt");
+            if (tryGetAuction == null)
+                throw new NullReferenceException();
+            Auction = tryGetAuction;
+			AllJoinedAccount =  Auction.JoinedAccounts?
+                .Select(j => j.Account).ToList();
+            JoinedAccounts = Auction.JoinedAccounts?
+                .Where(j => j.Status.Equals(JoinedAuctionStatus.REGISTERED))
+                .Select(j => j.Account).ToList();
+		}
     }
 }

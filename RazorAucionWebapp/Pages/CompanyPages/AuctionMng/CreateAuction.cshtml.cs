@@ -35,15 +35,17 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
 		//public DateTime RegistrationDate { get; set; }
 		[BindProperty]
 		[Required]
-		[DataType(DataType.Date)]
 		[IsDateAppropriate()]
 		public DateTime StartDate { get; set; }
 		[BindProperty]
 		[Required]
 		[IsDateAppropriate()]
-		[DataType(DataType.Date)]
 		public DateTime EndDate { get; set; }
-		[BindProperty]
+        [BindProperty]
+        [Required]
+        [IsDateAppropriate()]
+        public DateTime EndPayDate { get; set; }
+        [BindProperty]
 		[Required]
 		public decimal WantedPrice { get; set; }
 		[BindProperty]
@@ -76,10 +78,16 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
 				{
 					return Page();
 				}
-				int comparison = DateTime.Compare(EndDate, StartDate);
-				if (comparison <= 0)
+				int comparison1 = DateTime.Compare(EndDate, StartDate);
+				if (comparison1 <= 0)
 				{
 					ModelState.AddModelError(string.Empty, "EndDate is <= StartDate");
+					return Page();
+				}
+				int comparison2 = DateTime.Compare(EndPayDate, EndDate);
+				if (comparison2 <= 0)
+				{
+					ModelState.AddModelError(string.Empty, "EndPayDate is <= EndDate");
 					return Page();
 				}
 				var newAuction = new Auction()
@@ -87,6 +95,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
 					RegistrationDate = DateTime.Now,
 					StartDate = StartDate,
 					EndDate = EndDate,
+					EndPayDate = EndPayDate,
 					EstateId = SelectedEstate,
 					IncrementPrice = IncrementPrice,
 					EntranceFee = EntranceFee,
@@ -94,7 +103,6 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
 					WantedPrice = WantedPrice,
 					Status = AuctionStatus.NOT_STARTED,
 				};
-
 				var createResult = await _auctionServices.Create(newAuction);
 				if (createResult is null)
 				{

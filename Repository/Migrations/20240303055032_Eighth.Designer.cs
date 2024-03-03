@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repository.Database;
 
@@ -11,9 +12,10 @@ using Repository.Database;
 namespace Repository.Migrations
 {
     [DbContext(typeof(AuctionRealEstateDbContext))]
-    partial class AuctionRealEstateDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240303055032_Eighth")]
+    partial class Eighth
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -219,13 +221,10 @@ namespace Repository.Migrations
 
             modelBuilder.Entity("Repository.Database.Model.AuctionRelated.AuctionReceiptPayment", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int?>("AccountId")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int?>("AccountId")
+                    b.Property<int?>("ReceiptId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("PayAmount")
@@ -234,18 +233,13 @@ namespace Repository.Migrations
                     b.Property<DateTime>("PayTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 3, 3, 17, 10, 43, 524, DateTimeKind.Local).AddTicks(5897));
+                        .HasDefaultValue(new DateTime(2024, 3, 3, 12, 50, 32, 824, DateTimeKind.Local).AddTicks(1953));
 
-                    b.Property<int?>("ReceiptId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
+                    b.HasKey("AccountId", "ReceiptId");
 
                     b.HasIndex("ReceiptId");
 
-                    b.ToTable("AuctionReceiptPayments");
+                    b.ToTable("AuctionReceiptPayment");
                 });
 
             modelBuilder.Entity("Repository.Database.Model.AuctionRelated.Bid", b =>
@@ -516,12 +510,14 @@ namespace Repository.Migrations
                     b.HasOne("Repository.Database.Model.AppAccount.Account", "Account")
                         .WithMany("ReceiptPayments")
                         .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Repository.Database.Model.AuctionRelated.AuctionReceipt", "Receipt")
                         .WithMany("Payments")
                         .HasForeignKey("ReceiptId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Account");
 

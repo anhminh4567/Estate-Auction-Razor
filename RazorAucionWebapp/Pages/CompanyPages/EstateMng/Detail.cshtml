@@ -41,6 +41,30 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Estate.Length)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Estate.Area)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Estate.Area)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Estate.Floor)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Estate.Floor)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Estate.Location)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Estate.Location)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Estate.Status)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Estate.Status)
+        </dd>
         @{
             <p class="text-success"> Category</p>
             if (Model.Estate.EstateCategory is not null && Model.Estate.EstateCategory.Count > 0)

@@ -14,50 +14,11 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Auction.AuctionId" />
+
             <div class="form-group">
-                <label asp-for="Auction.EstateId" class="control-label"></label>
-                <select asp-for="Auction.EstateId" class="form-control" asp-items="ViewBag.EstateId"></select>
-                <span asp-validation-for="Auction.EstateId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Auction.RegistrationDate" class="control-label"></label>
-                <input asp-for="Auction.RegistrationDate" class="form-control" />
-                <span asp-validation-for="Auction.RegistrationDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Auction.StartDate" class="control-label"></label>
-                <input asp-for="Auction.StartDate" class="form-control" />
-                <span asp-validation-for="Auction.StartDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Auction.EndDate" class="control-label"></label>
-                <input asp-for="Auction.EndDate" class="form-control" />
-                <span asp-validation-for="Auction.EndDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Auction.EntranceFee" class="control-label"></label>
-                <input asp-for="Auction.EntranceFee" class="form-control" />
-                <span asp-validation-for="Auction.EntranceFee" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Auction.WantedPrice" class="control-label"></label>
-                <input asp-for="Auction.WantedPrice" class="form-control" />
-                <span asp-validation-for="Auction.WantedPrice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Auction.IncrementPrice" class="control-label"></label>
-                <input asp-for="Auction.IncrementPrice" class="form-control" />
-                <span asp-validation-for="Auction.IncrementPrice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Auction.MaxParticipant" class="control-label"></label>
-                <input asp-for="Auction.MaxParticipant" class="form-control" />
-                <span asp-validation-for="Auction.MaxParticipant" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Auction.Status" class="control-label"></label>
-                <select asp-for="Auction.Status" class="form-control"></select>
-                <span asp-validation-for="Auction.Status" class="text-danger"></span>
+                <label asp-for="IsCancelled" class="control-label"></label>
+                <input type="checkbox" asp-for="IsCancelled" class="form-control" value="Do you want to cancel the current estate"/>
+                <span asp-validation-for="IsCancelled" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

@@ -46,6 +46,7 @@ namespace Service.Services.RealEstate
 		}
 		public async Task<bool> Delete(Estate estate)
 		{
+
 			estate.Status = Repository.Database.Model.Enum.EstateStatus.REMOVED;
 			return await _estateRepository.UpdateAsync(estate);
 		}

@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
+using MailKit.Net.Imap;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Repository.Database;
+using Repository.Database.Model.Enum;
 using Repository.Database.Model.RealEstate;
 using Service.Services.AppAccount;
 using Service.Services.Auction;
@@ -54,16 +57,39 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
                 return NotFound();
             }
             try {
-                var getEstate = await _estateServices.GetById(id.Value);
-                var result = await _estateServices.Delete(getEstate);
-                if(result is false)
-                    throw new Exception("something wrong when delete, it result in false");
+                var getEstate = await _estateServices.GetIncludes(id.Value, "Auctions");
+                var isDeletable = true;
+                if (getEstate.Auctions is not null)
+                {
+                    foreach (var auction in getEstate.Auctions)
+                    {
+                        if(auction.Status.Equals(AuctionStatus.SUCCESS) ||
+                            auction.Status.Equals(AuctionStatus.ONGOING) ||
+                            auction.Status.Equals(AuctionStatus.PENDING_PAYMENT))
+                        {
+                            isDeletable = false;
+                            ModelState.AddModelError(string.Empty, "cannot delete, an auction is happening");
+                            break;
+                        }
+                    }
+                }
+                if (isDeletable)
+                {
+                    var result = await _estateServices.Delete(getEstate);
+                    if (result is false)
+                        throw new Exception("something wrong when delete, it result in false");
+                    return RedirectToPage("./Index");
+                }
+                else
+                {
+                    return Page();
+                }
+                
             }catch(Exception ex) 
             {
                 Console.WriteLine(ex.Message);
                 return NotFound();
             }            
-            return RedirectToPage("./Index");
         }
     }
 }

@@ -20,6 +20,7 @@
 			<p>des: @Model.Auction.Estate.Description</p>
 			<p>width: @Model.Auction.Estate.Width</p>
 			<p>length: @Model.Auction.Estate.Length</p>
+			<p class="text-danger fw-bold">Status: @Model.Auction.Estate.Status.ToString()</p>
 			<p>category:</p>
 			@{
 				if (Model.Auction.Estate.EstateCategory is not null && Model.Auction.Estate.EstateCategory.Count > 0)

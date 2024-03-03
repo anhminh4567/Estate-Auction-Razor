@@ -36,6 +36,14 @@ namespace Service.Services.Auction
                 throw new ArgumentNullException("argument is wrong");
             return await _bidRepository.GetByCondition(b => b.AuctionId == auctionId);
 		}
+		public async Task<Bid?> GetHighestBids(int auctionId) 
+		{
+			if(auctionId == 0)
+				throw new ArgumentNullException("argument is wrong");
+			return (await _bidRepository.GetByCondition(b => b.AuctionId == auctionId, includeProperties: "Bidder,Auction"))
+				.OrderByDescending(b => b.Amount)
+				.FirstOrDefault();
+		}
 		public async Task<Bid> Create(Bid newBid)
 		{
 			var tryGetAuction = await _auctionRepository.GetAsync(newBid.AuctionId);

@@ -14,31 +14,31 @@
                     @Html.DisplayNameFor(model => model.Auctions[0].Estate)
                 </th>*@
                 <th>
-                    @Html.DisplayNameFor(model => model.Auctions[0].RegistrationDate)
+                    @Html.DisplayNameFor(model => model.JoinedAuctions[0].RegistrationDate)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Auctions[0].StartDate)
+                    @Html.DisplayNameFor(model => model.JoinedAuctions[0].StartDate)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Auctions[0].EndDate)
+                    @Html.DisplayNameFor(model => model.JoinedAuctions[0].EndDate)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Auctions[0].WantedPrice)
+                    @Html.DisplayNameFor(model => model.JoinedAuctions[0].WantedPrice)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Auctions[0].IncrementPrice)
+                    @Html.DisplayNameFor(model => model.JoinedAuctions[0].IncrementPrice)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Auctions[0].MaxParticipant)
+                    @Html.DisplayNameFor(model => model.JoinedAuctions[0].MaxParticipant)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Auctions[0].Status)
+                    @Html.DisplayNameFor(model => model.JoinedAuctions[0].Status)
                 </th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.Auctions)
+            @foreach (var item in Model.JoinedAuctions)
             {
                 <tr>
                     @*<td>
@@ -66,8 +66,15 @@
                         @Html.DisplayFor(modelItem => item.Status)
                     </td>
                     <td>
-                        <a asp-page="./BidAuction" asp-route-id="@item.AuctionId">Bid</a>
+                        <a asp-page="./DetailAuction" asp-route-id="@item.AuctionId">Detail</a>
+                        @{
+                            if (item.AuctionReceipt is not null) // means this auction is won by this user
+                            {
+                                <a class="btn btn-success" asp-page="./ReceiptPayment/Index" asp-route-auctionId="@item.AuctionId">See your transaction</a>
+                            }
+                        }
                     </td>
+                    
                 </tr>
             }
         </tbody>

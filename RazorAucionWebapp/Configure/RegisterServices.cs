@@ -30,6 +30,7 @@ namespace RazorAucionWebapp.Configure
             services.AddScoped<JoinedAuctionServices>();
             services.AddScoped<AuctionServices>();
 			services.AddScoped<AuctionReceiptServices>();
+			services.AddScoped<AuctionReceiptPaymentServices>();
 
 			services.AddScoped<TransactionServices>();
 

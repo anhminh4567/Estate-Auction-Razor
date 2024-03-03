@@ -47,6 +47,36 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label asp-for="Area" class="control-label">Area (total m2)</label>
+                                <input asp-for="Area" class="form-control" />
+                                <span asp-validation-for="Area" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label asp-for="Floor" class="control-label">Floor of the estate </label>
+                                <input asp-for="Floor" class="form-control" />
+                                <span asp-validation-for="Floor" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label asp-for="Location" class="control-label">Location of the estate (m)</label>
+                                <input asp-for="Location" class="form-control" />
+                                <span asp-validation-for="Location" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label asp-for="Coordinate" class="control-label">Coordinate of the estate (google map)</label>
+                                <input asp-for="Coordinate" class="form-control" />
+                                <span asp-validation-for="Coordinate" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label asp-for="Description" class="control-label">Description</label>

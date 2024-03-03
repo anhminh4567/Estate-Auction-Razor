@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Repository.Database;
 using Repository.Database.Model.AuctionRelated;
+using Service.Services.AppAccount;
 using Service.Services.Auction;
 
 namespace RazorAucionWebapp.Pages.CustomerPages
@@ -15,17 +16,25 @@ namespace RazorAucionWebapp.Pages.CustomerPages
     public class ViewAuctionListModel : PageModel
     {
         private readonly AuctionServices _auctionServices;
+        private readonly AccountServices _accountServices;
 
-        public ViewAuctionListModel(AuctionServices auctionServices)
+        public ViewAuctionListModel(AuctionServices auctionServices, AccountServices accountServices)
         {
             _auctionServices = auctionServices;
+            _accountServices = accountServices;
         }
 
-        public IList<Auction> Auctions { get;set; } = default!;
+        public IList<Auction?> JoinedAuctions { get;set; } = default!;
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
-            await PopulateData();   
+            await PopulateData();
+            return Page();
+        }
+        public async Task<IActionResult> OnPostAsync() 
+        {
+            await PopulateData();
+            return Page();
         }
 		private int UserId { get; set; }
 
@@ -38,7 +47,11 @@ namespace RazorAucionWebapp.Pages.CustomerPages
         }
         private async Task PopulateData() 
         {
-            Auctions = await _auctionServices.GetActiveAuctions();
+            GetUserId();
+            var getUserDetail = await _accountServices.GetInclude(UserId, "JoinedAuctions.Auction.AuctionReceipt");
+            if (getUserDetail is null)
+                throw new Exception("user not exists");
+            JoinedAuctions = getUserDetail.JoinedAuctions?.Select(j => j.Auction).ToList();
 		}
     }
 }

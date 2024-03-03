@@ -19,6 +19,7 @@ namespace RazorAucionWebapp.Configure
 			services.AddScoped<IJoinedAuctionRepository,JoinedAuctionRepository>();
 			services.AddScoped<IAuctionRepository, AuctionRepository>();
 			services.AddScoped<IAuctionReceiptRepository, AuctionReceiptRepository>();
+			services.AddScoped<IAuctionReceiptPaymentRepository, AuctionReceiptPaymentRepository>();
 			services.AddScoped<IBidRepository, BidRepository>();
 
 			services.AddScoped<IEstateRepository, EstateRepository>();

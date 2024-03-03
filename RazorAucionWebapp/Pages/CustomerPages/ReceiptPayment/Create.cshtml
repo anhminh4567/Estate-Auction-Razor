@@ -1,0 +1,47 @@
+﻿@page
+@model RazorAucionWebapp.Pages.CustomerPages.ReceiptPayment.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>AuctionReceiptPayment</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+
+        <div class="">
+            <h4>Your Balance: @Model.UserAccount.Balance</h4>    
+        </div>
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+@*            <div class="form-group">
+                <label asp-for="AuctionReceiptPayment.AccountId" class="control-label"></label>
+                <select asp-for="AuctionReceiptPayment.AccountId" class ="form-control" asp-items="ViewBag.AccountId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="AuctionReceiptPayment.ReceiptId" class="control-label"></label>
+                <select asp-for="AuctionReceiptPayment.ReceiptId" class ="form-control" asp-items="ViewBag.ReceiptId"></select>
+            </div>*@
+            <input type="hidden" asp-for="ReceiptId" value="@Model.ReceiptId"/>
+            <div class="form-group">
+                <label asp-for="PayAmount" class="control-label"></label>
+                <input asp-for="PayAmount" class="form-control" />
+                <span asp-validation-for="PayAmount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

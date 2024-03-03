@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Repository.Database;
 using Repository.Database.Model.AppAccount;
 using Repository.Database.Model.AuctionRelated;
+using Repository.Database.Model.Enum;
 using Service.Services.AppAccount;
 using Service.Services.Auction;
 using Service.Services.RealEstate;
@@ -20,20 +21,21 @@ namespace RazorAucionWebapp.Pages.CustomerPages
     {
         private readonly BidServices _bidServices;
         private readonly AuctionServices _auctionServices;
-        private readonly EstateServices _estateServices;
+        private readonly AuctionReceiptServices _auctionReceiptServices;
         private readonly JoinedAuctionServices _joinedAuctionServices;
 
-        public BidAuctionModel(BidServices bidServices, AuctionServices auctionServices, EstateServices estateServices, JoinedAuctionServices joinedAuctionServices)
+        public BidAuctionModel(BidServices bidServices, AuctionServices auctionServices, AuctionReceiptServices auctionReceiptServices, JoinedAuctionServices joinedAuctionServices)
         {
             _bidServices = bidServices;
             _auctionServices = auctionServices;
-            _estateServices = estateServices;
+            _auctionReceiptServices = auctionReceiptServices;
             _joinedAuctionServices = joinedAuctionServices;
         }
         public Auction Auction { get; set; } = default!;
         public List<Bid> AuctionBids { get; set; }
         public Bid? HighestBid { get; set; }
-        public List<Account>? JoinedAccounts { get; set; }
+		public AuctionReceipt? Winner { get; set; }
+		public List<Account>? JoinedAccounts { get; set; }
         [BindProperty]
         [Required]
         public decimal Amount { get; set; }
@@ -58,7 +60,6 @@ namespace RazorAucionWebapp.Pages.CustomerPages
                 Console.WriteLine(ex.Message);
                 return Unauthorized();
             }
-
         }
         public async Task<IActionResult> OnPostAsync()
         {
@@ -69,6 +70,11 @@ namespace RazorAucionWebapp.Pages.CustomerPages
             try
             {
                 await PopulateData();
+                if(Winner is not null && Auction.Status.Equals(AuctionStatus.ONGOING) == false) 
+                {
+                    ModelState.AddModelError(string.Empty, "this auction has already finished, you cannot bid anymore");
+                    return Page();
+                }
                 var getJoinedAccount = JoinedAccounts?.FirstOrDefault(a => a.AccountId == _bidderId);
                 if (getJoinedAccount is null)
                 {
@@ -141,6 +147,7 @@ namespace RazorAucionWebapp.Pages.CustomerPages
             JoinedAccounts = Auction.JoinedAccounts
                 .Select(j => j.Account)
                 .ToList();
+            Winner = await _auctionReceiptServices.GetByAuctionId(AuctionID); // if this exist, mean someone has won ==> NO MORE BID ALLOWD
         }
     }
 }

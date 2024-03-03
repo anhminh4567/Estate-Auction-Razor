@@ -35,6 +35,13 @@
 					<span asp-validation-for="EndDate" class="text-danger"></span>
 				</div>
 			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label asp-for="EndPayDate" class="control-label">EndPayDate</label>
+					<input asp-for="EndPayDate" class="form-control" />
+					<span asp-validation-for="EndPayDate" class="text-danger"></span>
+				</div>
+			</div>
 		</div>
 		<div class="row mb-3">
 			<div class="col-md-6">
@@ -53,7 +60,7 @@
 			</div>
 			<div class="col-md-6">
 				<div class="form-group">
-					<label asp-for="EntranceFee" class="control-label">Wanted price</label>
+					<label asp-for="EntranceFee" class="control-label">EntranceFee</label>
 					<input asp-for="EntranceFee" class="form-control" />
 					<span asp-validation-for="EntranceFee" class="text-danger"></span>
 				</div>
@@ -79,7 +86,8 @@
 							<p class="">Estate Length: @estate.Length</p>
 							@foreach (var auc in estate.Auctions)
 							{
-								if (auc.Status != Repository.Database.Model.Enum.AuctionStatus.CANCELLED)
+								if (auc.Status != Repository.Database.Model.Enum.AuctionStatus.CANCELLED &&
+								auc.Status != Repository.Database.Model.Enum.AuctionStatus.FAILED_TO_PAY)
 								{
 									<p class="text-danger">this estate has had an auction goin on, cant create for this one, should not pick this one</p>
 								}

@@ -49,6 +49,18 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
         [BindProperty]
         [Required]
         public float Length { get; set; }
+        [BindProperty]
+        [Required]
+        public float Area { get; set; }
+        [BindProperty]
+        [Required]
+        public int Floor { get; set; }
+        [BindProperty]
+        [Required]
+        public string Location { get; set; }
+        [BindProperty]
+        [Required]
+        public string Coordinate { get; set; }
 
         [BindProperty]
         [Required(ErrorMessage = "At least one estate category must be selected!")]
@@ -71,11 +83,21 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
                 {
                     return Page();
                 }
+                if (SelectedEstateCategoriesOptions.Count == 0) 
+                {
+                    ModelState.AddModelError(string.Empty, "select a category please");
+                } 
                 Estate.Width = Width;
                 Estate.Length = Length;
+                Estate.Area = Area;
+                Estate.Floor = Floor;
+                Estate.Location = Location;
+                Estate.Coordinate = Coordinate;
                 Estate.Description = Description;
                 Estate.Name = Name;
                 Estate.CompanyId = CompanyId;
+                Estate.Status = Repository.Database.Model.Enum.EstateStatus.CREATED;
+                
                 var estateResult = await _estateServices.Create(Estate);
                 if (estateResult == null)
                 {
@@ -84,6 +106,8 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
                 }
                 foreach (var item in SelectedEstateCategoriesOptions)
                 {
+                    if (item == null)
+                        continue;
                     var newCategories = new EstateCategories()
                     {
                         CategoryId = int.Parse(item),
