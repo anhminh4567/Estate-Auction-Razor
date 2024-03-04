@@ -1,0 +1,124 @@
+﻿@page "{handler?}"
+@using System.Security.Claims;
+@model RazorAucionWebapp.Pages.CustomerPages.UpdateModel
+@{
+}
+<div class="row my-2">
+    <button id="updateFormBtn" class="col-auto btn btn-primary">Update Profile</button>
+    <button id="changeFormBtn" class="col-auto btn btn-outline-primary">Change Password</button>
+</div>
+<img id="previewImg" src=@Url.Content(Model.Avatar) width="80" height="80" />
+<form method="post" id="avatarForm" asp-page-handler="ImageUpdate" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row my-2">
+        <label>Avatar (if you want to update new avatar)</label>
+        <input type="file" id="uploadImg" asp-for="ImageFile" accept=".png,.jpeg, .jpg" />
+    </div>
+    <a id="ImageUpdateConfirm" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#updateModal">Submit</a>
+</form>
+<br />
+<div class="h1">Profile</div>
+<form method="post" id="UpdateForm" asp-page-handler="update">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Account.AccountId" />
+    <div class="row my-2">
+        @Html.DisplayNameFor(model => model.Account.FullName)
+        <input asp-for="@Model.Account.FullName" />
+        <span asp-asp-validation-for="Model.Account.FullName" />
+    </div>
+    <div class="row my-2">
+        @Html.DisplayNameFor(model => model.Account.Email)
+        <input asp-for="@Model.Account.Email" />
+        <span asp-asp-validation-for="Model.Account.Email" />
+    </div>
+    <div class="row my-2">
+        @Html.DisplayNameFor(model => model.Account.Dob)
+        <input asp-for="@Model.Account.Dob" />
+        <span asp-asp-validation-for="Model.Account.Dob" />
+    </div>
+    <div class="row my-2">
+        <div>Type in your password</div>
+        <input asp-for="@Model.Account.Password" />
+        <span asp-asp-validation-for="Model.Account.Password" />
+    </div>
+    <br/>
+    <a id="UpdateConfirm" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#updateModal">Save</a>
+</form>
+<form method="post" id="ChangeForm" asp-page-handler="change" style="display:none;">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Account.AccountId" />
+    <div>
+        <div>Old Password</div>
+        <input asp-for="@Model.Account.Password" />
+    </div>
+    <div>
+        <div>New Password</div>
+        <input asp-for="@Model.NewPass" />
+        <span asp-asp-validation-for="Model.NewPass" />
+    </div>
+    <br />
+    <a id="ChangeConfirm" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#updateModal">Save</a>
+</form>
+<div id="test">abc</div>
+<script>
+    function ChangeImg(input){
+        var reader = new FileReader();
+        reader.onload = function(e){
+            $("#previewImg").attr("src", e.target.result);
+        }
+        if(input.files[0] == null){
+            $("#previewImg").hide();
+        }
+        else{
+            $("#previewImg").show();
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $("#uploadImg").change(function(){
+        ChangeImg(this);
+    })
+
+    $('#updateFormBtn').click(function(){
+        $('#test').hide();
+        $('#changeForm').hide();
+        $('#updateForm').show();
+        $('#updateFormBtn').attr('class', 'col-auto btn btn-primary')
+        $('#changeFormBtn').attr('class', 'col-auto btn btn-outline-primary')
+    })
+    $('#changeFormBtn').click(function () {
+        $('#test').show();
+        $('#changeForm').show();
+        $('#updateForm').hide();
+        $('#changeFormBtn').attr('class', 'col-auto btn btn-primary')
+        $('#updateFormBtn').attr('class', 'col-auto btn btn-outline-primary')
+    })
+    $('#ImageUpdateConfirm').click(function () {
+        $('#modal-desc').html('Are you sure to update your avatar?')
+        $('#modal-confirm').attr('form', 'avatarForm')
+    })
+    $('#UpdateConfirm').click(function(){
+        $('#modal-desc').html('Are you sure to update your information?')
+        $('#modal-confirm').attr('form', 'updateForm')
+    })
+    $('#ChangeConfirm').click(function () {
+        $('#modal-desc').html('Are you sure to change to the new password?')
+        $('#modal-confirm').attr('form', 'changeForm')
+    })
+</script>
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateModalLabel">Confirmation</h5>
+            </div>
+            <div class="modal-body">
+                <span aria-hidden="true" id="modal-desc"></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <input type="submit" value="Confirm" form="" id="modal-confirm" class="btn btn-success"></input>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,5 @@
 ﻿using Repository.Database.Model;
+using Repository.Database.Model.AppAccount;
 using Repository.Interfaces.AppAccount;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,11 @@ namespace Service.Services.AppAccount
 			_accountImageRepository = accountImageRepository;
 			_imageService = imageService;
 		}
+		public async Task<AppImage?> GetAccountAvatar(int accountId)
+		{
+			var images = await _accountImageRepository.GetAllByAccountId(accountId);
+			return images.OrderByDescending(p => p.Image.Name).FirstOrDefault(p => p.Image.Name.ToLower().Contains("avatar"))?.Image;
+		}
 		public async Task<List<AppImage>?> GetByAccountId(int estateId)
 		{
 			var getImagesId = (await _accountImageRepository.GetAllByAccountId(estateId))?.Select(e => e.ImageId).ToArray();
@@ -29,11 +35,22 @@ namespace Service.Services.AppAccount
 		{
 			return await _imageService.GetImage(estateImageId);
 		}
-		public async Task<AppImage?> Create(Stream imageStream, string folderType, string fileName, string folderPath = "wwwroot\\PublicImages")
+		public async Task<AppImage?> Create(int accountId, string rootPath, string Savepath,string fileName)
 		{
-			return await _imageService.SaveImage(imageStream, folderType, fileName, folderPath);
-
-		}
+			var trueFileName = _imageService.GenerateFilename(fileName);
+			var image = await _imageService.SaveImage(rootPath, Savepath, trueFileName);
+			if(image is not null)
+			{
+                AccountImages accountImage = new AccountImages()
+                {
+                    ImageId = image.ImageId,
+					AccountId = accountId
+				};
+				var aImage = await _accountImageRepository.CreateAsync(accountImage);
+				return image;
+            }
+			else return null;
+        }
 		public async Task<bool> Update(AppImage image, string wwwroot_publicImage_folder_path)
 		{
 			return await _imageService.UpdateImage(image, wwwroot_publicImage_folder_path);

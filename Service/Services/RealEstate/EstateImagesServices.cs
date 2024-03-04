@@ -31,9 +31,9 @@ namespace Service.Services.RealEstate
 		{
 			return await _imageService.GetImage(estateImageId);
 		}
-		public async Task<AppImage?> Create(Stream imageStream,string folderType, string fileName,string folderPath = "wwwroot\\PublicImages") 
+		public async Task<AppImage?> Create(string folderType, string fileName,string folderPath = "wwwroot\\PublicImages") 
 		{
-			return await _imageService.SaveImage(imageStream, folderType,fileName,folderPath);	
+			return await _imageService.SaveImage(folderType,fileName,folderPath);	
 
 		}
 		public async Task<bool> Update(AppImage image, string wwwroot_publicImage_folder_path) 
