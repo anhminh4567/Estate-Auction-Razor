@@ -24,6 +24,7 @@ builder.Services.AddMyServices();
 builder.Services.AddSingleton<ServerDefaultValue>();
 
 builder.Services.AddHostedService<CheckAuctionTimeWorker>();
+builder.Services.AddHostedService<CheckPaymentReachDeadline>();
 
 builder.Services.AddAuthentication("cookie")
     .AddCookie("cookie", options =>

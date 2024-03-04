@@ -95,7 +95,7 @@
 							<p>@acc.Status</p>
 							<p>@acc.RegisterDate</p>
 							@*<p>@acc.RegiisterFee</p>*@
-							<button class="btn btn-primary">detail JoinedAccount</button>
+							<a class="btn btn-primary" asp-page="./JoinedAccounts/Index" asp-route-auctionId="@Model.Auction.AuctionId">detail JoinedAccounts</a>
 						</li>
 					}
 			}

@@ -21,9 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\PublicImages\general\auction_logo.png" />
-    <None Include="wwwroot\PublicImages\general\estate_banner.jpg" />
-    <None Include="wwwroot\PublicImages\general\user_icon.png" />
+    <Folder Include="Pages\AdminPages\Accounts\" />
+    <Folder Include="wwwroot\PublicImages\" />
+    <Folder Include="wwwroot\PublicImages\" />
   </ItemGroup>
 
   <ItemGroup>

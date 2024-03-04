@@ -1,0 +1,72 @@
+﻿@page
+@using Repository.Database.Model.Enum;
+@model RazorAucionWebapp.Pages.CompanyPages.AuctionMng.JoinedAccounts.IndexModel
+
+@{
+	ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+	<a asp-page="Create">Create New</a>
+</p>
+<div class="auction">
+	<p>auction startdate: @Model.Auction.StartDate</p>
+	<p>auction enddate: @Model.Auction.EndDate</p>
+	<p>auction status: @Model.Auction.Status.ToString()</p>
+</div>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.JoinedAuction[0].Account.FullName)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.JoinedAuction[0].Account.Email)
+			</th>
+
+			<th>
+				@Html.DisplayNameFor(model => model.JoinedAuction[0].Status)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.JoinedAuction[0].RegisterDate)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model.JoinedAuction)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Account.FullName)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Account.Email)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Status)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.RegisterDate)
+				</td>
+				<td>
+	@*				@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+					@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |*@
+					@{
+						if (Model.Auction.Status.Equals(AuctionStatus.NOT_STARTED) ||
+						Model.Auction.Status.Equals(AuctionStatus.ONGOING))
+						{
+							<a class="btn btn-danger" asp-page="./Delete" asp-route-auctionId="@item.AuctionId" asp-route-accountId="@item.AccountId"> remove</a>
+						}
+						else
+						{
+							<a class="btn btn-danger disabled">cannot removed</a>
+						}
+					}
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

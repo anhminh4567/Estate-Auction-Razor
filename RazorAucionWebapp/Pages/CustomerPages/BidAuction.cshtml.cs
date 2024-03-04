@@ -76,11 +76,16 @@ namespace RazorAucionWebapp.Pages.CustomerPages
                     return Page();
                 }
                 var getJoinedAccount = JoinedAccounts?.FirstOrDefault(a => a.AccountId == _bidderId);
-                if (getJoinedAccount is null)
+                if (getJoinedAccount is null )
                 {
                     ModelState.AddModelError(string.Empty, "user has not joined auction yet to bid");
                     return Page();
                 }
+                if (Auction.JoinedAccounts.FirstOrDefault(a => a.AccountId == _bidderId).Status.Equals(JoinedAuctionStatus.BANNED))
+                {
+					ModelState.AddModelError(string.Empty, "user is banned");
+					return Page();
+				}
                 ////////////// HIGHER THAN TOP BID /////////////
                 if (Amount <= HighestBid?.Amount)
                 {

@@ -77,7 +77,8 @@ namespace RazorAucionWebapp.BackgroundServices
                                 var createResult = await auctionRecieptService.Create(newWinnder);
                                 if (createResult is null)
                                     throw new Exception("something wrong when creating new reciept, in backgroundService");
-                               // auc.Estate.Status = EstateStatus.FINISHED;
+                               auc.ReceiptId = createResult.ReceiptId;
+                                // auc.Estate.Status = EstateStatus.FINISHED;
                             }
                         }
                     }
