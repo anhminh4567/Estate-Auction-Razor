@@ -71,6 +71,8 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
                     return Page();
                 }
                 Auction.Status = AuctionStatus.CANCELLED;
+                ///
+                /// Hoàn lại tiền Entrence Fee cho mọi nguời trong JoinedAuction có Status là REGISTERD
                 var joinedAccounts = Auction.JoinedAccounts;
                 await _auctionServices.Update(Auction);
                 //foreach(var joinedAccount in joinedAccounts)

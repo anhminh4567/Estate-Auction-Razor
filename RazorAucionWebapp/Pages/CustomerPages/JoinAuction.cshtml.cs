@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Org.BouncyCastle.Asn1.X509;
 using Repository.Database.Model.AppAccount;
@@ -74,6 +74,7 @@ namespace RazorAucionWebapp.Pages.CustomerPages
 						return Page();
 					}
 					getUser.Balance -= Auction.EntranceFee;
+					// Chưa có chuyênr tiền vào company, mới trừ tiền của customer 
 					var updateResult = await _accountServices.Update(getUser);
 					if (updateResult is false)
 						return BadRequest();
@@ -113,6 +114,7 @@ namespace RazorAucionWebapp.Pages.CustomerPages
 				GetUserId();
 				await GetJoinAuction(AuctionId);
 				var getUser = (await _accountServices.GetById(_userId));
+				var getAuction = await _auctionServices.GetById(JoinedAuction.AuctionId.Value);
 				if (Auction.Status.Equals(AuctionStatus.NOT_STARTED)  || Auction.Status.Equals(AuctionStatus.ONGOING) )
 				{
 					if (JoinedAuction.Status.Equals(JoinedAuctionStatus.REGISTERED))
@@ -123,6 +125,8 @@ namespace RazorAucionWebapp.Pages.CustomerPages
 							await _bidServices.DeleteRange(getBids);
 						}
 						await _joinedAuctionServices.DeleteRange(new List<JoinedAuction>() { JoinedAuction });
+						getUser.Balance += getAuction.EntranceFee;
+						await _accountServices.Update(getUser);
 					}
 					else
 					{

@@ -56,7 +56,7 @@ namespace RazorAucionWebapp.BackgroundServices
 								await auctionRecieptPaymentService.DeleteRange(payments.ToList());
 							}
 							await auctionRecieptService.Update(Receipt);
-							//await accountService.Update(buyer);
+							await accountService.Update(buyer);
 							await DoSomethingIfFailed(Receipt);
 						}
 					}
