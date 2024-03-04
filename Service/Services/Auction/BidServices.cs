@@ -44,7 +44,13 @@ namespace Service.Services.Auction
 				.OrderByDescending(b => b.Amount)
 				.FirstOrDefault();
 		}
-		public async Task<Bid> Create(Bid newBid)
+        public async Task<List<Bid>> GetByAuctionId_AccountId(int auctionId, int accountId)
+        {
+            if (auctionId == 0 || accountId ==0)
+                throw new ArgumentNullException("argument is wrong");
+            return await _bidRepository.GetByCondition(b => b.AuctionId == auctionId && b.BidderId == accountId);
+        }
+        public async Task<Bid> Create(Bid newBid)
 		{
 			var tryGetAuction = await _auctionRepository.GetAsync(newBid.AuctionId);
 			var tryGetAccount = await _accountRepository.GetAsync(newBid.BidderId);
@@ -64,6 +70,10 @@ namespace Service.Services.Auction
 		public async Task<bool> Delete(Bid bidToDelete) 
 		{
 			return await _bidRepository.DeleteAsync(bidToDelete);
+		}
+		public async Task<bool> DeleteRange(List<Bid> listBid)
+		{
+			return await _bidRepository.DeleteRange(listBid);
 		}
 	}
 }

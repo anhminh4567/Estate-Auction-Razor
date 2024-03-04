@@ -10,8 +10,11 @@ using Microsoft.Build.Framework;
 using Repository.Database;
 using Repository.Database.Model.AppAccount;
 using Repository.Database.Model.AuctionRelated;
+using Repository.Database.Model.Enum;
+using Repository.Database.Model.RealEstate;
 using Service.Services.AppAccount;
 using Service.Services.Auction;
+using Service.Services.RealEstate;
 
 namespace RazorAucionWebapp.Pages.CustomerPages.ReceiptPayment
 {
@@ -21,13 +24,15 @@ namespace RazorAucionWebapp.Pages.CustomerPages.ReceiptPayment
         private readonly AuctionReceiptServices _auctionReceiptServices;
         private readonly AuctionServices _auctionServices;
         private readonly AccountServices _accountServices;
+        private readonly EstateServices _estateService;
 
-        public CreateModel(AuctionReceiptPaymentServices auctionReceiptPaymentServices, AuctionReceiptServices auctionReceiptServices, AuctionServices auctionServices, AccountServices accountServices)
+        public CreateModel(AuctionReceiptPaymentServices auctionReceiptPaymentServices, AuctionReceiptServices auctionReceiptServices, AuctionServices auctionServices, AccountServices accountServices, EstateServices estateService)
         {
             _auctionReceiptPaymentServices = auctionReceiptPaymentServices;
             _auctionReceiptServices = auctionReceiptServices;
             _auctionServices = auctionServices;
             _accountServices = accountServices;
+            _estateService = estateService;
         }
 
         public async Task<IActionResult> OnGetAsync(int? receiptId)
@@ -57,6 +62,8 @@ namespace RazorAucionWebapp.Pages.CustomerPages.ReceiptPayment
         public AuctionReceipt AuctionReceipt { get; set; }
         public Account UserAccount { get; set; }
         public Auction Auction { get; set; }
+        public Estate Estate { get; set; }
+        public Account Company { get; set; }
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
@@ -72,6 +79,11 @@ namespace RazorAucionWebapp.Pages.CustomerPages.ReceiptPayment
                 var userBalance = UserAccount.Balance;
                 var moneyToPayRemain = AuctionReceipt.RemainAmount;
                 var payEndDate = Auction.EndPayDate;
+                if(Auction.Status.Equals(AuctionStatus.FAILED_TO_PAY)|| Auction.Status.Equals(AuctionStatus.SUCCESS)) 
+                {
+					ModelState.AddModelError(string.Empty, "Auction is finished");
+					return Page();
+				}
                 if (PayAmount > userBalance) 
                 {
                     ModelState.AddModelError(string.Empty, "You dont have enough balancee" );
@@ -119,12 +131,18 @@ namespace RazorAucionWebapp.Pages.CustomerPages.ReceiptPayment
                     //await _auctionReceiptPaymentServices.Delete(createResult);
                     throw new Exception();
                 }
-                /////////// UPDATE If NO REMAIN AMOUNT///////////
-                if (AuctionReceipt.RemainAmount == 0)
+                /////////// UPDATE Company BALANCE///////////
+                Company.Balance += createResult.PayAmount;
+                await _accountServices.Update(Company);
+				/////////// UPDATE If NO REMAIN AMOUNT///////////
+				if (AuctionReceipt.RemainAmount == 0)
                 {
                     Auction.Status = Repository.Database.Model.Enum.AuctionStatus.SUCCESS;
+                    Estate.Status = Repository.Database.Model.Enum.EstateStatus.FINISHED;
                     await _auctionServices.Update(Auction);
+                    await _estateService.Update(Estate);
                 }
+
                 return RedirectToPage("./Index",new {auctionId = Auction.AuctionId});
             }
             catch (Exception ex) 
@@ -135,12 +153,14 @@ namespace RazorAucionWebapp.Pages.CustomerPages.ReceiptPayment
         }
         private async Task PopulateData(int receiptId)
         {
-            var tryGetReceipt =  await _auctionReceiptServices.GetById(receiptId, "Payments,Buyer,Auction");
+            var tryGetReceipt =  await _auctionReceiptServices.GetById(receiptId, "Payments,Buyer,Auction.Estate.Company");
             if(tryGetReceipt is null) 
                 throw new ArgumentNullException(nameof(tryGetReceipt));
             AuctionReceipt = tryGetReceipt;
             ReceiptId = receiptId;
             Auction = AuctionReceipt.Auction;
+            Estate = Auction.Estate;
+            Company = Estate.Company;
             UserAccount = AuctionReceipt.Buyer;
             AuctionReceiptPayment = AuctionReceipt.Payments;
         }

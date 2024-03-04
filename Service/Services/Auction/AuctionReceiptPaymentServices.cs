@@ -39,5 +39,9 @@ namespace Service.Services.Auction
 		{
 			return await _auctionReceiptPaymentRepository.DeleteAsync(auctionReceiptPayment);
 		}
-	}
+        public async Task<bool> DeleteRange(List<AuctionReceiptPayment> auctionReceiptPayments)
+        {
+            return await _auctionReceiptPaymentRepository.DeleteRange(auctionReceiptPayments);
+        }
+    }
 }

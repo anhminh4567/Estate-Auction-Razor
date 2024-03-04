@@ -40,7 +40,10 @@ namespace Service.Services.AppAccount
 		}
 		private async Task<bool> CheckIfUserHasJoinedTheAuction(Account account, Repository.Database.Model.AuctionRelated.Auction auction)
 		{
-			var getUserJoinedAuctionJoined = await GetByAccountId_AuctionId(account.AccountId, auction.AuctionId);
+			var getUserJoinedAuctionJoined = (await _joinedAuctionRepository
+				.GetByCondition(j => j.AuctionId == auction.AuctionId 
+					&& j.AccountId == account.AccountId))//&& j.Status.Equals(JoinedAuctionStatus.REGISTERED
+				.FirstOrDefault();
 			if (getUserJoinedAuctionJoined is null)
 				return false;
 			return true;
@@ -53,7 +56,6 @@ namespace Service.Services.AppAccount
 				return true;
 			// CHECK USER ACCOUNT STATUS
 			// CHECK USER ACCOUNT STATUS
-
 			// CHECK AUCTION STATUS
 			// CHECK AUCTION STATUS
 			var aucStatus = auction.Status;

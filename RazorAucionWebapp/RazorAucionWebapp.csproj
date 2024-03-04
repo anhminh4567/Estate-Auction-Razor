@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Pages\AdminPages\Accounts\" />
     <Folder Include="wwwroot\PublicImages\" />
     <Folder Include="wwwroot\PublicImages\" />
   </ItemGroup>

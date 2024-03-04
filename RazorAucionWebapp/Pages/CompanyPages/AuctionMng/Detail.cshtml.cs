@@ -21,7 +21,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
         private readonly BidServices _bidService;
         private readonly AuctionReceiptServices _auctionReceiptService;
         private readonly JoinedAuctionServices _joinedAuctionService;
-
+        
         public DetailModel(AuctionServices auctionService, EstateServices estateService, BidServices bidService, AuctionReceiptServices auctionReceiptService)
         {
             _auctionService = auctionService;

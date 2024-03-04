@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Repository.Database;
 using Repository.Database.Model.AuctionRelated;
+using Repository.Database.Model.Enum;
+using Repository.Database.Model.RealEstate;
 using Service.Services.Auction;
 using Service.Services.RealEstate;
 
@@ -16,15 +18,20 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
     {
         private readonly AuctionServices _auctionServices;
         private readonly EstateServices _estateServices;
-
-        public DeleteModel(AuctionServices auctionServices, EstateServices estateServices)
+        private readonly BidServices _bidServices;
+        public DeleteModel(AuctionServices auctionServices, EstateServices estateServices, BidServices bidServices)
         {
             _auctionServices = auctionServices;
             _estateServices = estateServices;
+            _bidServices = bidServices;
         }
 
         [BindProperty]
         public Auction Auction { get; set; } = default!;
+        [BindProperty]
+        public int AuctionId { get; set; }
+        public Estate Estate { get; set; }
+        
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
@@ -33,15 +40,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
             }
             try
             {
-                var auction = await _auctionServices.GetById(id.Value);
-                if (auction is null)
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    Auction = auction;
-                }
+                await PopulateData(id.Value);
             }
             catch (Exception ex) 
             {
@@ -51,23 +50,33 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public async Task<IActionResult> OnPostAsync()
         {
-            if (id is null)
-            {
-                return NotFound();
-            }
             try 
             {
-                var auction = await _auctionServices.GetById(id.Value);
-                if (auction is null)
+                await PopulateData(AuctionId);
+                var startTime = Auction.StartDate;
+                var endTime = Auction.EndDate;
+                var status = Auction.Status;
+                if (DateTime.Compare(DateTime.Now,endTime) >= 0)
                 {
-                    return NotFound();
+                    ModelState.AddModelError(string.Empty, "over time to cancel");
+                    return Page();
                 }
-                Auction = auction;
-                var result = await _auctionServices.Delete(Auction);
-                if (result is false)
-                    throw new Exception("cannot set new status for this one, something wrong with it");
+                if(status.Equals(AuctionStatus.SUCCESS) ||
+                   status.Equals(AuctionStatus.PENDING_PAYMENT) ||
+                    status.Equals(AuctionStatus.CANCELLED))
+                {
+                    ModelState.AddModelError(string.Empty, "the status is not valid to cancel or you have already cancelled");
+                    return Page();
+                }
+                Auction.Status = AuctionStatus.CANCELLED;
+                var joinedAccounts = Auction.JoinedAccounts;
+                await _auctionServices.Update(Auction);
+                //foreach(var joinedAccount in joinedAccounts)
+                //{
+                //    joinedAccount.Status = JoinedAuctionStatus.QUIT;
+                //}
                 return RedirectToPage("./Index");
             }
             catch(Exception ex) 
@@ -76,6 +85,21 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
                 return BadRequest();
             }
             
+        }
+        private async Task PopulateData(int auctionId)
+        {
+            var auction = await _auctionServices.GetInclude(auctionId, "Estate,JoinedAccounts");
+            if (auction is null)
+            {
+                throw new Exception("not found auction");
+            }
+            else
+            {
+                Auction = auction;
+                AuctionId = Auction.AuctionId ;  
+                Estate = Auction.Estate;
+            }
+
         }
     }
 }
