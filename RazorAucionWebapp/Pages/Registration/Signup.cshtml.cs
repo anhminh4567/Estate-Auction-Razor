@@ -72,7 +72,7 @@ namespace RazorAucionWebapp.Pages.Registration
 				ModelState.AddModelError(string.Empty, "error on create new account");
 				return Page();
 			}
-			SetUserIdentity(newAcc);
+			await SetUserIdentity(newAcc);
 			TempData["SuccessSignUp"] = $"Create success, email: {result.Email} , Id: {result.AccountId}";
 			return RedirectToPage("/Index");
 		}
