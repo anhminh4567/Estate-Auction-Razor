@@ -29,7 +29,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
 			_estateServices = estateServices;
 			_estateCategoryDetailServices = estateCategoryDetailServices;
 		}
-		public IList<Estate> CompanyEstates { get; set; }
+		//public IList<Estate> CompanyEstates { get; set; }
 		//[BindProperty]
 		//[Required]
 		//public DateTime RegistrationDate { get; set; }
@@ -57,14 +57,21 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
         [BindProperty]
 		[Required]
 		public int MaxParticipant { get; set; }
+		//[BindProperty]
+		//[NotNull]
+		//[Required]
+		//public int SelectedEstate { get; set; }
+		public Estate CurrentEstate { get; set; }
 		[BindProperty]
-		[NotNull]
-		[Required]
-		public int SelectedEstate { get; set; }
+		public int CurrentEstateId { get; set; }
 		private int _companyId { get; set; }
-		public async Task<IActionResult> OnGetAsync()
+		public async Task<IActionResult> OnGetAsync(int? estateId)
 		{
-			await PopulateData();
+			if(estateId is null)
+			{
+				return NotFound();
+			}
+			await PopulateData(estateId.Value);
 			return Page();
 		}
 
@@ -73,7 +80,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
 		{
 			try
 			{
-				await PopulateData();
+				await PopulateData(CurrentEstateId);
 				if (!ModelState.IsValid)
 				{
 					return Page();
@@ -96,7 +103,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
 					StartDate = StartDate,
 					EndDate = EndDate,
 					EndPayDate = EndPayDate,
-					EstateId = SelectedEstate,
+					EstateId = CurrentEstate.EstateId,
 					IncrementPrice = IncrementPrice,
 					EntranceFee = EntranceFee,
 					MaxParticipant = MaxParticipant,
@@ -118,13 +125,15 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
 				return Page();
 			}
 		}
-		private async Task PopulateData()
+		private async Task PopulateData(int estateId)
 		{
 			var tryGetClaimId = int.TryParse(HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("Id"))?.Value, out var companyId);
 			if (tryGetClaimId is false)
 				throw new Exception("claim id is not found, means this user is not legit or not exist at all");
 			_companyId = companyId;
-			CompanyEstates = await _estateServices.GetByCompanyId(_companyId);
+			CurrentEstateId = estateId;
+			//CompanyEstates = await _estateServices.GetByCompanyId(_companyId);
+			CurrentEstate = await _estateServices.GetById(CurrentEstateId);
 		}
 	}
 }

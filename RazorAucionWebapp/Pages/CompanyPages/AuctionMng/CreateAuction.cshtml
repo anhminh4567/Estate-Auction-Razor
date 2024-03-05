@@ -1,4 +1,5 @@
 ﻿@page
+@using Repository.Database.Model.Enum;
 @model RazorAucionWebapp.Pages.CompanyPages.AuctionMng.CreateModel
 
 @{
@@ -10,15 +11,15 @@
 	<hr />
 
 	<form method="post">
-		 <div asp-validation-summary="ModelOnly" class="text-danger"></div> 
-@*		<div class="row mb-3">
-			<div class="col-md-6">
-				<div class="form-group">
-					<label asp-for="RegistrationDate" class="control-label">Registration Date</label>
-					<input asp-for="RegistrationDate" class="form-control" />
-					<span asp-validation-for="RegistrationDate" class="text-danger"></span>
-				</div>
-			</div>
+		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+		@*		<div class="row mb-3">
+		<div class="col-md-6">
+		<div class="form-group">
+		<label asp-for="RegistrationDate" class="control-label">Registration Date</label>
+		<input asp-for="RegistrationDate" class="form-control" />
+		<span asp-validation-for="RegistrationDate" class="text-danger"></span>
+		</div>
+		</div>
 		</div>*@
 		<div class="row mb-3">
 			<div class="col-md-6">
@@ -71,35 +72,49 @@
 			<input asp-for="MaxParticipant" class="form-control" />
 			<span asp-validation-for="MaxParticipant" class="text-danger"></span>
 		</div>
-		<div class="form-group">
-			<label asp-for="SelectedEstate" class="control-label">Estate for this Auction</label>
-			<span asp-validation-for="SelectedEstate" class="text-danger"></span>
-			@{
-				foreach (var estate in Model.CompanyEstates)
-				{
-					<div>
-						<input class="" type="radio" name="SelectedEstate" value="@estate.EstateId" />
-						<div>
-							<p>THIS PART SHOULD PUT AN IMAGE, LIKE SHOPPING, TAKE 1st Img IN table and display, since there are none, use text, later use image</p>
-							<p class="">Estate Name: @estate.Name</p>
-							<p class="">Estate Width: @estate.Width </p>
-							<p class="">Estate Length: @estate.Length</p>
-							@foreach (var auc in estate.Auctions)
-							{
-								if (auc.Status != Repository.Database.Model.Enum.AuctionStatus.CANCELLED &&
-								auc.Status != Repository.Database.Model.Enum.AuctionStatus.FAILED_TO_PAY)
-								{
-									<p class="text-danger">this estate has had an auction goin on, cant create for this one, should not pick this one</p>
-								}
-							}
-						</div>
-					</div>
-				}
+		@*<div class="form-group">
+		<label asp-for="SelectedEstate" class="control-label">Estate for this Auction</label>
+		<span asp-validation-for="SelectedEstate" class="text-danger"></span>
+		@{
+		foreach (var estate in Model.CompanyEstates)
+		{
+		<div>
+		<input class="" type="radio" name="SelectedEstate" value="@estate.EstateId" />
+		<div>
+		<p>THIS PART SHOULD PUT AN IMAGE, LIKE SHOPPING, TAKE 1st Img IN table and display, since there are none, use text, later use image</p>
+		<p class="">Estate Name: @estate.Name</p>
+		<p class="">Estate Width: @estate.Width </p>
+		<p class="">Estate Length: @estate.Length</p>
+		@foreach (var auc in estate.Auctions)
+		{
+		if (auc.Status != Repository.Database.Model.Enum.AuctionStatus.CANCELLED &&
+		auc.Status != Repository.Database.Model.Enum.AuctionStatus.FAILED_TO_PAY)
+		{
+		<p class="text-danger">this estate has had an auction goin on, cant create for this one, should not pick this one</p>
+		}
+		}
+		</div>
+		</div>
+		}
+		}
+		</div>*@
+		@{
+			if (Model.CurrentEstate.Status.Equals(EstateStatus.CREATED) is false)
+			{
+				<div class="form-group">
+					<p class="text-danger"> you cannot create auction for estate, it must be a new estate that have not been removed or banned</p>
+					<input type="hidden" asp-for="CurrentEstateId" value="@Model.CurrentEstateId" />
+					<input type="submit" value="Create" class="btn btn-primary" disabled />
+				</div>
 			}
-		</div>
-		<div class="form-group">
-			<input type="submit" value="Create" class="btn btn-primary" />
-		</div>
+			else
+			{
+				<div class="form-group">
+					<input type="hidden" asp-for="CurrentEstateId" value="@Model.CurrentEstateId" />
+					<input type="submit" value="Create" class="btn btn-primary" />
+				</div>
+			}
+		}
 	</form>
 
 

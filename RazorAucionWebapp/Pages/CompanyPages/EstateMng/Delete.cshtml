@@ -1,4 +1,5 @@
 ﻿@page
+@using Repository.Database.Model.Enum;
 @model RazorAucionWebapp.Pages.CompanyPages.EstateMng.DeleteModel
 
 @{
@@ -10,7 +11,7 @@
 <h3>Are you sure you want to delete this?</h3>
 <div>
     <h4>Estate</h4>
-    <div asp-validation-summary="ModelOnly">
+    <div class="text-danger" asp-validation-summary="ModelOnly">
 
     </div>
     <hr />
@@ -46,10 +47,41 @@
             @Html.DisplayFor(model => model.Estate.Length)
         </dd>
     </dl>
-    
-    <form method="post">
-        <input type="hidden" asp-for="Estate.EstateId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-page="./Index">Back to List</a>
-    </form>
+    <div>
+        @{
+            if(Model.Estate.Auctions is not null)
+            {
+                foreach (var auc in Model.Estate.Auctions)
+                {
+                    <div class ="auction border border-2 p-3 m-3">
+                        <p>id       : @auc.AuctionId</p>
+                        <p>start    : @auc.RegistrationDate</p>
+                        <p>end      : @auc.EndDate</p>
+                        <p>pay end  : @auc.EndPayDate</p>
+                        <p class="text-danger">status   : @auc.Status.ToString()</p>
+                    </div>
+                }
+            }
+           
+        }
+    </div>
+    @{
+        if(Model.Estate.Status.Equals(EstateStatus.CREATED) is false)
+        {
+            <h4 class="text-danger">CANNOT REMOVE, ESTATE IS @Model.Estate.Status.ToString()</h4>
+            <form method="post">
+                <input type="hidden" asp-for="Estate.EstateId" disabled />
+                <input type="submit" value="Delete" class="btn btn-danger" disabled /> |
+                <a class="btn btn-secondary" asp-page="./Index">Back to List</a>
+            </form>
+        }
+        else
+        {
+            <form method="post">
+                <input type="hidden" asp-for="Estate.EstateId" />
+                <input type="submit" value="Delete" class="btn btn-danger" /> |
+                <a class="btn btn-secondary" asp-page="./Index">Back to List</a>
+            </form>
+        }
+    }
 </div>

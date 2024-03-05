@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Build.Framework;
+using RazorAucionWebapp.Configure;
 using Repository.Database;
 using Repository.Database.Model.AppAccount;
 using Repository.Database.Model.AuctionRelated;
@@ -25,14 +26,16 @@ namespace RazorAucionWebapp.Pages.CustomerPages.ReceiptPayment
         private readonly AuctionServices _auctionServices;
         private readonly AccountServices _accountServices;
         private readonly EstateServices _estateService;
+        private readonly BindAppsettings _bindAppsettings;
 
-        public CreateModel(AuctionReceiptPaymentServices auctionReceiptPaymentServices, AuctionReceiptServices auctionReceiptServices, AuctionServices auctionServices, AccountServices accountServices, EstateServices estateService)
+        public CreateModel(AuctionReceiptPaymentServices auctionReceiptPaymentServices, AuctionReceiptServices auctionReceiptServices, AuctionServices auctionServices, AccountServices accountServices, EstateServices estateService, BindAppsettings bindAppsettings)
         {
             _auctionReceiptPaymentServices = auctionReceiptPaymentServices;
             _auctionReceiptServices = auctionReceiptServices;
             _auctionServices = auctionServices;
             _accountServices = accountServices;
             _estateService = estateService;
+            _bindAppsettings = bindAppsettings;
         }
 
         public async Task<IActionResult> OnGetAsync(int? receiptId)
@@ -131,16 +134,20 @@ namespace RazorAucionWebapp.Pages.CustomerPages.ReceiptPayment
                     //await _auctionReceiptPaymentServices.Delete(createResult);
                     throw new Exception();
                 }
-                /////////// UPDATE Company BALANCE///////////
-                Company.Balance += createResult.PayAmount;
-                await _accountServices.Update(Company);
+                
 				/////////// UPDATE If NO REMAIN AMOUNT///////////
 				if (AuctionReceipt.RemainAmount == 0)
                 {
                     Auction.Status = Repository.Database.Model.Enum.AuctionStatus.SUCCESS;
                     Estate.Status = Repository.Database.Model.Enum.EstateStatus.FINISHED;
+                    /////////// UPDATE Company BALANCE///////////
+                    Company.Balance += AuctionReceipt.Amount - AuctionReceipt.Commission;
+                    await _accountServices.Update(Company);
                     await _auctionServices.Update(Auction);
                     await _estateService.Update(Estate);
+                    /////////// UPDATE APP COMISSION///////////
+                    AuctionReceipt.Commission = AuctionReceipt.Amount * (_bindAppsettings.CommissionPercentage / 100);
+                    await _auctionReceiptServices.Update(AuctionReceipt);
                 }
 
                 return RedirectToPage("./Index",new {auctionId = Auction.AuctionId});

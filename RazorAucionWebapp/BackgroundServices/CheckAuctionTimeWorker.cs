@@ -1,4 +1,5 @@
-﻿using Repository.Database;
+﻿using RazorAucionWebapp.Configure;
+using Repository.Database;
 using Repository.Database.Model.AuctionRelated;
 using Repository.Database.Model.Enum;
 using Service.Services.Auction;
@@ -36,6 +37,7 @@ namespace RazorAucionWebapp.BackgroundServices
         {
             using (var scope = ServiceProvider.CreateScope()) 
             {
+                var getBindAppsettings = scope.ServiceProvider.GetRequiredService<BindAppsettings>();
                 var auctionService = scope.ServiceProvider.GetRequiredService<AuctionServices>();
 				var bidServices = scope.ServiceProvider.GetRequiredService<BidServices>();
                 var auctionRecieptService = scope.ServiceProvider.GetRequiredService<AuctionReceiptServices>();
@@ -72,7 +74,7 @@ namespace RazorAucionWebapp.BackgroundServices
                                     BuyerId = getHighestBid.BidderId,
                                     Amount = getHighestBid.Amount,
                                     RemainAmount = getHighestBid.Amount - 0,
-                                    Commission = getHighestBid.Amount * (1 / 100), // GET THIS FROM APPSETTING.JSON
+                                    Commission = 0, // this is because commision only apllied when the user has already paid all 
                                 };
                                 var createResult = await auctionRecieptService.Create(newWinnder);
                                 if (createResult is null)

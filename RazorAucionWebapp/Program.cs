@@ -4,7 +4,14 @@ using RazorAucionWebapp.Configure;
 using Repository.Database;
 using Repository.Database.Model.Enum;
 using System.Security.Claims;
+using System.Text.Json;
 
+string json = File.ReadAllText("appsettings.json");
+var appSettings = JsonSerializer.Deserialize<BindAppsettings>(json, new JsonSerializerOptions()
+{
+    AllowTrailingCommas = true,
+    ReadCommentHandling = JsonCommentHandling.Skip
+}) ;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -22,6 +29,7 @@ builder.Services.AddMyRepositories();
 builder.Services.AddMyServices();
 
 builder.Services.AddSingleton<ServerDefaultValue>();
+builder.Services.AddSingleton(appSettings);
 
 builder.Services.AddHostedService<CheckAuctionTimeWorker>();
 builder.Services.AddHostedService<CheckPaymentReachDeadline>();

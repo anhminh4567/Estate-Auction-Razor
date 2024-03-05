@@ -81,6 +81,7 @@
         }
         @{
             <p class="text-success"> Auction</p>
+            <a class="btn btn-primary" asp-page="../AuctionMng/CreateAuction" asp-route-estateId="@Model.Estate.EstateId">Create Auciton</a>
             if (Model.Estate.Auctions is not null && Model.Estate.Auctions.Count > 0)
             {
                 foreach (var auction in Model.Estate.Auctions)

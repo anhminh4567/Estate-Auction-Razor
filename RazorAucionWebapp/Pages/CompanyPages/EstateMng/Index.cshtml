@@ -23,9 +23,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Estates[0].Company)
-                </th>
+
                 <th>
                     @Html.DisplayNameFor(model => model.Estates[0].Name)
                 </th>
@@ -38,6 +36,15 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Estates[0].Length)
                 </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Estates[0].Area)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Estates[0].Floor)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Estates[0].Status)
+                </th>
                 <th></th>
             </tr>
         </thead>
@@ -45,9 +52,6 @@
             @foreach (var item in Model.Estates)
             {
                 <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Company.CMND)
-                    </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
@@ -61,9 +65,18 @@
                         @Html.DisplayFor(modelItem => item.Length)
                     </td>
                     <td>
-                        <a asp-page="./Update" asp-route-id="@item.EstateId">Edit</a> |
-                        <a asp-page="./Detail" asp-route-id="@item.EstateId">Details</a> |
-                        <a asp-page="./Delete" asp-route-id="@item.EstateId">Delete</a>
+                        @Html.DisplayFor(modelItem => item.Area)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Floor)
+                    </td>
+                    <td class="text-danger">
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+                        @*<a asp-page="./Update" asp-route-id="@item.EstateId">Edit</a> |*@
+                        <a class="btn btn-secondary" asp-page="./Detail" asp-route-id="@item.EstateId">Details</a> |
+                        <a class="btn btn-danger" asp-page="./Delete" asp-route-id="@item.EstateId">Delete</a>
                     </td>
                 </tr>
             }

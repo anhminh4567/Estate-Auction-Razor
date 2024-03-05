@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Repository.Database;
+using Repository.Database.Model.AuctionRelated;
 using Repository.Database.Model.Enum;
 using Repository.Database.Model.RealEstate;
 using Service.Services.AppAccount;
@@ -38,8 +39,8 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
                 return NotFound();
             }
 
-            var estate = await _estateServices.GetById(id.Value);
-            if (estate is null)
+            var estate = await _estateServices.GetIncludes(id.Value, "Auctions");
+			if (estate is null)
             {
                 return NotFound();
             }
@@ -58,7 +59,13 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
             }
             try {
                 var getEstate = await _estateServices.GetIncludes(id.Value, "Auctions");
+                Estate = getEstate;
                 var isDeletable = true;
+                if(getEstate.Status.Equals(EstateStatus.REMOVED) || getEstate.Status.Equals(EstateStatus.BANNDED) || getEstate.Status.Equals(EstateStatus.FINISHED))
+                {
+                    ModelState.AddModelError(string.Empty, "cannot delete, estate is already " + getEstate.Status.ToString());
+                    return Page();
+                }
                 if (getEstate.Auctions is not null)
                 {
                     foreach (var auction in getEstate.Auctions)
@@ -68,7 +75,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
                             auction.Status.Equals(AuctionStatus.PENDING_PAYMENT))
                         {
                             isDeletable = false;
-                            ModelState.AddModelError(string.Empty, "cannot delete, an auction is happening");
+                            ModelState.AddModelError(string.Empty, "cannot delete, an auction is " +  auction.Status.ToString());
                             break;
                         }
                     }
@@ -84,7 +91,6 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
                 {
                     return Page();
                 }
-                
             }catch(Exception ex) 
             {
                 Console.WriteLine(ex.Message);
