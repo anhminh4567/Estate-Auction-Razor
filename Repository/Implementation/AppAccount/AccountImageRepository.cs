@@ -23,7 +23,7 @@ namespace Repository.Implementation.AppAccount
 
 		public async Task<IList<AccountImages>> GetAllByAccountId(int AccountId)
 		{
-			return await _set.Where(img => img.AccountId.Equals(AccountId)).ToListAsync();
+			return await _set.Where(img => img.AccountId.Equals(AccountId)).Include(p => p.Image).ToListAsync();
 		}
 	}
 }

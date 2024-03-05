@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\PublicImages\general\auction_logo.png" />
+    <Content Remove="wwwroot\PublicImages\general\estate_banner.jpg" />
+    <Content Remove="wwwroot\PublicImages\general\user_icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Pages\Registration\login_bg.jpg" />
   </ItemGroup>
 
@@ -17,7 +23,7 @@
   <ItemGroup>
     <Folder Include="Pages\AdminPages\Accounts\" />
     <Folder Include="wwwroot\PublicImages\" />
-    <Folder Include="wwwroot\PublicImages\" />
+	<Folder Include="wwwroot\PublicImages\storage\user\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,6 +34,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\PublicImages\storage\user\" />
   </ItemGroup>
 
 </Project>

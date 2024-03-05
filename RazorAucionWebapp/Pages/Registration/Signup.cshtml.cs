@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Repository.Database.Model.AppAccount;
 using Service.Services.AppAccount;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 
 namespace RazorAucionWebapp.Pages.Registration
 {
@@ -70,8 +72,25 @@ namespace RazorAucionWebapp.Pages.Registration
 				ModelState.AddModelError(string.Empty, "error on create new account");
 				return Page();
 			}
+			SetUserIdentity(newAcc);
 			TempData["SuccessSignUp"] = $"Create success, email: {result.Email} , Id: {result.AccountId}";
 			return RedirectToPage("/Index");
+		}
+
+		private async Task SetUserIdentity(Account account)
+		{
+			var claims = new List<Claim>
+			{
+				 new Claim(ClaimTypes.Email,account.Email),
+				new Claim(ClaimTypes.Role, account.Role.ToString()),
+				new Claim(ClaimTypes.Name,account.FullName),
+				new Claim("IsVerified", account.IsVerified == 0 ? "false" : "true"),
+				new Claim("Status",account.Status.ToString()),
+				new Claim("Id",account.AccountId.ToString()),
+			};
+			var claimIdentity = new ClaimsIdentity(claims, "cookie", ClaimTypes.Email, ClaimTypes.Role);
+			var claimPrinciple = new ClaimsPrincipal(claimIdentity);
+			await HttpContext.SignInAsync("cookie", claimPrinciple);
 		}
     }
 }

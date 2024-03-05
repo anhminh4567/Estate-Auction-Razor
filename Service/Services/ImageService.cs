@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Repository.Database.Model;
 using Repository.Interfaces;
+using System.Drawing;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
@@ -72,28 +74,31 @@ namespace Service.Services
 		/// <param name="fileName">ten file</param>
 		/// <returns></returns>
 		//, string folderPath = "wwwroot\\PublicImages"
-		public async Task<AppImage?> SaveImage(Stream imageStream, string folderType, string fileName, string wwwroot_publicImage_folder_path) //folder should be local to app, webroot path or wwwroot path
+		public async Task<AppImage?> SaveImage(string rootPath, string savePath, string fileName) //folder should be local to app, webroot path or wwwroot path
 		{
-			var correctFilename = GenerateFilename(fileName);
-			var savePath =  folderType + "\\" + correctFilename;
-			using (var fs = new FileStream(savePath, FileMode.Create))
+			/*using (var fs = new FileStream(Path.Combine(rootPath,savePath,correctFilename), FileMode.Create))
 			{
 				await imageStream.CopyToAsync(fs);
-			}
-			var saveImageData = new AppImage() { Name = correctFilename, Path = savePath, CreateDate = DateTime.Now };
+			}*/
+			var saveImageData = new AppImage() { 
+				Name = fileName, 
+				Path = Path.Combine(savePath, fileName), 
+				CreateDate = DateTime.Now 
+			};
 			var result =  await _imagesRepository.CreateAsync(saveImageData);
 			if (result is not null) 
-			{ 
+			{
+
+				return saveImageData;
 				//TODO add image vo trong file wwwroot/PublicImages
 			}
 			return null;
-
 		}
 		//not test yet
 		public string GenerateFilename(string filename)
 		{
 			var fileExtendsion = filename.Split('.').Last();
-			var nameOnly = filename.Substring(0, filename.Length - 1 - ".".Length - fileExtendsion.Length);
+			var nameOnly = filename.Split('.').First();
 			var timeNowAsLong = DateTime.Now.Ticks;
 			return nameOnly + "." + timeNowAsLong.ToString() + "." + fileExtendsion;
 		}
