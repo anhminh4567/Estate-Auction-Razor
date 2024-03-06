@@ -24,12 +24,12 @@ namespace RazorAucionWebapp.Pages.CustomerPages.ReceiptPayment
             _auctionServices = auctionServices;
         }
 
-        public IList<AuctionReceiptPayment> AuctionReceiptPayment { get;set; } = default!;
+        public IList<AuctionReceiptPayment> AuctionReceiptPayment { get; set; } = default!;
         public AuctionReceipt AuctionReceipt { get; set; }
-        
+
         public async Task<IActionResult> OnGetAsync(int? auctionId)
         {
-            if(auctionId is null || auctionId == 0)
+            if (auctionId is null || auctionId == 0)
             {
                 return NotFound();
             }
@@ -37,7 +37,8 @@ namespace RazorAucionWebapp.Pages.CustomerPages.ReceiptPayment
             {
                 await PopulateData(auctionId.Value);
                 return Page();
-            }catch(Exception ex) 
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return Page();
@@ -53,7 +54,7 @@ namespace RazorAucionWebapp.Pages.CustomerPages.ReceiptPayment
             }
             else
                 AuctionReceipt = tryGetReceipt;
-            var tryGetReceiptTransaction =( await _auctionReceiptPaymentServices.GetByReceiptId(tryGetReceipt.ReceiptId, "Account")).ToList();
+            var tryGetReceiptTransaction = (await _auctionReceiptPaymentServices.GetByReceiptId(tryGetReceipt.ReceiptId, "Account")).ToList();
             if (tryGetReceiptTransaction == null)
             {
                 ModelState.AddModelError(string.Empty, "No transaction can be found for this reeipt");

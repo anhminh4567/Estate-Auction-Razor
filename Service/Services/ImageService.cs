@@ -10,33 +10,34 @@ using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
+using Repository.Interfaces.DbTransaction;
 
 namespace Service.Services
 {
 	public class ImageService
 	{
-		private readonly IImagesRepository _imagesRepository;
+		private readonly IUnitOfWork _unitOfWork;
 		private readonly string[] _validFileExtendsion = new[] { "png", "jpeg" };
 		private readonly string[] _invalidFileCharacter = new[] { "~!@#$%^&*()-=+|\\/<>," }; //allow is _ and .
-		public ImageService(IImagesRepository imagesRepository)
+		public ImageService(IUnitOfWork unitOfWOrk)
 		{
-			_imagesRepository = imagesRepository;
+			_unitOfWork = unitOfWOrk;
 		}
 
 		public async Task<AppImage?> GetImage(int imageId)
 		{
-			return await _imagesRepository.GetAsync(imageId);
+			return await _unitOfWork.Repositories.imagesRepository.GetAsync(imageId);
 		}
 		public async Task<List<AppImage>?> GetRangeImages(params int[] imagesId) 
 		{
-			return await _imagesRepository.GetRange(imagesId);
+			return await _unitOfWork.Repositories.imagesRepository.GetRange(imagesId);
 		}
 		public async Task<bool> RemoveImage(AppImage image, string wwwroot_publicImage_folder_path) 
 		{
 			var imagePath = image.Path;
 			if (IsFileExist(wwwroot_publicImage_folder_path, imagePath) == false)
 				return false;
-			var result = await _imagesRepository.DeleteAsync(image);
+			var result = await _unitOfWork.Repositories.imagesRepository.DeleteAsync(image);
 			if (result) 
 			{
 				//TODO delete image trong file wwwroot/publicimages
@@ -58,7 +59,7 @@ namespace Service.Services
 			var imagePath = image.Path;
 			if(IsFileExist(wwwroot_publicImage_folder_path,imagePath) == false)
 				return false;
-			var result = await _imagesRepository.UpdateAsync(image);
+			var result = await _unitOfWork.Repositories.imagesRepository.UpdateAsync(image);
 			if (result)
 			{
 				//TODO update image trong file wwwroot/publicimages
@@ -85,7 +86,7 @@ namespace Service.Services
 				Path = Path.Combine(savePath, fileName), 
 				CreateDate = DateTime.Now 
 			};
-			var result =  await _imagesRepository.CreateAsync(saveImageData);
+			var result =  await _unitOfWork.Repositories.imagesRepository.CreateAsync(saveImageData);
 			if (result is not null) 
 			{
 

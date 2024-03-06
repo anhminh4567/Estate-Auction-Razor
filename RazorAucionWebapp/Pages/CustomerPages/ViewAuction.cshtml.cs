@@ -24,34 +24,34 @@ namespace RazorAucionWebapp.Pages.CustomerPages
             _accountServices = accountServices;
         }
 
-        public IList<Auction?> JoinedAuctions { get;set; } = default!;
+        public IList<Auction?> JoinedAuctions { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync()
         {
             await PopulateData();
             return Page();
         }
-        public async Task<IActionResult> OnPostAsync() 
+        public async Task<IActionResult> OnPostAsync()
         {
             await PopulateData();
             return Page();
         }
-		private int UserId { get; set; }
+        private int UserId { get; set; }
 
-		private void GetUserId()
+        private void GetUserId()
         {
             var result = int.TryParse(HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("Id"))?.Value, out int userId);
-            if(result is false) 
+            if (result is false)
                 throw new Exception("Unauthorized User");
             UserId = userId;
         }
-        private async Task PopulateData() 
+        private async Task PopulateData()
         {
             GetUserId();
             var getUserDetail = await _accountServices.GetInclude(UserId, "JoinedAuctions.Auction.AuctionReceipt");
             if (getUserDetail is null)
                 throw new Exception("user not exists");
             JoinedAuctions = getUserDetail.JoinedAuctions?.Select(j => j.Auction).ToList();
-		}
+        }
     }
 }

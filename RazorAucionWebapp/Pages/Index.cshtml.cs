@@ -30,7 +30,7 @@ namespace RazorAucionWebapp.Pages
         {
             // 2 so nay la static, mot frontend sua lai, bind 2 so nay 
             PageStart = 0;
-            DisplayAmount = 10;
+            DisplayAmount = 15;
             // 2 so nay la static, mot frontend sua lai, bind 2 so nay 
             int correctStartValue = PageStart * DisplayAmount;
             await PopulateData(correctStartValue, DisplayAmount);

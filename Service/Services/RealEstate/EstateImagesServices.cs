@@ -1,5 +1,6 @@
 ﻿using Repository.Database.Model;
 using Repository.Database.Model.RealEstate;
+using Repository.Interfaces.DbTransaction;
 using Repository.Interfaces.RealEstate;
 using System;
 using System.Collections.Generic;
@@ -12,17 +13,27 @@ namespace Service.Services.RealEstate
 {
 	public class EstateImagesServices
 	{
-		private readonly IEstateImagesRepository _estateImagesRepository;
-		private readonly ImageService _imageService;	
+		private readonly IUnitOfWork _unitOfWork;
+        private readonly ImageService _imageService;
 
-		public EstateImagesServices(IEstateImagesRepository estateImagesRepository, ImageService imageService)
+        public EstateImagesServices(IUnitOfWork unitOfWork, ImageService imageService)
+        {
+            _unitOfWork = unitOfWork;
+            _imageService = imageService;
+        }
+
+
+        //private readonly IEstateImagesRepository _estateImagesRepository;
+        //private readonly ImageService _imageService;	
+
+        //public EstateImagesServices(IEstateImagesRepository estateImagesRepository, ImageService imageService)
+        //{
+        //	_estateImagesRepository = estateImagesRepository;
+        //	_imageService = imageService;
+        //}
+        public async Task<List<AppImage>?> GetByEstateId(int estateId) 
 		{
-			_estateImagesRepository = estateImagesRepository;
-			_imageService = imageService;
-		}
-		public async Task<List<AppImage>?> GetByEstateId(int estateId) 
-		{
-			var getImagesId = ( await _estateImagesRepository.GetByEstateId(estateId))?.Select(e => e.ImageId).ToArray();
+			var getImagesId = ( await _unitOfWork.Repositories.estateImagesRepository.GetByEstateId(estateId))?.Select(e => e.ImageId).ToArray();
 			if (getImagesId is null)
 				return null;
 			return await _imageService.GetRangeImages(getImagesId);
