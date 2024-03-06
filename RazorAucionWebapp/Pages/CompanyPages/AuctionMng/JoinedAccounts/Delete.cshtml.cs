@@ -39,52 +39,58 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng.JoinedAccounts
         {
             if (auctionId is null || accountId is null)
                 return NotFound();
-			try
-			{
-                await PopulateData(accountId.Value,auctionId.Value);
+            try
+            {
+                await PopulateData(accountId.Value, auctionId.Value);
                 return Page();
-			}
-			catch (Exception ex)
-			{
-				return NotFound();
-			}
-		}
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
+        }
 
         public async Task<IActionResult> OnPostAsync()
-		{
-			try
-			{
-				await PopulateData(AccountId, AuctionId);
-                var status = JoinedAuction.Status;
-                if (status.Equals(JoinedAuctionStatus.REGISTERED))// only when user is registered can you ban him, if i quit, or alreay banned, then no
+        {
+            try
+            {
+                await PopulateData(AccountId, AuctionId);
+                var result = await _joinedAuctionServices.BanUserFromAuction(JoinedAuction);
+                if (result.IsSuccess)
                 {
-                    JoinedAuction.Status = JoinedAuctionStatus.BANNED;
-                    await _joinedAuctionServices.Update(JoinedAuction);// UPDate status to BANNED
-                    var getBids = await _bidServices.GetByAuctionId_AccountId(AuctionId,AccountId);// REMOVE ALL BID OF THE USER IF EXIST
-                    if(getBids.Count > 0)
-                    {
-                        await _bidServices.DeleteRange(getBids);
-                    }
-                    return RedirectToPage("./Index", new { auctionId = AuctionId});
+                    return RedirectToPage("./Index", new { auctionId = AuctionId });
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty,"cannot banned this user because the status is "+ JoinedAuction.Status.ToString());
+                    ModelState.AddModelError(string.Empty, result.message);
                     return Page();
                 }
+                //var status = JoinedAuction.Status;
+                //if (status.Equals(JoinedAuctionStatus.REGISTERED))// only when user is registered can you ban him, if i quit, or alreay banned, then no
+                //{
+                //    JoinedAuction.Status = JoinedAuctionStatus.BANNED;
+                //    await _joinedAuctionServices.Update(JoinedAuction);// UPDate status to BANNED
+                //    var getBids = await _bidServices.GetByAuctionId_AccountId(AuctionId,AccountId);// REMOVE ALL BID OF THE USER IF EXIST
+                //    if(getBids.Count > 0)
+                //    {
+                //        await _bidServices.DeleteRange(getBids);
+                //    }
+                //    return RedirectToPage("./Index", new { auctionId = AuctionId});
+                //}
+
             }
-			catch (Exception ex)
-			{
+            catch (Exception ex)
+            {
                 Console.WriteLine(ex.ToString());
-				return NotFound();
-			}
+                return NotFound();
+            }
         }
         private async Task PopulateData(int accountId, int auctionId)
         {
             AuctionId = auctionId;
             AccountId = accountId;
             var tryGetJoinedAuction = (await _joinedAuctionServices.GetByAccountId_AuctionId(accountId: accountId, auctionId: auctionId));
-            if(tryGetJoinedAuction is null) 
+            if (tryGetJoinedAuction is null)
                 throw new NullReferenceException(nameof(tryGetJoinedAuction));
             JoinedAuction = tryGetJoinedAuction;
             Auction = await _auctionServices.GetById(AuctionId);

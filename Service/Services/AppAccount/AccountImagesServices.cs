@@ -1,6 +1,7 @@
 ﻿using Repository.Database.Model;
 using Repository.Database.Model.AppAccount;
 using Repository.Interfaces.AppAccount;
+using Repository.Interfaces.DbTransaction;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,22 +12,33 @@ namespace Service.Services.AppAccount
 {
 	public class AccountImagesServices
 	{
-		private readonly IAccountImageRepository _accountImageRepository;
-		private readonly ImageService _imageService;
+		private readonly IUnitOfWork _unitOfWork;
+        private readonly ImageService _imageService;
 
-		public AccountImagesServices(IAccountImageRepository accountImageRepository, ImageService imageService)
+        public AccountImagesServices(IUnitOfWork unitOfWork, ImageService imageService)
+        {
+            _unitOfWork = unitOfWork;
+            _imageService = imageService;
+        }
+
+
+
+        //private readonly IAccountImageRepository _accountImageRepository;
+        //private readonly ImageService _imageService;
+
+        //public AccountImagesServices(IAccountImageRepository accountImageRepository, ImageService imageService)
+        //{
+        //	_accountImageRepository = accountImageRepository;
+        //	_imageService = imageService;
+        //}
+        public async Task<AppImage?> GetAccountAvatar(int accountId)
 		{
-			_accountImageRepository = accountImageRepository;
-			_imageService = imageService;
-		}
-		public async Task<AppImage?> GetAccountAvatar(int accountId)
-		{
-			var images = await _accountImageRepository.GetAllByAccountId(accountId);
+			var images = await _unitOfWork.Repositories.accountImageRepository.GetAllByAccountId(accountId);
 			return images.OrderByDescending(p => p.Image.Name).FirstOrDefault(p => p.Image.Name.ToLower().Contains("avatar"))?.Image;
 		}
 		public async Task<List<AppImage>?> GetByAccountId(int estateId)
 		{
-			var getImagesId = (await _accountImageRepository.GetAllByAccountId(estateId))?.Select(e => e.ImageId).ToArray();
+			var getImagesId = (await _unitOfWork.Repositories.accountImageRepository.GetAllByAccountId(estateId))?.Select(e => e.ImageId).ToArray();
 			if (getImagesId is null)
 				return null;
 			return await _imageService.GetRangeImages(getImagesId);
@@ -46,7 +58,7 @@ namespace Service.Services.AppAccount
                     ImageId = image.ImageId,
 					AccountId = accountId
 				};
-				var aImage = await _accountImageRepository.CreateAsync(accountImage);
+				var aImage = await _unitOfWork.Repositories.accountImageRepository.CreateAsync(accountImage);
 				return image;
             }
 			else return null;

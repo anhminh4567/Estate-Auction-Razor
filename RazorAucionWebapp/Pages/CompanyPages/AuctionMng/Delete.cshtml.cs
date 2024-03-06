@@ -31,7 +31,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
         [BindProperty]
         public int AuctionId { get; set; }
         public Estate Estate { get; set; }
-        
+
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
@@ -42,7 +42,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
             {
                 await PopulateData(id.Value);
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return BadRequest(ex.Message);
@@ -52,41 +52,26 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
 
         public async Task<IActionResult> OnPostAsync()
         {
-            try 
+            try
             {
                 await PopulateData(AuctionId);
-                var startTime = Auction.StartDate;
-                var endTime = Auction.EndDate;
-                var status = Auction.Status;
-                if (DateTime.Compare(DateTime.Now,endTime) >= 0)
+                var result = await _auctionServices.Delete(Auction);
+                if (result.IsSuccess)
                 {
-                    ModelState.AddModelError(string.Empty, "over time to cancel");
+                    return RedirectToPage("./Index");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, result.message);
                     return Page();
                 }
-                if(status.Equals(AuctionStatus.SUCCESS) ||
-                   status.Equals(AuctionStatus.PENDING_PAYMENT) ||
-                    status.Equals(AuctionStatus.CANCELLED))
-                {
-                    ModelState.AddModelError(string.Empty, "the status is not valid to cancel or you have already cancelled");
-                    return Page();
-                }
-                Auction.Status = AuctionStatus.CANCELLED;
-                ///
-                /// Hoàn lại tiền Entrence Fee cho mọi nguời trong JoinedAuction có Status là REGISTERD
-                var joinedAccounts = Auction.JoinedAccounts;
-                await _auctionServices.Update(Auction);
-                //foreach(var joinedAccount in joinedAccounts)
-                //{
-                //    joinedAccount.Status = JoinedAuctionStatus.QUIT;
-                //}
-                return RedirectToPage("./Index");
+
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return BadRequest();
             }
-            
         }
         private async Task PopulateData(int auctionId)
         {
@@ -98,7 +83,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
             else
             {
                 Auction = auction;
-                AuctionId = Auction.AuctionId ;  
+                AuctionId = Auction.AuctionId;
                 Estate = Auction.Estate;
             }
 

@@ -83,10 +83,10 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
                 {
                     return Page();
                 }
-                if (SelectedEstateCategoriesOptions.Count == 0) 
+                if (SelectedEstateCategoriesOptions.Count == 0)
                 {
                     ModelState.AddModelError(string.Empty, "select a category please");
-                } 
+                }
                 Estate.Width = Width;
                 Estate.Length = Length;
                 Estate.Area = Area;
@@ -97,31 +97,41 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
                 Estate.Name = Name;
                 Estate.CompanyId = CompanyId;
                 Estate.Status = Repository.Database.Model.Enum.EstateStatus.CREATED;
-                
-                var estateResult = await _estateServices.Create(Estate);
-                if (estateResult == null)
+
+                var estateResult = await _estateServices.Create(Estate, SelectedEstateCategoriesOptions);
+                if (estateResult.IsSuccess)
                 {
-                    ModelState.AddModelError(string.Empty, "something wrong when create");
+                    return RedirectToPage("./Index");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, estateResult.message);
                     return Page();
                 }
-                foreach (var item in SelectedEstateCategoriesOptions)
-                {
-                    if (item == null)
-                        continue;
-                    var newCategories = new EstateCategories()
-                    {
-                        CategoryId = int.Parse(item),
-                        EstateId = estateResult.EstateId,
-                    };
-                    var estateCategoriesResult = await _estateCategoriesServices.CreateEstateCategories(newCategories);
-                    if (estateCategoriesResult is null)
-                    {
-                        ModelState.AddModelError(string.Empty, "something wrong when adding categories");
-                        return Page();
-                    }
-                }
-                return RedirectToPage("./Index");
-            }catch(Exception ex) 
+                //if (estateResult == null)
+                //{
+                //    ModelState.AddModelError(string.Empty, "something wrong when create");
+                //    return Page();
+                //}
+                //foreach (var item in SelectedEstateCategoriesOptions)
+                //{
+                //    if (item == null)
+                //        continue;
+                //    var newCategories = new EstateCategories()
+                //    {
+                //        CategoryId = int.Parse(item),
+                //        EstateId = estateResult.EstateId,
+                //    };
+                //    var estateCategoriesResult = await _estateCategoriesServices.CreateEstateCategories(newCategories);
+                //    if (estateCategoriesResult is null)
+                //    {
+                //        ModelState.AddModelError(string.Empty, "something wrong when adding categories");
+                //        return Page();
+                //    }
+                //}
+
+            }
+            catch (Exception ex)
             {
                 ModelState.AddModelError(string.Empty, ex.Message);
                 return Page();
@@ -138,7 +148,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
                     EstateCategoriesOptions.Add(new SelectListItem(category.CategoryName, category.CategoryId.ToString()));
                 }
             }
-        
+
         }
 
         private void GetCompanyId()

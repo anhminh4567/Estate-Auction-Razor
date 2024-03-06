@@ -21,23 +21,23 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
         private readonly AuctionServices _auctionServices;
         private readonly EstateServices _estateServices;
         private readonly JoinedAuctionServices _joinedAuctionServices;
-		private readonly BidServices _bidServices;
+        private readonly BidServices _bidServices;
 
-		public UpdateModel(AuctionServices auctionServices, EstateServices estateServices, JoinedAuctionServices joinedAuctionServices, BidServices bidServices)
-		{
-			_auctionServices = auctionServices;
-			_estateServices = estateServices;
-			_joinedAuctionServices = joinedAuctionServices;
-			_bidServices = bidServices;
-		}
+        public UpdateModel(AuctionServices auctionServices, EstateServices estateServices, JoinedAuctionServices joinedAuctionServices, BidServices bidServices)
+        {
+            _auctionServices = auctionServices;
+            _estateServices = estateServices;
+            _joinedAuctionServices = joinedAuctionServices;
+            _bidServices = bidServices;
+        }
 
-		[BindProperty]
-		public bool IsCancelled { get; set; }
-        
-		public Auction Auction { get; set; } = default!;
+        [BindProperty]
+        public bool IsCancelled { get; set; }
+
+        public Auction Auction { get; set; } = default!;
         public AuctionReceipt AuctionReceipt { get; set; }
-		public List<Account?> AllJoinedAccount { get; set; }// total Joined
-		public List<Account?> JoinedAccounts { get;set; }// those who haven't quit or banned 
+        public List<Account?> AllJoinedAccount { get; set; }// total Joined
+        public List<Account?> JoinedAccounts { get; set; }// those who haven't quit or banned 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
@@ -47,8 +47,8 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
             try
             {
                 await PopulateData(id.Value);
-			}
-			catch(Exception ex) 
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return BadRequest();
@@ -66,10 +66,10 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
             }
             try
             {
-				await PopulateData(Auction.AuctionId);
+                await PopulateData(Auction.AuctionId);
                 var maxParticipant = Auction.MaxParticipant;
                 var status = Auction.Status;
-			}
+            }
             catch (DbUpdateConcurrencyException ex)
             {
                 Console.WriteLine(ex.Message);
@@ -85,11 +85,11 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
             if (tryGetAuction == null)
                 throw new NullReferenceException();
             Auction = tryGetAuction;
-			AllJoinedAccount =  Auction.JoinedAccounts?
+            AllJoinedAccount = Auction.JoinedAccounts?
                 .Select(j => j.Account).ToList();
             JoinedAccounts = Auction.JoinedAccounts?
                 .Where(j => j.Status.Equals(JoinedAuctionStatus.REGISTERED))
                 .Select(j => j.Account).ToList();
-		}
+        }
     }
 }

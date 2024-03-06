@@ -33,17 +33,16 @@ namespace RazorAucionWebapp.Pages.CustomerPages
         }
         public Auction Auction { get; set; } = default!;
         public List<Bid> AuctionBids { get; set; }
-        public Bid? HighestBid { get; set; }
-		public AuctionReceipt? Winner { get; set; }
-		public List<Account>? JoinedAccounts { get; set; }
+
+        //public List<Account>? JoinedAccounts { get; set; }
         [BindProperty]
         [Required]
         public decimal Amount { get; set; }
-		[BindProperty]
-		[Required]
-		public int AuctionID { get; set; }
-		//private Bid Bid { get; set; } = default!;
-		private int _bidderId;
+        [BindProperty]
+        [Required]
+        public int AuctionID { get; set; }
+        //private Bid Bid { get; set; } = default!;
+        private int _bidderId;
 
         public async Task<IActionResult> OnGetAsync(int? auctionId)
         {
@@ -70,71 +69,80 @@ namespace RazorAucionWebapp.Pages.CustomerPages
             try
             {
                 await PopulateData();
-                if(Winner is not null && Auction.Status.Equals(AuctionStatus.ONGOING) == false) 
+                var result = await _bidServices.PlaceBid(_bidderId, AuctionID, Amount);
+                if (result.IsSuccess)
                 {
-                    ModelState.AddModelError(string.Empty, "this auction has already finished, you cannot bid anymore");
+                    TempData["SuccessMessage"] = $"your bid is registered at {result.returnBid.Time} with amount {result.returnBid.Amount}";
                     return Page();
-                }
-                var getJoinedAccount = JoinedAccounts?.FirstOrDefault(a => a.AccountId == _bidderId);
-                if (getJoinedAccount is null )
-                {
-                    ModelState.AddModelError(string.Empty, "user has not joined auction yet to bid");
-                    return Page();
-                }
-                if (Auction.JoinedAccounts.FirstOrDefault(a => a.AccountId == _bidderId).Status.Equals(JoinedAuctionStatus.BANNED))
-                {
-					ModelState.AddModelError(string.Empty, "user is banned");
-					return Page();
-				}
-                ////////////// HIGHER THAN TOP BID /////////////
-                if (Amount <= HighestBid?.Amount)
-                {
-                    ModelState.AddModelError(string.Empty, "your cannot place a bit lower than the top dog");
-                    return Page();
-                }
-				////////////// CHECK IF BID IS VALID AGAINST AUCTION CONDITION /////////////
-				if (HighestBid is not null)
-                {
-					var compareToBidJump = (Amount - HighestBid?.Amount) >= Auction.IncrementPrice;
-					if (compareToBidJump is false)
-					{
-						ModelState.AddModelError(string.Empty, "your bid must match increament price condition");
-						return Page();
-					}
                 }
                 else
                 {
-                    var compareToBidJump_FirstBidder = Amount >= Auction.IncrementPrice;
-					if (compareToBidJump_FirstBidder is false)
-					{
-						ModelState.AddModelError(string.Empty, "your bid must match increament price condition");
-						return Page();
-					}
-				}
-				////////////// CHECK IF BID IS VALID AGAINST AUCTION CONDITION /////////////
-
-				///////////// ADD TO DB /////////////
-				var createResult = await _bidServices.Create(new Bid()
-                {
-                    BidderId = _bidderId,
-                    AuctionId = AuctionID,
-                    Amount = Amount,
-                    Time = DateTime.Now,
-                });
-                if(createResult is null) 
-                {
-                    ModelState.AddModelError(string.Empty, "cannot create bid, something wrong, try again later");
+                    ModelState.AddModelError(string.Empty, result.message);
                     return Page();
                 }
-                TempData["SuccessMessage"] = $"your bid is registered at {createResult.Time} with amount {createResult.Amount}";
-                return Page();
+                //            if(Winner is not null && Auction.Status.Equals(AuctionStatus.ONGOING) == false) 
+                //            {
+                //                ModelState.AddModelError(string.Empty, "this auction has already finished, you cannot bid anymore");
+                //                return Page();
+                //            }
+                //            var getJoinedAccount = JoinedAccounts?.FirstOrDefault(a => a.AccountId == _bidderId);
+                //            if (getJoinedAccount is null )
+                //            {
+                //                ModelState.AddModelError(string.Empty, "user has not joined auction yet to bid");
+                //                return Page();
+                //            }
+                //            if (Auction.JoinedAccounts.FirstOrDefault(a => a.AccountId == _bidderId).Status.Equals(JoinedAuctionStatus.BANNED))
+                //            {
+                //	ModelState.AddModelError(string.Empty, "user is banned");
+                //	return Page();
+                //}
+                //            ////////////// HIGHER THAN TOP BID /////////////
+                //            if (Amount <= HighestBid?.Amount)
+                //            {
+                //                ModelState.AddModelError(string.Empty, "your cannot place a bit lower than the top dog");
+                //                return Page();
+                //            }
+                //////////////// CHECK IF BID IS VALID AGAINST AUCTION CONDITION /////////////
+                //if (HighestBid is not null)
+                //            {
+                //	var compareToBidJump = (Amount - HighestBid?.Amount) >= Auction.IncrementPrice;
+                //	if (compareToBidJump is false)
+                //	{
+                //		ModelState.AddModelError(string.Empty, "your bid must match increament price condition");
+                //		return Page();
+                //	}
+                //            }
+                //            else
+                //            {
+                //                var compareToBidJump_FirstBidder = Amount >= Auction.IncrementPrice;
+                //	if (compareToBidJump_FirstBidder is false)
+                //	{
+                //		ModelState.AddModelError(string.Empty, "your bid must match increament price condition");
+                //		return Page();
+                //	}
+                //}
+                //////////////// CHECK IF BID IS VALID AGAINST AUCTION CONDITION /////////////
+
+                /////////////// ADD TO DB /////////////
+                //var createResult = await _bidServices.Create(new Bid()
+                //            {
+                //                BidderId = _bidderId,
+                //                AuctionId = AuctionID,
+                //                Amount = Amount,
+                //                Time = DateTime.Now,
+                //            });
+                //            if(createResult is null) 
+                //            {
+                //                ModelState.AddModelError(string.Empty, "cannot create bid, something wrong, try again later");
+                //                return Page();
+                //            }
+
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return BadRequest(ex.Message);
             }
-            return RedirectToPage("./Index");
         }
         private async Task PopulateData()
         {
@@ -148,11 +156,11 @@ namespace RazorAucionWebapp.Pages.CustomerPages
             else
                 Auction = auction;
             AuctionBids = Auction.Bids.OrderByDescending(b => b.Amount).ToList();
-            HighestBid = AuctionBids.FirstOrDefault();
-            JoinedAccounts = Auction.JoinedAccounts
-                .Select(j => j.Account)
-                .ToList();
-            Winner = await _auctionReceiptServices.GetByAuctionId(AuctionID); // if this exist, mean someone has won ==> NO MORE BID ALLOWD
+            //HighestBid = AuctionBids.FirstOrDefault();
+            //JoinedAccounts = Auction.JoinedAccounts
+            //    .Select(j => j.Account)
+            //    .ToList();
+            //Winner = await _auctionReceiptServices.GetByAuctionId(AuctionID); // if this exist, mean someone has won ==> NO MORE BID ALLOWD
         }
     }
 }

@@ -68,8 +68,8 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
                 await PopulateData(id.Value);
                 return Page();
             }
-            catch (Exception ex) 
-            { 
+            catch (Exception ex)
+            {
                 Console.WriteLine(ex.Message);
                 return NotFound();
             }
@@ -81,31 +81,40 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
             {
                 return Page();
             }
-            try {
+            try
+            {
                 Estate.Name = Name;
                 Estate.Description = Description;
                 Estate.Width = Width;
                 Estate.Length = Length;
-                List<EstateCategories> selectedCategories = new List<EstateCategories>();
-                foreach(var sel in SelectedCategories) 
+                var result = await _estateService.Update(Estate, SelectedCategories);
+                if (result.IsSuccess)
+                    return RedirectToPage("./Index");
+                else
                 {
-                    selectedCategories.Add(new EstateCategories() { CategoryId = sel,EstateId = EstateId});
+                    ModelState.AddModelError(string.Empty, result.message);
+                    return Page();
                 }
-                var result = await _estateCategoriesServices.DeleteRangeAsync(CurrentEstateCategories);
-                var addResult = await _estateCategoriesServices.CreateRangeAsync(selectedCategories);
-                var updateResult = await _estateService.Update(Estate);
+                //List<EstateCategories> selectedCategories = new List<EstateCategories>();
+                //foreach(var sel in SelectedCategories) 
+                //{
+                //    selectedCategories.Add(new EstateCategories() { CategoryId = sel,EstateId = EstateId});
+                //}
+                //var result = await _estateCategoriesServices.DeleteRangeAsync(CurrentEstateCategories);
+                //var addResult = await _estateCategoriesServices.CreateRangeAsync(selectedCategories);
+                //var updateResult = await _estateService.Update(Estate);
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 ModelState.AddModelError(string.Empty, ex.Message);
+                return Page();
             }
-            return RedirectToPage("./Index");
         }
-        
-        private async Task PopulateData(int id) 
+
+        private async Task PopulateData(int id)
         {
-            var estate = await _estateService.GetIncludes(id,new string[] { "EstateCategory.CategoryDetail", "Images.Image" });
-            if(estate is null)
+            var estate = await _estateService.GetIncludes(id, new string[] { "EstateCategory.CategoryDetail", "Images.Image" });
+            if (estate is null)
                 throw new NullReferenceException("estate of such id does not exist, something wrong ");
             Estate = estate;
             Categories = await _estateCategoriesDetailServies.GetAll();

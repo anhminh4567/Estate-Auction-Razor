@@ -19,27 +19,27 @@ namespace RazorAucionWebapp.Pages.CustomerPages
 			_auctionServices = auctionServices;
 
 		}
-		public Auction Auction { get; set; } = default!;
-		public List<Bid> AuctionBids { get; set; }
-		public List<Account>? JoinedAccounts { get; set; }
-		public async Task<IActionResult> OnGetAsync(int? id)
+        public Auction Auction { get; set; } = default!;
+        public List<Bid> AuctionBids { get; set; }
+        public List<Account>? JoinedAccounts { get; set; }
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
-			if (id is null)
-				return BadRequest();
-			await PopulateData(id.Value);
-			return Page();
+            if (id is null)
+                return BadRequest();
+            await PopulateData(id.Value);
+            return Page();
         }
-		private async Task PopulateData(int auctionId) 
-		{
-			var auction = await _auctionServices.GetInclude(auctionId, "Bids.Bidder,JoinedAccounts.Account,Estate.Images.Image,Estate.EstateCategory.CategoryDetail");
-			if (auction == null)
-				throw new Exception("no auction found for this id");
-			else
-				Auction = auction;
-			AuctionBids = Auction.Bids.OrderByDescending(b => b.Amount).ToList();
-			JoinedAccounts = Auction.JoinedAccounts
-				.Select(j => j.Account)
-				.ToList();
-		}
+        private async Task PopulateData(int auctionId)
+        {
+            var auction = await _auctionServices.GetInclude(auctionId, "Bids.Bidder,JoinedAccounts.Account,Estate.Images.Image,Estate.EstateCategory.CategoryDetail");
+            if (auction == null)
+                throw new Exception("no auction found for this id");
+            else
+                Auction = auction;
+            AuctionBids = Auction.Bids.OrderByDescending(b => b.Amount).ToList();
+            JoinedAccounts = Auction.JoinedAccounts
+                .Select(j => j.Account)
+                .ToList();
+        }
     }
 }

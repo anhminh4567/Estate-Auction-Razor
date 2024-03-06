@@ -40,11 +40,11 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
             }
 
             var estate = await _estateServices.GetIncludes(id.Value, "Auctions");
-			if (estate is null)
+            if (estate is null)
             {
                 return NotFound();
             }
-            else 
+            else
             {
                 Estate = estate;
             }
@@ -57,45 +57,53 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
             {
                 return NotFound();
             }
-            try {
+            try
+            {
                 var getEstate = await _estateServices.GetIncludes(id.Value, "Auctions");
                 Estate = getEstate;
-                var isDeletable = true;
-                if(getEstate.Status.Equals(EstateStatus.REMOVED) || getEstate.Status.Equals(EstateStatus.BANNDED) || getEstate.Status.Equals(EstateStatus.FINISHED))
+                //var isDeletable = true;
+                //if(getEstate.Status.Equals(EstateStatus.REMOVED) || getEstate.Status.Equals(EstateStatus.BANNDED) || getEstate.Status.Equals(EstateStatus.FINISHED))
+                //{
+                //    ModelState.AddModelError(string.Empty, "cannot delete, estate is already " + getEstate.Status.ToString());
+                //    return Page();
+                //}
+                //if (getEstate.Auctions is not null)
+                //{
+                //    foreach (var auction in getEstate.Auctions)
+                //    {
+                //        if(auction.Status.Equals(AuctionStatus.SUCCESS) ||
+                //            auction.Status.Equals(AuctionStatus.ONGOING) ||
+                //            auction.Status.Equals(AuctionStatus.PENDING_PAYMENT))
+                //        {
+                //            isDeletable = false;
+                //            ModelState.AddModelError(string.Empty, "cannot delete, an auction is " +  auction.Status.ToString());
+                //            break;
+                //        }
+                //    }
+                //}
+                //if (isDeletable)
+                //{
+                //    var result = await _estateServices.Delete(getEstate);
+                //    if (result is false)
+                //        throw new Exception("something wrong when delete, it result in false");
+                //    return RedirectToPage("./Index");
+                //}
+                var deleteEstate = await _estateServices.Delete(Estate);
+                if (deleteEstate.IsSuccess)
                 {
-                    ModelState.AddModelError(string.Empty, "cannot delete, estate is already " + getEstate.Status.ToString());
-                    return Page();
-                }
-                if (getEstate.Auctions is not null)
-                {
-                    foreach (var auction in getEstate.Auctions)
-                    {
-                        if(auction.Status.Equals(AuctionStatus.SUCCESS) ||
-                            auction.Status.Equals(AuctionStatus.ONGOING) ||
-                            auction.Status.Equals(AuctionStatus.PENDING_PAYMENT))
-                        {
-                            isDeletable = false;
-                            ModelState.AddModelError(string.Empty, "cannot delete, an auction is " +  auction.Status.ToString());
-                            break;
-                        }
-                    }
-                }
-                if (isDeletable)
-                {
-                    var result = await _estateServices.Delete(getEstate);
-                    if (result is false)
-                        throw new Exception("something wrong when delete, it result in false");
                     return RedirectToPage("./Index");
                 }
                 else
                 {
+                    ModelState.AddModelError(string.Empty, deleteEstate.message);
                     return Page();
                 }
-            }catch(Exception ex) 
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return NotFound();
-            }            
+            }
         }
     }
 }

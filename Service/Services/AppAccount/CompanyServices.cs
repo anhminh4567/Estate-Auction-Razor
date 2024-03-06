@@ -12,30 +12,41 @@ using Repository.Database.Model.AuctionRelated;
 using Repository.Interfaces.Auction;
 using Service.Services.RealEstate;
 using Service.Services.Auction;
+using Repository.Interfaces.DbTransaction;
 
 namespace Service.Services.AppAccount
 {
 	public class CompanyServices
 	{
-		private readonly ICompanyRepository _companyRepository;
-		private readonly EstateServices _estateServices;
-		private readonly AuctionServices _auctionService;
-		public CompanyServices(
-			ICompanyRepository companyRepository, 
-			EstateServices estateServices,
-			AuctionServices auctionService)
+		private readonly IUnitOfWork _unitOfWork;
+        private readonly EstateServices _estateServices;
+        private readonly AuctionServices _auctionService;
+        public CompanyServices(IUnitOfWork unitOfWork, EstateServices estateServices)
+        {
+            _unitOfWork = unitOfWork;
+            _estateServices = estateServices;
+        }
+
+
+        //private readonly ICompanyRepository _companyRepository;
+        //private readonly EstateServices _estateServices;
+        //private readonly AuctionServices _auctionService;
+        //public CompanyServices(
+        //	ICompanyRepository companyRepository, 
+        //	EstateServices estateServices,
+        //	AuctionServices auctionService)
+        //{
+        //	_companyRepository = companyRepository;
+        //	_estateServices = estateServices;
+        //	_auctionService = auctionService;
+        //}
+        public async Task<Company> GetById(int id)
 		{
-			_companyRepository = companyRepository;
-			_estateServices = estateServices;
-			_auctionService = auctionService;
-		}
-		public async Task<Company> GetById(int id)
-		{
-			return await _companyRepository.GetAsync(id);
+			return await _unitOfWork.Repositories.companyRepository.GetAsync(id);
 		}
 		public async Task<List<Company>> GetAll() 
 		{
-			return await _companyRepository.GetAllAsync();
+			return await _unitOfWork.Repositories.companyRepository.GetAllAsync();
 		}
 		public async Task<List<Estate>> GetAllEstateByCompanyId(int companyId) 
 		{
@@ -47,15 +58,15 @@ namespace Service.Services.AppAccount
 		}
 		public async Task<Company> Create(Company company) 
 		{
-			return await _companyRepository.CreateAsync(company);
+			return await _unitOfWork.Repositories.companyRepository.CreateAsync(company);
 		}
 		public async Task<bool> Update(Company company)
 		{
-			return await _companyRepository.UpdateAsync(company);
+			return await _unitOfWork.Repositories.companyRepository.UpdateAsync(company);
 		}
 		public async Task<bool> Delete(Company company)
 		{
-			return await _companyRepository.DeleteAsync(company);
+			return await _unitOfWork.Repositories.companyRepository.DeleteAsync(company);
 		}
 	}
 }
