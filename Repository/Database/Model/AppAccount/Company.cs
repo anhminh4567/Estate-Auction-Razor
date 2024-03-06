@@ -29,7 +29,7 @@ namespace Repository.Database.Model.AppAccount
         {
             if (initBase)
             {
-
+                base.CMND = "0";
                 base.Role = Enum.Role.COMPANY;
                 base.Balance = 0;
                 base.Status = Enum.AccountStatus.ACTIVED;

@@ -67,11 +67,14 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
         public List<string> SelectedEstateCategoriesOptions { get; set; }
         public List<SelectListItem> EstateCategoriesOptions { get; set; }
         [BindProperty]
-        [Required]
-        public string ImageUrl { get; set; }
+        public List<IFormFile> Images { get; set; }
         private int CompanyId { get; set; }
         private Estate Estate { get; set; } = new Estate();
 
+        public async Task OnPostTestAsync()
+        {
+            var a = Images;
+        }
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {

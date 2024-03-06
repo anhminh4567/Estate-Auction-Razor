@@ -13,13 +13,17 @@
 	</div>
 }
 <div class="border border-2 m-3 p-3">
-	<h4>Account</h4>
+	<h4>Account (<span class="text-info fw-bolder">
+			@Enum.GetName(typeof(Repository.Database.Model.Enum.Role), Model.Account.Role)
+		</span>)</h4>
 	<hr />
 	<div>
 		<p>Email: @Model.Account.Email</p>
 		<p>Fullname: @Model.Account.FullName</p>
-		<p>CMND: @Model.Account.CMND</p>
-		<p>DOB: @Model.Account.Dob</p>
+		@if(Model.Account.Role != Repository.Database.Model.Enum.Role.COMPANY){
+			<p>CMND: @Model.Account.CMND</p>
+		}
+		<p>DOB: @Model.Account.Dob.ToShortDateString()</p>
 		<p>Status:
 		@if(Model.Account.Status == Repository.Database.Model.Enum.AccountStatus.ACTIVED)
 		{

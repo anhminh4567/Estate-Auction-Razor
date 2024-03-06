@@ -21,7 +21,7 @@
             <div class="create_form">
                 <h4 class="form_header">Create new estate</h4>
                 <hr />
-                <form method="post" id="create_estate_frm">
+                <form method="post" id="create_estate_frm" enctype="multipart/form-data">
                     @* <div asp-validation-summary="ModelOnly" class="text-danger"></div> *@
                     <div class="row">
                         <div class="col-md-4">
@@ -87,7 +87,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label asp-for="SelectedEstateCategoriesOptions" class="control-label" style="margin-bottom: .5rem">Estate categories</label>
-                                <input type="hidden" asp-for="SelectedEstateCategoriesOptions" />
+                                <input type="hidden" asp-for="SelectedEstateCategoriesOptions" multiple/>
                                 <div class="row">
                                     @foreach (var item in Model.EstateCategoriesOptions)
                                     {
@@ -105,21 +105,20 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="form-group add_img_form">
-                        <label asp-for="ImageUrl" class="control-label">Estate images</label>
-                                <input type="file" asp-for="ImageUrl" class="form-control" style="display: none;"/>
-                                <label for="ImageUrl" class="add_img_btn"></label>
-                        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                    <div class="form-group">
+                        <div class="container d-flex flex-row" id="ImageShowcase" style="height: 0px" ></div>
+                        <label asp-for="Images" class="control-label container-fluid" style="height: 150px">
+                            Estate images
+                            <div class="add_img_btn "></div>
+                        </label>
+                        <input id="ImageInput" type="file" asp-for="Images" class="form-control" style="display: none;" multiple/>
+                        <span asp-validation-for="Images" class="text-danger"></span>
                     </div>
-
-
                     <div class="form-group create_btn">
                         <input type="submit" value="Create" class="btn btn-primary"/>
                     </div>
                 </form>
             </div>
-
         </div>
     </div>
     
@@ -141,6 +140,29 @@
         });
         document.getElementById('inputtedCates').value = selectedCates.join(',');
     }
+
+    $('#ImageInput').on('change', function(){
+        var images = this[0].files;
+        console.log(images)
+        if (images.length > 5) {
+            alert('You can only upload maximum 5 images');
+        }
+        else {
+            (if (images.length == 0) $('#ImageShowcase').css('height', '0px')
+            else $('#ImageShowcase').css('height','120px')
+            var size = 60;
+            for (var i = 0; i < images.length; i++) {
+                let url;
+                var reader = new FileReader();
+                reader.onload = function(e){
+                    url = e.target.result;
+                }
+                reader.readAsDataURL(images[i]);
+                $('#ImageShowcase').append(`<img src="${url}" width="${size}" height="${size}"/>`)
+            }
+        }
+    });
+
 </script>
 
 @section Scripts {

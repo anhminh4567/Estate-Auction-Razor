@@ -68,8 +68,7 @@ namespace Service.Services.Auction
                 throw new Exception("auction or account is null");
             var auctionStatus = tryGetAuction.Status;
             var accountStatus = tryGetAccount.Status;
-            var accountVerified = tryGetAccount.IsVerified == 0 ? false : true;
-            if (auctionStatus != AuctionStatus.ONGOING || accountVerified == false || (accountStatus == AccountStatus.ACTIVED) is false)
+            if (auctionStatus != AuctionStatus.ONGOING || (accountStatus == AccountStatus.ACTIVED) is false)
                 throw new Exception("unqualified for bidding, either the auction is not happending or your account is not verified");
             var tryGetJoinedAuction = (await _unitOfWork.Repositories.joinedAuctionRepository.GetByCondition(j => j.AuctionId == newBid.AuctionId && j.AccountId == newBid.BidderId)).FirstOrDefault();
             if (tryGetJoinedAuction is null)

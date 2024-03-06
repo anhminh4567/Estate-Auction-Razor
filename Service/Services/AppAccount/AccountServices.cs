@@ -32,7 +32,7 @@ namespace Service.Services.AppAccount
 
 		public async Task<List<Account>> GetActiveCustomers()
 		{
-			return await _unitOfWork.Repositories.accountRepository.GetActiveCustomers( id );	
+			return await _unitOfWork.Repositories.accountRepository.GetActiveCustomers();	
 		}
 		public async Task< Account> GetById(int id) 
 		{
