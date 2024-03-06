@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Org.BouncyCastle.Math.EC.Rfc8032;
 using Repository.Database.Model;
 using Repository.Database.Model.AppAccount;
 using Service.Services.AppAccount;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Security.Claims;
 
@@ -14,13 +17,36 @@ namespace RazorAucionWebapp.Pages.CustomerPages
         private readonly AccountImagesServices _accountImagesServices;
         private readonly AccountServices _accountServices;
         [BindProperty]
-        public Account Account { get; set; }
+        public int Id {  get; set; }
+        [BindProperty]
+        [DataType(DataType.Text)]
+        [Required(ErrorMessage = "Name is required")]
+        public string Name { get; set; }
+        [BindProperty]
+        [DataType(DataType.EmailAddress)]
+        [Required(ErrorMessage = "Email is required")]
+        public string Email { get; set; }
+        [BindProperty]
+        [DataType(DataType.PhoneNumber)]
+        [Required(ErrorMessage = "Phone number is required")]
+        [RegularExpression(@"^0\d{9}$", ErrorMessage = "Phone number is not in correct format")]
+        [StringLength(10, MinimumLength = 10, ErrorMessage = "Not valid phone number")]
+        public string Tel { get; set; }
+        [BindProperty]
+        [DataType(DataType.Date)]
+        public DateTime Dob { get; set; }
+        [BindProperty]
+        [DataType(DataType.Password)]
+        [Required(ErrorMessage = "Password is required")]
+        public string Pass { get; set; }
         [BindProperty]
         public AppImage Image { get; set; }
         [BindProperty]
         public string Avatar { get; set; }
         public IFormFile ImageFile { get; set; }
         [BindProperty]
+        [DataType(DataType.Password)]
+        [Required(ErrorMessage = "NewPass is required")]
         public string NewPass { get; set; }
         public UpdateModel(IWebHostEnvironment webHostEnvironment, AccountImagesServices accountImagesServices, AccountServices accountServices)
         {
@@ -35,7 +61,7 @@ namespace RazorAucionWebapp.Pages.CustomerPages
             {
                 return RedirectToPage("/Registration/Login");
             }
-            GetAvatar();
+            await GetAvatar();
             return Page();
         }
         public async Task<IActionResult> OnPostImageUpdateAsync()
@@ -50,7 +76,7 @@ namespace RazorAucionWebapp.Pages.CustomerPages
                         await PopulateData();
                         var stream = br.ReadBytes((Int32)fs.Length);
                         var (directory, path, filename) = GetAvatarDirectory();
-                        var result = await _accountImagesServices.Create(Account.AccountId, directory, path, filename);
+                        var result = await _accountImagesServices.Create(Id, directory, path, filename);
                         if(result is not null)
                         {
                             SaveImage(stream, Path.Combine(directory, result.Path));
@@ -58,72 +84,86 @@ namespace RazorAucionWebapp.Pages.CustomerPages
                             identity.RemoveClaim(identity.FindFirst("Avatar"));
                             identity.AddClaim(new Claim("Avatar", "~/PublicImages/storage/"+result.Path));
                             TempData["Success"] = "Avatar updated";
+                            return RedirectToPage("./Detail");
                         }
                         else TempData["Failed"] = "Unknown error has occured";
                     }
                 }
             }
-            GetAvatar();
+            await GetAvatar();
             return Page();
         }
         public async Task<IActionResult> OnPostUpdateAsync()
         {
-            var flag = ModelState.IsValid;
-            if (flag)
+
+            var flag = ModelState["Name"].Errors.Any() || ModelState["Email"].Errors.Any() || ModelState["Tel"].Errors.Any() || ModelState["Pass"].Errors.Any();
+            if (!flag)
             {
-                var account = await _accountServices.GetById(Account.AccountId);
-                if (account.Password.Equals(Account.Password))
+                var account = await _accountServices.GetById(Id);
+                if (account.Password.Equals(Pass))
                 {
-                    account.FullName = Account.FullName;
-                    account.Email = Account.Email;
-                    account.Dob = Account.Dob;
-                    account.Telephone = Account.Telephone;
+                    account.FullName = Name;
+                    account.Email = Email;
+                    account.Dob = Dob;
+                    account.Telephone = Tel;
                     var result = await _accountServices.Update(account);
-                    if (result) TempData["Success"] = "Profile updated";
+                    if (result)
+                    {
+                        TempData["Success"] = "Profile updated";
+                        return RedirectToPage("./Detail");
+                    }
                     else TempData["Failed"] = "Unknown error has occured";
                 }
                 else
                 {
-                    ModelState.AddModelError("IncorrectPassword", "Your password doesn't match");
+                    TempData["Pass"] = "Wrong password";
                 }
             }
-            else
-            {
-                ModelState.AddModelError("IncorrectForm", "Please fill in your form");
+            else{
+                TempData["Name"] = ModelState["Name"].Errors.FirstOrDefault()?.ErrorMessage;
+                TempData["Email"] = ModelState["Email"].Errors.FirstOrDefault()?.ErrorMessage;
+                TempData["Tel"] = ModelState["Tel"].Errors.FirstOrDefault()?.ErrorMessage;
+                TempData["Dob"] = ModelState["Dob"].Errors.FirstOrDefault()?.ErrorMessage;
+                TempData["Pass"] = ModelState["Pass"].Errors.FirstOrDefault()?.ErrorMessage;
             }
-            GetAvatar();
+            await GetAvatar();
             return Page();
         }
         public async Task<IActionResult> OnPostChangeAsync()
         {
-            var flag = ModelState.IsValid;
-            if (flag)
+            var flag = ModelState["Pass"].Errors.Any() || ModelState["NewPass"].Errors.Any();
+            if (!flag)
             {
-                var account = await _accountServices.GetById(Account.AccountId);
-                if (account.Password.Equals(Account.Password))
+                var account = await _accountServices.GetById(Id);
+                if (account.Password.Equals(Pass))
                 {
-                    if (Account.Password != NewPass)
+                    if (Pass != NewPass)
                     {
                         account.Password = NewPass;
                         var result = await _accountServices.Update(account);
-                        if (result) TempData["Success"] = "Password changed";
+                        if (result)
+                        {
+							TempData["Success"] = "Password changed";
+                            return RedirectToPage("./Detail");
+						}
                         else TempData["Failed"] = "Unknown error has occured";
                     }
                     else
                     {
-                        ModelState.AddModelError("DuplicatePassword", "New password can't be your old password.");
+                        TempData["NewPass"] = "New password can't be your old password.";
                     }
                 }
                 else
                 {
-                    ModelState.AddModelError("IncorrectPassword", "Your password doesn't match");
+                    TempData["Pass"] = "Wrong password";
                 }
             }
             else
             {
-                ModelState.AddModelError("IncorrectForm", "Please fill in your form");
-            }
-            GetAvatar();
+                TempData["OldPass"] = ModelState["Pass"].Errors.FirstOrDefault().ErrorMessage;
+                TempData["NewPass"] = ModelState["NewPass"].Errors.FirstOrDefault().ErrorMessage;
+			}
+            await GetAvatar();
             return RedirectToPage();
         }
         private void SaveImage(Byte[] stream, string path)
@@ -174,7 +214,12 @@ namespace RazorAucionWebapp.Pages.CustomerPages
             var result = int.TryParse(id, out int accountId);
             if (result)
             {
-                Account = await _accountServices.GetById(accountId);
+                var account = await _accountServices.GetById(accountId);
+                Id = account.AccountId;
+                Name = account.FullName;
+                Email = account.Email;
+                Tel = account.Telephone;
+                Dob = account.Dob;
                 return true;
             }
             return false;
@@ -191,7 +236,7 @@ namespace RazorAucionWebapp.Pages.CustomerPages
         private (string,string,string) GetAvatarDirectory()
         {
             var directory = _webHostEnvironment.ContentRootPath;
-            var result = (Path.Combine(directory.Replace("//","\\"), "wwwroot","PublicImages","storage"),Path.Combine("user", Account.Email), "avatar.png");
+            var result = (Path.Combine(directory.Replace("//","\\"), "wwwroot","PublicImages","storage"),Path.Combine("user", Email), "avatar.png");
             return result;
         }
     }

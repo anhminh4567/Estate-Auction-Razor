@@ -6,7 +6,12 @@
 }
 
 <h1>Detail</h1>
-
+@if(TempData["Success"] is not null)
+{
+	<div class="border border-2 m-3 p-3 text-success">
+		@TempData["Success"]
+	</div>
+}
 <div class="border border-2 m-3 p-3">
 	<h4>Account</h4>
 	<hr />
@@ -31,6 +36,6 @@
 <div class="border border-2 m-3 p-3">
 	<a asp-page="../ViewAuction" class="btn btn-primary">Previous Auction Joined</a> |
 	<a asp-page="../Transactions/Create" class="btn btn-primary">Fill Your Waller (transaction) </a>
-	<a href="#" class="btn btn-primary">Edit</a> |
+	<a asp-page="./Update" class="btn btn-primary">Edit</a> |
 	<a asp-page="../../Index" class="btn btn-primary">Back to view</a>
 </div>

@@ -3,6 +3,13 @@
 @model RazorAucionWebapp.Pages.CustomerPages.UpdateModel
 @{
 }
+
+@if(TempData["Failed"] is not null)
+{
+    <div class="alert alert-danger">
+        @TempData["Failed"]
+    </div>
+}
 <div class="row my-2">
     <button id="updateFormBtn" class="col-auto btn btn-primary">Update Profile</button>
     <button id="changeFormBtn" class="col-auto btn btn-outline-primary">Change Password</button>
@@ -18,48 +25,54 @@
 </form>
 <br />
 <div class="h1">Profile</div>
-<form method="post" id="UpdateForm" asp-page-handler="update">
+<form class="ms-3" method="post" id="updateForm" asp-page-handler="update">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <input type="hidden" asp-for="Account.AccountId" />
+    <input type="hidden" asp-for="Id" />
     <div class="row my-2">
-        @Html.DisplayNameFor(model => model.Account.FullName)
-        <input asp-for="@Model.Account.FullName" />
-        <span asp-asp-validation-for="Model.Account.FullName" />
+        @Html.DisplayNameFor(model => model.Name)
+        <input asp-for="Name" />
+        <span class="text-danger">@TempData["Name"]</span>
     </div>
     <div class="row my-2">
-        @Html.DisplayNameFor(model => model.Account.Email)
-        <input asp-for="@Model.Account.Email" />
-        <span asp-asp-validation-for="Model.Account.Email" />
+        @Html.DisplayNameFor(model => model.Email)
+        <input asp-for="Email" />
+        <span class="text-danger">@TempData["Email"]</span>
     </div>
     <div class="row my-2">
-        @Html.DisplayNameFor(model => model.Account.Dob)
-        <input asp-for="@Model.Account.Dob" />
-        <span asp-asp-validation-for="Model.Account.Dob" />
+        @Html.DisplayNameFor(model => model.Tel)
+        <input asp-for="Tel" />
+        <span class="text-danger">@TempData["Email"]</span>
+    </div>
+    <div class="row my-2">
+        @Html.DisplayNameFor(model => model.Dob)
+        <input asp-for="Dob" />
+        <span class="text-danger">@TempData["Dob"]</span>
     </div>
     <div class="row my-2">
         <div>Type in your password</div>
-        <input asp-for="@Model.Account.Password" />
-        <span asp-asp-validation-for="Model.Account.Password" />
+        <input asp-for="Pass" />
+        <span class="text-danger">@TempData["Pass"]</span>
     </div>
     <br/>
     <a id="UpdateConfirm" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#updateModal">Save</a>
 </form>
-<form method="post" id="ChangeForm" asp-page-handler="change" style="display:none;">
+<form method="post" id="changeForm" asp-page-handler="change" style="display:none;">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <input type="hidden" asp-for="Account.AccountId" />
+    <input type="hidden" asp-for="Id" />
     <div>
         <div>Old Password</div>
-        <input asp-for="@Model.Account.Password" />
+        <input asp-for="@Model.Pass" />
+        <span class="text-danger">@TempData["OldPass"]</span>
     </div>
     <div>
         <div>New Password</div>
         <input asp-for="@Model.NewPass" />
         <span asp-asp-validation-for="Model.NewPass" />
+        <span class="text-danger">@TempData["NewPass"]</span>
     </div>
     <br />
     <a id="ChangeConfirm" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#updateModal">Save</a>
 </form>
-<div id="test">abc</div>
 <script>
     function ChangeImg(input){
         var reader = new FileReader();
