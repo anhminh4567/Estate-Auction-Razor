@@ -20,16 +20,20 @@
 		<p>Fullname: @Model.Account.FullName</p>
 		<p>CMND: @Model.Account.CMND</p>
 		<p>DOB: @Model.Account.Dob</p>
-		<p>Status:@Model.Account.Status.ToString()</p>
-		@if(Model.Account.IsVerified == 0)
+		<p>Status:
+		@if(Model.Account.Status == Repository.Database.Model.Enum.AccountStatus.ACTIVED)
 		{
-			<p>verified: IS VERIFIED</p>
+			<span class="text-success">ACTIVE</span>
+		}
+		else if (Model.Account.Status == Repository.Database.Model.Enum.AccountStatus.PENDING)
+		{
+			<span class="text-secondary">PENDING</span>
 		}
 		else
 		{
-			<p>verified: IS NOT VERIFIED (unable to do anything unless verified)</p>
+			<span class="text-danger">DEACTIVATED</span>
 		}
-
+		</p>
 		<p>Balance in account: @Model.Account.Balance</p>
 	</div>
 </div>

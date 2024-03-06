@@ -12,6 +12,7 @@ using Repository.Database.Model.AuctionRelated;
 using Repository.Interfaces.Auction;
 using Service.Services.RealEstate;
 using Service.Services.Auction;
+using Repository.Database.Model.Enum;
 
 namespace Service.Services.AppAccount
 {
@@ -47,7 +48,7 @@ namespace Service.Services.AppAccount
 		}
 		public async Task<Company> Create(Company company) 
 		{
-			return await _companyRepository.CreateAsync(company);
+            return await _companyRepository.CreateAsync(company);
 		}
 		public async Task<bool> Update(Company company)
 		{

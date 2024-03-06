@@ -21,7 +21,6 @@ namespace Repository.Database.Model.AppAccount
         public DateTime Dob { get; set; }
         public string Telephone { get; set; }
         public AccountStatus Status { get; set; }
-        public byte IsVerified { get; set; }
         public Role Role { get; set; }
         public string CMND { get; set; }
         public decimal Balance { get; set; }

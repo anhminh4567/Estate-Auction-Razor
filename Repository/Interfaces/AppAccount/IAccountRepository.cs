@@ -13,5 +13,6 @@ namespace Repository.Interfaces.AppAccount
 		Task<Account> GetByEmailPassword(string email, string password);
 		Task<Account> GetByEmail(string email, bool isCaseSensitive);
 		Task<Account> GetFullAsync(int accountId);
-	}
+		Task<List<Account>> GetActiveCustomers();
+    }
 }

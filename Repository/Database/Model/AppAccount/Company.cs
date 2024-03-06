@@ -20,27 +20,26 @@ namespace Repository.Database.Model.AppAccount
             FullName = acc.FullName;
             Dob = acc.Dob;
             Telephone = acc.Telephone;
-            Status = acc.Status;
-            IsVerified = acc.IsVerified;
-            Role = acc.Role;
+            Status = Enum.AccountStatus.ACTIVED;
+            Role = Enum.Role.COMPANY;
             CMND = acc.CMND;
-            Balance = acc.Balance;
+            Balance = 0;
         }
         public Company(bool initBase)
         {
             if (initBase)
             {
+
                 base.Role = Enum.Role.COMPANY;
                 base.Balance = 0;
-                base.IsVerified = 1;
-                base.Status = Enum.AccountStatus.PENDING;
+                base.Status = Enum.AccountStatus.ACTIVED;
             }
         }
         public string CompanyName { get; set; }
         public string Description { get; set; }
         public string Address { get; set; }
         public DateTime EstablishDate { get; set; }
-        public DateTime DateStartOnPlatform { get; set; }
-        public IList<Estate> OwnedEstate { get; set; }
+        public DateTime DateStartOnPlatform { get; set; } = DateTime.Now.Date;
+		public IList<Estate> OwnedEstate { get; set; }
     }
 }

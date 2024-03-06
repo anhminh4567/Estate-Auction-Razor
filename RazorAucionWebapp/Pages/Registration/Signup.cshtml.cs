@@ -61,7 +61,6 @@ namespace RazorAucionWebapp.Pages.Registration
 				Dob = Dob,
 				Telephone = Tel,
 				Status = Repository.Database.Model.Enum.AccountStatus.PENDING,
-				IsVerified = 0,
 				Role = Repository.Database.Model.Enum.Role.CUSTOMER,
 				CMND = CMND,
 				Balance = 0,
@@ -84,7 +83,6 @@ namespace RazorAucionWebapp.Pages.Registration
 				 new Claim(ClaimTypes.Email,account.Email),
 				new Claim(ClaimTypes.Role, account.Role.ToString()),
 				new Claim(ClaimTypes.Name,account.FullName),
-				new Claim("IsVerified", account.IsVerified == 0 ? "false" : "true"),
 				new Claim("Status",account.Status.ToString()),
 				new Claim("Id",account.AccountId.ToString()),
 			};

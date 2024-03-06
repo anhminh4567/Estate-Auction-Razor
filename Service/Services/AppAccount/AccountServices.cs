@@ -19,6 +19,10 @@ namespace Service.Services.AppAccount
 		{
 			_accountRepository = accountRepository;
 		}
+		public async Task<List<Account>> GetActiveCustomers()
+		{
+			return await _accountRepository.GetActiveCustomers();
+		}
 		public async Task< Account> GetById(int id) 
 		{
 			return await _accountRepository.GetAsync( id );	

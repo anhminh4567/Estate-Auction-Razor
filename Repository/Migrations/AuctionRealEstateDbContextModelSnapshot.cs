@@ -49,9 +49,6 @@ namespace Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte>("IsVerified")
-                        .HasColumnType("tinyint");
-
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -234,7 +231,7 @@ namespace Repository.Migrations
                     b.Property<DateTime>("PayTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 3, 3, 17, 10, 43, 524, DateTimeKind.Local).AddTicks(5897));
+                        .HasDefaultValue(new DateTime(2024, 3, 6, 9, 51, 50, 610, DateTimeKind.Local).AddTicks(5455));
 
                     b.Property<int?>("ReceiptId")
                         .HasColumnType("int");

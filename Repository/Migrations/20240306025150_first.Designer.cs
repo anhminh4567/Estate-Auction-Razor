@@ -12,8 +12,8 @@ using Repository.Database;
 namespace Repository.Migrations
 {
     [DbContext(typeof(AuctionRealEstateDbContext))]
-    [Migration("20240228043317_Fifth")]
-    partial class Fifth
+    [Migration("20240306025150_first")]
+    partial class first
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -50,9 +50,6 @@ namespace Repository.Migrations
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte>("IsVerified")
-                        .HasColumnType("tinyint");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -98,9 +95,6 @@ namespace Repository.Migrations
                     b.Property<int?>("AuctionId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("RegiisterFee")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<DateTime>("RegisterDate")
                         .HasColumnType("datetime2");
 
@@ -108,16 +102,9 @@ namespace Repository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TransactionId")
-                        .HasColumnType("int");
-
                     b.HasKey("AccountId", "AuctionId");
 
                     b.HasIndex("AuctionId");
-
-                    b.HasIndex("TransactionId")
-                        .IsUnique()
-                        .HasFilter("[TransactionId] IS NOT NULL");
 
                     b.ToTable("JoinedAuctions");
                 });
@@ -157,6 +144,9 @@ namespace Repository.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("EndPayDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<decimal>("EntranceFee")
                         .HasColumnType("decimal(18,2)");
 
@@ -167,6 +157,9 @@ namespace Repository.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("MaxParticipant")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ReceiptId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("RegistrationDate")
@@ -201,6 +194,7 @@ namespace Repository.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("AuctionId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int?>("BuyerId")
@@ -209,32 +203,75 @@ namespace Repository.Migrations
                     b.Property<decimal>("Commission")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<decimal>("RemainAmount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("ReceiptId");
 
-                    b.HasIndex("AuctionId");
+                    b.HasIndex("AuctionId")
+                        .IsUnique();
 
                     b.HasIndex("BuyerId");
 
                     b.ToTable("AuctionReceipts");
                 });
 
-            modelBuilder.Entity("Repository.Database.Model.AuctionRelated.Bid", b =>
+            modelBuilder.Entity("Repository.Database.Model.AuctionRelated.AuctionReceiptPayment", b =>
                 {
-                    b.Property<int>("BidderId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("AuctionId")
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("AccountId")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("PayAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("PayTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 3, 6, 9, 51, 50, 610, DateTimeKind.Local).AddTicks(5455));
+
+                    b.Property<int?>("ReceiptId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("ReceiptId");
+
+                    b.ToTable("AuctionReceiptPayments");
+                });
+
+            modelBuilder.Entity("Repository.Database.Model.AuctionRelated.Bid", b =>
+                {
+                    b.Property<int>("BidId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BidId"), 1L, 1);
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("AuctionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BidderId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("Time")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("BidderId", "AuctionId");
+                    b.HasKey("BidId");
 
                     b.HasIndex("AuctionId");
+
+                    b.HasIndex("BidderId");
 
                     b.ToTable("Bids", (string)null);
                 });
@@ -247,17 +284,35 @@ namespace Repository.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EstateId"), 1L, 1);
 
+                    b.Property<float>("Area")
+                        .HasColumnType("real");
+
                     b.Property<int>("CompanyId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Coordinate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Floor")
+                        .HasColumnType("int");
+
                     b.Property<float>("Length")
                         .HasColumnType("real");
 
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -421,15 +476,9 @@ namespace Repository.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Repository.Database.Model.Transaction", "Transaction")
-                        .WithOne("RegisterAuction")
-                        .HasForeignKey("Repository.Database.Model.AppAccount.JoinedAuction", "TransactionId");
-
                     b.Navigation("Account");
 
                     b.Navigation("Auction");
-
-                    b.Navigation("Transaction");
                 });
 
             modelBuilder.Entity("Repository.Database.Model.AuctionRelated.Auction", b =>
@@ -446,9 +495,10 @@ namespace Repository.Migrations
             modelBuilder.Entity("Repository.Database.Model.AuctionRelated.AuctionReceipt", b =>
                 {
                     b.HasOne("Repository.Database.Model.AuctionRelated.Auction", "Auction")
-                        .WithMany("AuctionReceipt")
-                        .HasForeignKey("AuctionId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .WithOne("AuctionReceipt")
+                        .HasForeignKey("Repository.Database.Model.AuctionRelated.AuctionReceipt", "AuctionId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
                     b.HasOne("Repository.Database.Model.AppAccount.Account", "Buyer")
                         .WithMany("AuctionsReceipt")
@@ -458,6 +508,23 @@ namespace Repository.Migrations
                     b.Navigation("Auction");
 
                     b.Navigation("Buyer");
+                });
+
+            modelBuilder.Entity("Repository.Database.Model.AuctionRelated.AuctionReceiptPayment", b =>
+                {
+                    b.HasOne("Repository.Database.Model.AppAccount.Account", "Account")
+                        .WithMany("ReceiptPayments")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Repository.Database.Model.AuctionRelated.AuctionReceipt", "Receipt")
+                        .WithMany("Payments")
+                        .HasForeignKey("ReceiptId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Receipt");
                 });
 
             modelBuilder.Entity("Repository.Database.Model.AuctionRelated.Bid", b =>
@@ -557,6 +624,8 @@ namespace Repository.Migrations
 
                     b.Navigation("JoinedAuctions");
 
+                    b.Navigation("ReceiptPayments");
+
                     b.Navigation("Transactions");
                 });
 
@@ -576,6 +645,11 @@ namespace Repository.Migrations
                     b.Navigation("JoinedAccounts");
                 });
 
+            modelBuilder.Entity("Repository.Database.Model.AuctionRelated.AuctionReceipt", b =>
+                {
+                    b.Navigation("Payments");
+                });
+
             modelBuilder.Entity("Repository.Database.Model.RealEstate.Estate", b =>
                 {
                     b.Navigation("Auctions");
@@ -588,11 +662,6 @@ namespace Repository.Migrations
             modelBuilder.Entity("Repository.Database.Model.RealEstate.EstateCategoryDetail", b =>
                 {
                     b.Navigation("Categories");
-                });
-
-            modelBuilder.Entity("Repository.Database.Model.Transaction", b =>
-                {
-                    b.Navigation("RegisterAuction");
                 });
 
             modelBuilder.Entity("Repository.Database.Model.AppAccount.Company", b =>

@@ -35,5 +35,10 @@ namespace Repository.Implementation.AppAccount
 				.Include(a => a.AccountImages).ThenInclude(img => img.Image)
 				.Include(a => a.Transactions).FirstOrDefaultAsync(a => a.AccountId == accountId);
 		}
+
+		public async Task<List<Account>> GetActiveCustomers()
+        {
+			return await _set.Where(p => p.Role == Repository.Database.Model.Enum.Role.CUSTOMER && p.Status == Repository.Database.Model.Enum.AccountStatus.ACTIVED).ToListAsync();
+        }
 	}
 }

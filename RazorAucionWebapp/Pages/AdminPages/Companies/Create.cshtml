@@ -11,10 +11,20 @@
 <h4>Company</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4"></div>
-    <div class="col-md-4">
+    <div class="col-md-7 border border-2 m-3 p-3">
+        <div class="h4 text-secondary">Customer List</div>
+        <div id="customers" class="d-flex flex-row ">
+        </div>
+    </div>
+    <div class="col-md-auto">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label>Owner</label>
+                <input type="hidden" asp-for="OwnerId" id="OwnerId" />
+                <div id="OwnerName">Please select an owner first</div>
+                <span asp-validation-for="OwnerId" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="Company.CompanyName" class="control-label"></label>
                 <input asp-for="Company.CompanyName" class="form-control" />
@@ -32,13 +42,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="Company.EstablishDate" class="control-label"></label>
-                <input asp-for="Company.EstablishDate" class="form-control" />
+                <input asp-for="Company.EstablishDate" type="date" value="2000-01-01" class="form-control" />
                 <span asp-validation-for="Company.EstablishDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Company.DateStartOnPlatform" class="control-label"></label>
-                <input asp-for="Company.DateStartOnPlatform" class="form-control" />
-                <span asp-validation-for="Company.DateStartOnPlatform" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Company.Email" class="control-label"></label>
@@ -46,50 +51,11 @@
                 <span asp-validation-for="Company.Email" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Company.Password" class="control-label"></label>
-                <input asp-for="Company.Password" class="form-control" />
-                <span asp-validation-for="Company.Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Company.FullName" class="control-label"></label>
-                <input asp-for="Company.FullName" class="form-control" />
-                <span asp-validation-for="Company.FullName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Company.Dob" class="control-label"></label>
-                <input asp-for="Company.Dob" class="form-control" />
-                <span asp-validation-for="Company.Dob" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Company.Telephone" class="control-label"></label>
                 <input asp-for="Company.Telephone" class="form-control" />
                 <span asp-validation-for="Company.Telephone" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Company.Status" class="control-label"></label>
-                <select asp-for="Company.Status" asp-items="Html.GetEnumSelectList<AccountStatus>()" class="form-control"></select>
-                <span asp-validation-for="Company.Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Company.IsVerified" class="control-label"></label>
-                <input asp-for="Company.IsVerified" class="form-control" readonly />
-                <span asp-validation-for="Company.IsVerified" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Company.Role" class="control-label"></label>
-                <input asp-for="Company.Role" class="form-control" readonly />
-                <span asp-validation-for="Company.Role" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Company.CMND" class="control-label"></label>
-                <input asp-for="Company.CMND" class="form-control" />
-                <span asp-validation-for="Company.CMND" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Company.Balance" class="control-label"></label>
-                <input asp-for="Company.Balance" class="form-control" />
-                <span asp-validation-for="Company.Balance" class="text-danger"></span>
-            </div>
+            <br/>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -104,4 +70,57 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+<style>
+    .customer-select:hover{
+        color: black;
+        background-color: dimgrey;
+    }
+</style>
+
+@{
+    <script>
+        function SelectCustomer(e){
+            $(".customer").each(function(){
+                this.classList.remove('btn-success')
+                this.classList.add('btn-primary')
+            })
+            var btn = e.target
+            var id = btn.getAttribute("cId");
+            var oId = $("#OwnerId").attr("value")
+            
+            if(id == oId){
+                $("#OwnerId").val('')
+                $("#OwnerName").html('Please select an owner first')
+            }
+            else{
+                $("#OwnerId").val(id)
+                $("#OwnerName").html(btn.innerHTML)
+                btn.classList.remove('btn-primary')
+                btn.classList.add('btn-success')
+            }
+            
+        }
+
+        async function FetchCustomers(){
+            var content = '';
+            const customers = await fetch('?handler=Customers', {
+                method: "GET",
+            }).then(response => response.json()).then(data => data).catch(err => console.log(err))
+            if (customers.length == 0) {
+                content = '<div class="h1 text-danger fw-bold">No available active customer</div>'
+            }
+            else{
+                customers.forEach((e) => {
+                    content += `<button class="p-2 mx-1 btn btn-primary customer" onclick="SelectCustomer(event)" cId=${e.accountId}>${e.fullName} - ${e.email}</button>`
+                });
+            }
+            $("#customers").html(content)
+        }
+
+        $(function(){
+           FetchCustomers()
+        })
+
+    </script>
 }
