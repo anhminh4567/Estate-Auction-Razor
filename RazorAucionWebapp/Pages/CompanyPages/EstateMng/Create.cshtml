@@ -148,7 +148,7 @@
             alert('You can only upload maximum 5 images');
         }
         else {
-            (if (images.length == 0) $('#ImageShowcase').css('height', '0px')
+            if (images.length == 0) $('#ImageShowcase').css('height', '0px')
             else $('#ImageShowcase').css('height','120px')
             var size = 60;
             for (var i = 0; i < images.length; i++) {

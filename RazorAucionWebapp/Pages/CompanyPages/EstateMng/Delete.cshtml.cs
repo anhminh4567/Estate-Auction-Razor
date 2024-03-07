@@ -88,7 +88,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
                 //        throw new Exception("something wrong when delete, it result in false");
                 //    return RedirectToPage("./Index");
                 //}
-                var deleteEstate = await _estateServices.Delete(Estate);
+                var deleteEstate = await _estateServices.DeleteEstate(Estate);
                 if (deleteEstate.IsSuccess)
                 {
                     return RedirectToPage("./Index");
