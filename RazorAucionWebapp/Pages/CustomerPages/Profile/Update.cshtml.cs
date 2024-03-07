@@ -1,12 +1,10 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Org.BouncyCastle.Math.EC.Rfc8032;
+using RazorAucionWebapp.BackgroundServices;
 using Repository.Database.Model;
-using Repository.Database.Model.AppAccount;
 using Service.Services.AppAccount;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Drawing;
 using System.Security.Claims;
 
 namespace RazorAucionWebapp.Pages.CustomerPages
@@ -66,30 +64,20 @@ namespace RazorAucionWebapp.Pages.CustomerPages
         }
         public async Task<IActionResult> OnPostImageUpdateAsync()
         {
-            byte[] bytes = null;
-            if (ImageFile != null)
+            if (ImageFile is not null)
             {
-                using (Stream fs = ImageFile.OpenReadStream())
+                var (directory, path) = GetAvatarDirectory();
+                var result = await _accountImagesServices.Create(Id, path, "avatar.png");
+                if (result.IsSuccess)
                 {
-                    using (BinaryReader br = new BinaryReader(fs))
-                    {
-                        await PopulateData();
-                        var stream = br.ReadBytes((Int32)fs.Length);
-                        var (directory, path, filename) = GetAvatarDirectory();
-                        var result = await _accountImagesServices.Create(Id, directory, path, filename);
-                        if(result is not null)
-                        {
-                            SaveImage(stream, Path.Combine(directory, result.Path));
-                            var identity = HttpContext.User.Identity as ClaimsIdentity;
-                            identity.RemoveClaim(identity.FindFirst("Avatar"));
-                            identity.AddClaim(new Claim("Avatar", "~/PublicImages/storage/"+result.Path));
-                            TempData["Success"] = "Avatar updated";
-                            return RedirectToPage("./Detail");
-                        }
-                        else TempData["Failed"] = "Unknown error has occured";
-                    }
+                    ImageHandler.SaveImage(ImageFile, Path.Combine(directory, path), result.image.Name);
+                    UpdateClaim("~/PublicImages/storage/" + result.image.Path);
+                    TempData["Success"] = "Avatar updated";
+                    return RedirectToPage("./Detail");
                 }
+                else TempData["Failed"] = "Unknown error has occured";
             }
+            else TempData["Failed"] = "No image uploaded";
             await GetAvatar();
             return Page();
         }
@@ -166,48 +154,6 @@ namespace RazorAucionWebapp.Pages.CustomerPages
             await GetAvatar();
             return RedirectToPage();
         }
-        private void SaveImage(Byte[] stream, string path)
-        {
-            using (var ms = new MemoryStream(stream))
-            {
-                using (var img = System.Drawing.Image.FromStream(ms))
-                {
-                    int maxWidth = 800;
-                    int maxHeight = 800;
-
-                    int newWidth, newHeight;
-
-                    if (img.Width > maxWidth || img.Height > maxHeight)
-                    {
-                        float aspectRatio = (float)img.Width / (float)img.Height;
-
-                        if (img.Width > maxWidth)
-                        {
-                            newWidth = maxWidth;
-                            newHeight = (int)(newWidth / aspectRatio);
-                        }
-                        else
-                        {
-                            newHeight = maxHeight;
-                            newWidth = (int)(newHeight / aspectRatio);
-                        }
-                    }
-                    else
-                    {
-                        newWidth = img.Width;
-                        newHeight = img.Height;
-                    }
-                    using (Bitmap resizedMap = new Bitmap(newWidth, newHeight))
-                    {
-                        using (Graphics graphics = Graphics.FromImage(resizedMap))
-                        {
-                            graphics.DrawImage(img, 0, 0, newWidth, newHeight);
-                        }
-                    }
-                    img.Save(path, System.Drawing.Imaging.ImageFormat.Png);
-                }
-            }
-        }
         private async Task<bool> PopulateData()
         {
             var id = HttpContext.User.FindFirst("Id")?.Value;
@@ -233,11 +179,23 @@ namespace RazorAucionWebapp.Pages.CustomerPages
             }
             return false;
         }
-        private (string,string,string) GetAvatarDirectory()
+        private (string,string) GetAvatarDirectory()
         {
-            var directory = _webHostEnvironment.ContentRootPath;
-            var result = (Path.Combine(directory.Replace("//","\\"), "wwwroot","PublicImages","storage"),Path.Combine("user", Email), "avatar.png");
-            return result;
+            var email = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value;
+            if (email is not null)
+            {
+                email = ImageHandler.RemoveWhiteSpace(email);
+                var directory = _webHostEnvironment.ContentRootPath;
+                return (Path.Combine(directory.Replace("//","\\"), "wwwroot","PublicImages","storage"),Path.Combine("user", email));
+            }
+            else return (null, null);
+        }
+
+        private void UpdateClaim(string path)
+        {
+            var Identity = HttpContext.User.Identity as ClaimsIdentity;
+            Identity.RemoveClaim(Identity.FindFirst("Avatar"));
+            Identity.AddClaim(new Claim("Avatar", path));
         }
     }
 }

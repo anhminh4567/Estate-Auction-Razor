@@ -42,10 +42,28 @@ namespace Service.Services.RealEstate
 		{
 			return await _imageService.GetImage(estateImageId);
 		}
-		public async Task<AppImage?> Create(string folderType, string fileName,string folderPath = "wwwroot\\PublicImages") 
+		public async Task<(bool IsSuccess, AppImage? image, string? result)> Create(int estateId, string savePath, string fileName) 
 		{
-			return await _imageService.SaveImage(folderType,fileName,folderPath);	
-
+			try
+			{
+                var trueFileName = _imageService.GenerateFilename(fileName);
+				await _unitOfWork.BeginTransaction();
+				var image = await _imageService.SaveImage(savePath, trueFileName);
+                EstateImages estateImages = new EstateImages()
+                {
+                    ImageId = image.ImageId,
+                    EstateId = estateId,
+                };
+                await _unitOfWork.Repositories.estateImagesRepository.CreateAsync(estateImages);
+				await _unitOfWork.SaveChangesAsync();
+				await _unitOfWork.CommitAsync();
+                return (true, image, "Success");
+            }
+			catch (Exception ex)
+			{
+				await _unitOfWork.RollBackAsync();
+				return (false, null, ex.Message);
+			}
 		}
 		public async Task<bool> Update(AppImage image, string wwwroot_publicImage_folder_path) 
 		{

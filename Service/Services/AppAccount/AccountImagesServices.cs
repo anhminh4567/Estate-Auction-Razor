@@ -1,5 +1,6 @@
 ﻿using Repository.Database.Model;
 using Repository.Database.Model.AppAccount;
+using Repository.Database.Model.RealEstate;
 using Repository.Interfaces.AppAccount;
 using Repository.Interfaces.DbTransaction;
 using System;
@@ -47,23 +48,30 @@ namespace Service.Services.AppAccount
 		{
 			return await _imageService.GetImage(estateImageId);
 		}
-		public async Task<AppImage?> Create(int accountId, string rootPath, string Savepath,string fileName)
+		public async Task<(bool IsSuccess, AppImage? image, string? result)> Create(int accountId, string savePath,string fileName)
 		{
-			var trueFileName = _imageService.GenerateFilename(fileName);
-			var image = await _imageService.SaveImage(rootPath, Savepath, trueFileName);
-			if(image is not null)
-			{
+            try
+            {
+                var trueFileName = _imageService.GenerateFilename(fileName);
+                await _unitOfWork.BeginTransaction();
+                var image = await _imageService.SaveImage(savePath, trueFileName);
                 AccountImages accountImage = new AccountImages()
                 {
                     ImageId = image.ImageId,
-					AccountId = accountId
-				};
-				var aImage = await _unitOfWork.Repositories.accountImageRepository.CreateAsync(accountImage);
-				return image;
+                    AccountId = accountId
+                };
+                await _unitOfWork.Repositories.accountImageRepository.CreateAsync(accountImage);
+                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.CommitAsync();
+                return (true, image, "Success");
             }
-			else return null;
+            catch (Exception ex)
+            {
+                await _unitOfWork.RollBackAsync();
+                return (false, null, ex.Message);
+            }
         }
-		public async Task<bool> Update(AppImage image, string wwwroot_publicImage_folder_path)
+        public async Task<bool> Update(AppImage image, string wwwroot_publicImage_folder_path)
 		{
 			return await _imageService.UpdateImage(image, wwwroot_publicImage_folder_path);
 		}

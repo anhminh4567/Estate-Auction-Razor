@@ -11,6 +11,15 @@
     <h4>Estate</h4>
     <hr />
     <dl class="row">
+        <dt class="col-sm-12">
+            <div class="container-fluid w-500 d-flex flex-row justify-content-around">
+                @foreach (var Image in Model.Images)
+                {
+                    <img src=@Url.Content(Image) width="80" height="80" />
+                }
+            </div>
+            
+        </dt>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Estate.Company)
         </dt>

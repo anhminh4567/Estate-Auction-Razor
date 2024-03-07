@@ -2,16 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Drawing;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using RazorAucionWebapp.BackgroundServices;
 using RazorAucionWebapp.MyAttributes;
 using Repository.Database;
 using Repository.Database.Model.RealEstate;
 using Service.Services.RealEstate;
-
 namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
 {
     public class CreateModel : PageModel
@@ -19,14 +21,21 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
         private readonly EstateServices _estateServices;
         private readonly EstateCategoriesServices _estateCategoriesServices;
         private readonly EstateCategoryDetailServices _estateCategoryDetailServices;
+        private readonly EstateImagesServices _estateImagesServices;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         public CreateModel(
             EstateServices estateServices,
             EstateCategoryDetailServices estateCategoryDetailServices,
-            EstateCategoriesServices estateCategoriesServices)
+            EstateCategoriesServices estateCategoriesServices,
+            EstateImagesServices estateImagesServices,
+            IWebHostEnvironment webHostEnvironment
+            )
         {
             _estateServices = estateServices;
             _estateCategoryDetailServices = estateCategoryDetailServices;
             _estateCategoriesServices = estateCategoriesServices;
+            _estateImagesServices = estateImagesServices;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public async Task<IActionResult> OnGet()
@@ -73,7 +82,8 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
 
         public async Task OnPostTestAsync()
         {
-            var a = Images;
+            
+            
         }
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
@@ -101,9 +111,25 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
                 Estate.CompanyId = CompanyId;
                 Estate.Status = Repository.Database.Model.Enum.EstateStatus.CREATED;
 
+                
+
                 var estateResult = await _estateServices.Create(Estate, SelectedEstateCategoriesOptions);
                 if (estateResult.IsSuccess)
                 {
+                    //Handling Image
+                    foreach (var Image in Images)
+                    {
+                        var (directory, path) = GetEstateDirectory("abc");
+                        var result = await _estateImagesServices.Create(Estate.EstateId, path, Image.FileName);
+                        if(result.IsSuccess)
+                        {
+                            ImageHandler.SaveImage(Image, Path.Combine(directory, path), result.image.Name);
+                        }
+                        else
+                        {
+                        }
+                    }
+
                     return RedirectToPage("./Index");
                 }
                 else
@@ -160,6 +186,20 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
             if (result is false)
                 throw new Exception("this user is not company id, create an account first to create this, very simple, go to admin page and do so");
             else CompanyId = companyId;
+        }
+        private (string,string) GetEstateDirectory(string estateName)
+        {
+            var email = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value;
+            if(email is not null)
+            {
+                email = ImageHandler.RemoveWhiteSpace(email);
+                var directory = _webHostEnvironment.ContentRootPath;
+                return (Path.Combine(directory.Replace("//", "\\"), "wwwroot", "PublicImages", "storage"), Path.Combine("estate", email, estateName));
+            }
+            else
+            {
+                return (null,null);
+            }
         }
     }
 }

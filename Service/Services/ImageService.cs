@@ -75,7 +75,7 @@ namespace Service.Services
 		/// <param name="fileName">ten file</param>
 		/// <returns></returns>
 		//, string folderPath = "wwwroot\\PublicImages"
-		public async Task<AppImage?> SaveImage(string rootPath, string savePath, string fileName) //folder should be local to app, webroot path or wwwroot path
+		public async Task<AppImage?> SaveImage(string savePath, string fileName) //folder should be local to app, webroot path or wwwroot path
 		{
 			/*using (var fs = new FileStream(Path.Combine(rootPath,savePath,correctFilename), FileMode.Create))
 			{

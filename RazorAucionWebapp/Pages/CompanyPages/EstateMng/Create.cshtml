@@ -106,30 +106,41 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="container d-flex flex-row" id="ImageShowcase" style="height: 0px" ></div>
-                        <label asp-for="Images" class="control-label container-fluid" style="height: 150px">
+                        <div class="container d-flex flex-row justify-content-around" id="ImageShowcase" style="height: 0px"></div>
+                        <label for="ImageInput" class="control-label container-fluid" style="height: 150px">
                             Estate images
                             <div class="add_img_btn "></div>
                         </label>
-                        <input id="ImageInput" type="file" asp-for="Images" class="form-control" style="display: none;" multiple/>
+                        <input id="ImageInput" type="file" asp-for="Images" class="form-control" style="display: none;" multiple accept=".png,.jpeg, .jpg" />
+
                         <span asp-validation-for="Images" class="text-danger"></span>
                     </div>
                     <div class="form-group create_btn">
-                        <input type="submit" value="Create" class="btn btn-primary"/>
+                        <a class="btn btn-primary" data-bs-target="#createModal" data-bs-toggle="modal">Create</a>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    
-
-    
     <div>
     <a asp-page="Index">Back to List</a>
     </div>
 </div>
-
-
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createModalLabel">Confirmation</h5>
+            </div>
+            <div class="modal-body">
+                <span aria-hidden="true" id="modal-desc">Are you sure to create this easte</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <input type="submit" value="Confirm" form="create_estate_frm" id="modal-confirm" class="btn btn-success"></input>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -140,26 +151,36 @@
         });
         document.getElementById('inputtedCates').value = selectedCates.join(',');
     }
+    async function getImageUrl(image){
+        return new Promise((resolve,reject) => {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                resolve(e.target.result);
+            }
+            reader.onerror = function(err){
+                reject(e.target.error);
+            }
+            reader.readAsDataURL(image);
+        })
+    }
 
-    $('#ImageInput').on('change', function(){
-        var images = this[0].files;
+    $('#ImageInput').on('change', async function(){
+        var images = this.files;
         console.log(images)
         if (images.length > 5) {
             alert('You can only upload maximum 5 images');
         }
         else {
-            (if (images.length == 0) $('#ImageShowcase').css('height', '0px')
-            else $('#ImageShowcase').css('height','120px')
-            var size = 60;
+
+            var size = 80;
+            if (images.length == 0) $('#ImageShowcase').css('height', '0px')
+            else $('#ImageShowcase').css('height', size)
+            var content = '';
             for (var i = 0; i < images.length; i++) {
-                let url;
-                var reader = new FileReader();
-                reader.onload = function(e){
-                    url = e.target.result;
-                }
-                reader.readAsDataURL(images[i]);
-                $('#ImageShowcase').append(`<img src="${url}" width="${size}" height="${size}"/>`)
+                const url = await getImageUrl(images[i]);
+                content +=(`<img src="${url}" width="${size}" height="${size}"/>`)
             }
+            $('#ImageShowcase').html(content)
         }
     });
 

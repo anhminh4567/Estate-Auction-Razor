@@ -14,7 +14,7 @@ namespace RazorAucionWebapp.Pages.AdminPages.EstateCategories
             _estateCategoryDetailRepository = estateCategoryDetailRepository;
             _estateCategoriesRepository = estateCategoriesRepository;
         }
-
+        
         public EstateCategoryDetail EstateCategoryDetail { get; set; } = default!;
         public async Task<IActionResult> OnGetAsync(int? id)
         {

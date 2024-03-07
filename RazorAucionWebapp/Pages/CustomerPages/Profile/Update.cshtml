@@ -19,6 +19,7 @@
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="row my-2">
         <label>Avatar (if you want to update new avatar)</label>
+        <input type="hidden" asp-for="Id" />
         <input type="file" id="uploadImg" asp-for="ImageFile" accept=".png,.jpeg, .jpg" />
     </div>
     <a id="ImageUpdateConfirm" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#updateModal">Submit</a>
