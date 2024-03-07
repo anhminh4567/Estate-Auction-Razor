@@ -87,7 +87,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
                 Estate.Description = Description;
                 Estate.Width = Width;
                 Estate.Length = Length;
-                var result = await _estateService.Update(Estate, SelectedCategories);
+                var result = await _estateService.UpdateEstates(Estate, SelectedCategories);
                 if (result.IsSuccess)
                     return RedirectToPage("./Index");
                 else

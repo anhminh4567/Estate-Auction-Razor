@@ -5,6 +5,7 @@ using Repository.Interfaces.DbTransaction;
 using Repository.Interfaces.RealEstate;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
@@ -28,10 +29,12 @@ namespace Service.Services.RealEstate
         //{
         //	_estateRepository = estateRepository;
         //}
-        public async Task<Estate> GetById(int id) 
+        public async Task<Estate?> GetById(int id, string includeProperties = null) 
 		{
-			return await _unitOfWork.Repositories.estateRepository.GetAsync(id);
-		}
+            if(includeProperties == null)
+			    return await _unitOfWork.Repositories.estateRepository.GetAsync(id);
+            return await GetWithCondition(id, includeProperties);
+        }
 		public async Task<Estate?> GetFullDetail(int id) 
 		{
 			return await _unitOfWork.Repositories.estateRepository.GetFullDetail(id);
@@ -39,6 +42,10 @@ namespace Service.Services.RealEstate
         public async Task<Estate?> GetIncludes(int id, params string[] attributeName)
         {
             return await _unitOfWork.Repositories.estateRepository.GetInclude(id,attributeName);
+        }
+        public async Task<Estate?> GetWithCondition(int id, string properties)
+        {
+            return (await _unitOfWork.Repositories.estateRepository.GetByCondition(e => e.EstateId == id,includeProperties: properties)).FirstOrDefault();
         }
         public async Task<List<Estate>> GetByCompanyId(int companyId) 
 		{
@@ -90,7 +97,7 @@ namespace Service.Services.RealEstate
 
             //return await _unitOfWork.Repositories.estateRepository.CreateAsync(estate);
 		}
-		public async Task<(bool IsSuccess, string message)> Update(Estate estate,  List<int> SelectedCategories)
+		public async Task<(bool IsSuccess, string message)> UpdateEstates(Estate estate,  List<int> SelectedCategories)
 		{
 			try
 			{
@@ -123,7 +130,7 @@ namespace Service.Services.RealEstate
 			}
 			
 		}
-		public async Task<(bool IsSuccess, string message)> Delete(Estate estate)
+		public async Task<(bool IsSuccess, string message)> DeleteEstate(Estate estate)
 		{
             var isDeletable = true;
             if (estate.Status.Equals(EstateStatus.REMOVED) 
@@ -173,10 +180,43 @@ namespace Service.Services.RealEstate
             
 			
 		}
-		public async Task<bool> Banned(Estate estate) 
+		public async Task<(bool IsSuccess, string? message)> AdminBannedEstate(Estate estate) 
 		{
 			estate.Status = Repository.Database.Model.Enum.EstateStatus.BANNDED;
-			return await _unitOfWork.Repositories.estateRepository.UpdateAsync(estate) ;	
+            try
+            {
+                var getAuctions = await _unitOfWork.Repositories.auctionRepository.GetByEstateId(estate.EstateId);
+                var getCurrentValidAuction = getAuctions.Where(
+                    a => a.Status != AuctionStatus.SUCCESS &&
+                    a.Status != AuctionStatus.FAILED_TO_PAY &&
+                    a.Status != AuctionStatus.CANCELLED).FirstOrDefault();// this is because at one time only 1 aution valid is happening
+                
+                await _unitOfWork.BeginTransaction();
+                
+                if(getCurrentValidAuction is not null)
+                {
+                    if(getCurrentValidAuction.Status == AuctionStatus.PENDING_PAYMENT) 
+                    {
+                        //receipt cannot be null at this time
+                        var getReceipt = (await _unitOfWork.Repositories.auctionReceiptRepository.GetByCondition(a => a.AuctionId == getCurrentValidAuction.AuctionId)).First();
+                        var getUserAccount = await _unitOfWork.Repositories.accountRepository.GetAsync(getReceipt.BuyerId.Value);
+                        getUserAccount.Balance += (getReceipt.Amount - getReceipt.RemainAmount);// add back user balance
+                        await _unitOfWork.Repositories.accountRepository.UpdateAsync(getUserAccount);
+                        await _unitOfWork.Repositories.auctionReceiptRepository.DeleteAsync(getReceipt);// ko can xoa payment. do rule cascade delete
+                    }
+                    getCurrentValidAuction.Status = AuctionStatus.CANCELLED;
+                    await _unitOfWork.Repositories.auctionRepository.UpdateAsync(getCurrentValidAuction);
+                }
+                await _unitOfWork.Repositories.estateRepository.UpdateAsync(estate);
+                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.CommitAsync();
+                return (true, "Success");
+            }
+            catch (Exception ex) 
+            {
+                await _unitOfWork.RollBackAsync();
+                return (false, ex.Message);
+            }
 		}
 	}
 }

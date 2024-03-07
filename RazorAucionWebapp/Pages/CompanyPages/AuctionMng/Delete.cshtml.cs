@@ -55,7 +55,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
             try
             {
                 await PopulateData(AuctionId);
-                var result = await _auctionServices.Delete(Auction);
+                var result = await _auctionServices.CancelAuction(Auction);
                 if (result.IsSuccess)
                 {
                     return RedirectToPage("./Index");
