@@ -24,23 +24,23 @@
                 <form method="post" id="create_estate_frm" enctype="multipart/form-data">
                     @* <div asp-validation-summary="ModelOnly" class="text-danger"></div> *@
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label asp-for="Name" class="control-label">Name of estate</label>
                                 <input asp-for="Name" class="form-control" />
                                 <span asp-validation-for="Name" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
-                                <label asp-for="Width" class="control-label">Width of the estate (m)</label>
+                                <label asp-for="Width" class="control-label">Width (m)</label>
                                 <input asp-for="Width" class="form-control" />
                                 <span asp-validation-for="Width" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
-                                <label asp-for="Length" class="control-label">Length of the estate (m)</label>
+                                <label asp-for="Length" class="control-label">Length (m)</label>
                                 <input asp-for="Length" class="form-control" />
                                 <span asp-validation-for="Length" class="text-danger"></span>
                             </div>
@@ -49,28 +49,28 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label asp-for="Area" class="control-label">Area (total m2)</label>
+                                <label asp-for="Area" class="control-label">Total area (m²)</label>
                                 <input asp-for="Area" class="form-control" />
                                 <span asp-validation-for="Area" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label asp-for="Floor" class="control-label">Floor of the estate </label>
+                                <label asp-for="Floor" class="control-label">Number of floors </label>
                                 <input asp-for="Floor" class="form-control" />
                                 <span asp-validation-for="Floor" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label asp-for="Location" class="control-label">Location of the estate (m)</label>
+                                <label asp-for="Location" class="control-label">Address</label>
                                 <input asp-for="Location" class="form-control" />
                                 <span asp-validation-for="Location" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label asp-for="Coordinate" class="control-label">Coordinate of the estate (google map)</label>
+                                <label asp-for="Coordinate" class="control-label">Coordinate</label>
                                 <input asp-for="Coordinate" class="form-control" />
                                 <span asp-validation-for="Coordinate" class="text-danger"></span>
                             </div>
@@ -87,7 +87,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label asp-for="SelectedEstateCategoriesOptions" class="control-label" style="margin-bottom: .5rem">Estate categories</label>
-                                <input type="hidden" asp-for="SelectedEstateCategoriesOptions" multiple/>
+                                <input type="hidden" asp-for="SelectedEstateCategoriesOptions" multiple />
                                 <div class="row">
                                     @foreach (var item in Model.EstateCategoriesOptions)
                                     {
@@ -106,11 +106,14 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="container d-flex flex-row justify-content-around" id="ImageShowcase" style="height: 0px"></div>
-                        <label for="ImageInput" class="control-label container-fluid" style="height: 150px">
-                            Estate images
-                            <div class="add_img_btn "></div>
-                        </label>
+                        <label class="mb-3">Estate images</label>
+                        <div class="d-flex justify-content-start">
+                            <div class="d-flex flex-row justify-content-start" id="ImageShowcase" style="height: 0px"></div>
+                            <label for="ImageInput" class="control-label">
+                                <div class="add_img_btn "></div>
+                            </label>
+
+                        </div>
                         <input id="ImageInput" type="file" asp-for="Images" class="form-control" style="display: none;" multiple accept=".png,.jpeg, .jpg" />
 
                         <span asp-validation-for="Images" class="text-danger"></span>
@@ -123,7 +126,7 @@
         </div>
     </div>
     <div>
-    <a asp-page="Index">Back to List</a>
+        <a asp-page="Index">Back to List</a>
     </div>
 </div>
 <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
@@ -151,20 +154,20 @@
         });
         document.getElementById('inputtedCates').value = selectedCates.join(',');
     }
-    async function getImageUrl(image){
-        return new Promise((resolve,reject) => {
+    async function getImageUrl(image) {
+        return new Promise((resolve, reject) => {
             var reader = new FileReader();
             reader.onload = function (e) {
                 resolve(e.target.result);
             }
-            reader.onerror = function(err){
+            reader.onerror = function (err) {
                 reject(e.target.error);
             }
             reader.readAsDataURL(image);
         })
     }
 
-    $('#ImageInput').on('change', async function(){
+    $('#ImageInput').on('change', async function () {
         var images = this.files;
         console.log(images)
         if (images.length > 5) {
@@ -178,7 +181,7 @@
             var content = '';
             for (var i = 0; i < images.length; i++) {
                 const url = await getImageUrl(images[i]);
-                content +=(`<img src="${url}" width="${size}" height="${size}"/>`)
+                content += (`<img src="${url}" width="${size}" height="${size}" style="margin-right: 1rem; border-radius: .2rem;"/>`)
             }
             $('#ImageShowcase').html(content)
         }

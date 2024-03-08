@@ -14,5 +14,6 @@ namespace Repository.Interfaces.RealEstate
 		Task<Estate?> GetInclude(int id, params string[] includes);
 
         Task<List<Estate>> GetByCompanyId(int id);
-	}
+		Task<List<Estate>> GetAllDetails();
+    }
 }

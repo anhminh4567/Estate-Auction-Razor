@@ -29,7 +29,7 @@ namespace Repository.Implementation.RealEstate
         public async Task<Estate?> GetFullDetail(int id)
         {
 			return await _set.Include(e => e.EstateCategory)?.ThenInclude(e => e.CategoryDetail)
-				.Include(e => e.Auctions).FirstOrDefaultAsync(e => e.EstateId == id);
+				.Include(e => e.Auctions).Include(e => e.Company).FirstOrDefaultAsync(e => e.EstateId == id);
         }
 		public async Task<Estate?> GetInclude(int id,params string[] includes) 
 		{
@@ -40,5 +40,10 @@ namespace Repository.Implementation.RealEstate
 			}
 			return await query.FirstOrDefaultAsync(e => e.EstateId.Equals(id));
 		}
+        public async Task<List<Estate>> GetAllDetails()
+        {
+            return await _set.Include(e => e.EstateCategory)?.ThenInclude(e => e.CategoryDetail)
+				.Include(e => e.Images).ThenInclude(e => e.Image).ToListAsync();
+        }
     }
 }

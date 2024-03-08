@@ -43,6 +43,10 @@ namespace Service.Services.RealEstate
         {
             return await _unitOfWork.Repositories.estateRepository.GetInclude(id,attributeName);
         }
+        public async Task<List<Estate>> GetAllDetails()
+        {
+            return await _unitOfWork.Repositories.estateRepository.GetAllDetails();
+        }
         public async Task<Estate?> GetWithCondition(int id, string properties)
         {
             return (await _unitOfWork.Repositories.estateRepository.GetByCondition(e => e.EstateId == id,includeProperties: properties)).FirstOrDefault();

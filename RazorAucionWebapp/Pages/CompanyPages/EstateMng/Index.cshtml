@@ -15,72 +15,85 @@
         </ol>
     </nav>
 
-    <h4>My estates</h4>
+    <h3 class="fw-bold text-center sectionTxt">My estates</h3>
 
-    <p>
-        <a asp-page="./Create">Create New</a>
-    </p>
-    <table class="table">
-        <thead>
-            <tr>
+    <p class="create_btn"><a class="" asp-page="./Create">New Estate <i class="fa-solid fa-plus"></i></a></p>
 
-                <th>
-                    @Html.DisplayNameFor(model => model.Estates[0].Name)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Estates[0].Description)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Estates[0].Width)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Estates[0].Length)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Estates[0].Area)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Estates[0].Floor)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Estates[0].Status)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Estates)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Width)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Length)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Area)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Floor)
-                    </td>
-                    <td class="text-danger">
-                        @Html.DisplayFor(modelItem => item.Status)
-                    </td>
-                    <td>
-                        @*<a asp-page="./Update" asp-route-id="@item.EstateId">Edit</a> |*@
-                        <a class="btn btn-secondary" asp-page="./Detail" asp-route-id="@item.EstateId">Details</a> |
-                        <a class="btn btn-danger" asp-page="./Delete" asp-route-id="@item.EstateId">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
 </div>
+<div class="container-fluid">
 
+    <div class="row estate_list d-flex justify-content-center">
+        @foreach (var item in Model.Estates)
+        {
+            <div class="col-md-6 estate_card p-0">
+                <div class="es_name">
+                    <span class="">@item.Name</span><br>
+                </div>
+                <div id="estate_carousel_@item.EstateId" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner position-relative">
+                        @if (item.Images.Count == 0)
+                        {
+                            <div class="carousel-item active">
+                                <img src="https://i.ibb.co/pnxpB5w/digital-marketing-agency-ntwrk-g39p1k-Djv-SY-unsplash.jpg" class="d-block w-100" />
+                            </div>
+                        }
+                        else
+                        {
+                            bool isFirst = true;
+                            foreach (var img in item.Images)
+                            {
+                                <div class="carousel-item @(isFirst ? "active" : "")">
+                                    <img src="@Url.Content(img.Image.Path)" width="90" height="90" class="d-block w-100" />
+                                </div>
+                                isFirst = false;
+                            }
+
+                        }
+                        <div class="es_status">
+                            @if (item.Status.ToString() == "CREATED")
+                            {
+                                <span class="status_available">available</span>
+                            }
+                            else if (item.Status.ToString() == "FINISHED")
+                            {
+                                <span class="status_sold">sold</span>
+                            }
+                            else
+                            {
+                                <span class="status_unavailable">unavailable</span>
+                            }
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#estate_carousel_@item.EstateId" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#estate_carousel_@item.EstateId" data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                    </button>
+                </div>
+                <div class="estate_info">
+                    @foreach (var cate in item.EstateCategory)
+                    {
+                        <span class="es_cate">@cate.CategoryDetail.CategoryName</span>
+                    }
+
+                    <div class="d-flex justify-content-start house_info">
+                        <span title="estate width"><i class="fa-solid fa-ruler-vertical"></i> @item.Width m</span>
+                        <span title="estate length"><i class="fa-solid fa-ruler-horizontal"></i> @item.Length m</span>
+                        <span title="total area"><i class="fa-solid fa-chart-area"></i> @item.Area m²</span>
+                        <span title="number of floor"><i class="fa-solid fa-layer-group"></i> @item.Floor</span>
+                    </div>
+                    <div class="es_location">
+                        <span class=""><i class="fa-solid fa-location-dot"></i> @item.Location</span><br>
+                    </div>
+                    <div class="buttons">
+                        <a class="" asp-page="./Detail" asp-route-id="@item.EstateId">Detail</a>
+                        @* <a class="" asp-page="./Delete" asp-route-id="@item.EstateId">Delete</a> *@
+                    </div>
+                </div>
+
+            </div>
+
+        }
+    </div>
+</div>

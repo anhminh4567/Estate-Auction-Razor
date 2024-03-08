@@ -2,48 +2,89 @@
 @model RazorAucionWebapp.Pages.CustomerPages.Profile.DetailModel
 
 @{
-	ViewData["Title"] = "Detail";
+    ViewData["Title"] = "Detail";
 }
-
-<h1>Detail</h1>
-@if(TempData["Success"] is not null)
+@if (TempData["Success"] is not null)
 {
-	<div class="border border-2 m-3 p-3 text-success">
-		@TempData["Success"]
-	</div>
+    <div class="border border-2 m-3 p-3 text-success">
+        @TempData["Success"]
+    </div>
 }
-<div class="border border-2 m-3 p-3">
-	<h4>Account (<span class="text-info fw-bolder">
-			@Enum.GetName(typeof(Repository.Database.Model.Enum.Role), Model.Account.Role)
-		</span>)</h4>
-	<hr />
-	<div>
-		<p>Email: @Model.Account.Email</p>
-		<p>Fullname: @Model.Account.FullName</p>
-		@if(Model.Account.Role != Repository.Database.Model.Enum.Role.COMPANY){
-			<p>CMND: @Model.Account.CMND</p>
-		}
-		<p>DOB: @Model.Account.Dob.ToShortDateString()</p>
-		<p>Status:
-		@if(Model.Account.Status == Repository.Database.Model.Enum.AccountStatus.ACTIVED)
-		{
-			<span class="text-success">ACTIVE</span>
-		}
-		else if (Model.Account.Status == Repository.Database.Model.Enum.AccountStatus.PENDING)
-		{
-			<span class="text-secondary">PENDING</span>
-		}
-		else
-		{
-			<span class="text-danger">DEACTIVATED</span>
-		}
-		</p>
-		<p>Balance in account: @Model.Account.Balance</p>
-	</div>
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">Home</li>
+            <li class="breadcrumb-item">Customer account</li>
+            <li class="breadcrumb-item"><a href="#">Profile</a></li>
+        </ol>
+    </nav>
+    <div class="detailBtn">
+        <a asp-page="../Transactions/Create">Fill your wallet</a>
+        <a asp-page="./Update"><i class="fa-solid fa-pen-to-square"></i> Edit Profile</a>
+    </div>
+    <div class="profile_wrapper">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="left_profile">
+                    <img class="rounded-circle" src=@Url.Content(Model.Avatar) height="40" width="40" />
+                    <span class="fw-bold">User #@Model.Account.AccountId</span>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="right_profile">
+                    <h5>User information</h5>
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="info_text"><span>Full name</span>@Model.Account.FullName</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info_text"><span>Phone</span>@Model.Account.Telephone</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="info_text"><span>Email</span>@Model.Account.Email</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="info_text"><span>Birthday</span> @Model.Account.Dob</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info_text"><span>Citizen ID</span>@Model.Account.CMND</div>
+                        </div>
+                    </div>
+                    <div>
+                        <h6>Account</h6>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-8">
+                                Status:
+                                @if (Model.Account.Status.ToString() == "PENDING")
+                                {
+                                    <p class="account_status_pending">@Model.Account.Status.ToString()</p>
+                                }
+                                else if (Model.Account.Status.ToString() == "ACTIVED")
+                                {
+                                    <p class="account_status_active">@Model.Account.Status.ToString()</p>
+
+                                }
+                                else
+                                {
+                                    <p class="account_status_deactivate">Status:@Model.Account.Status.ToString()</p>
+                                }
+                            </div>
+                            <div class="col-md-4">
+                                <p>Balance: <span class="fw-bold">$ @Model.Account.Balance</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<div class="border border-2 m-3 p-3">
-	<a asp-page="../ViewAuction" class="btn btn-primary">Previous Auction Joined</a> |
-	<a asp-page="../Transactions/Create" class="btn btn-primary">Fill Your Waller (transaction) </a>
-	<a asp-page="./Update" class="btn btn-primary">Edit</a> |
-	<a asp-page="../../Index" class="btn btn-primary">Back to view</a>
+
 </div>
+

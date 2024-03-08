@@ -44,6 +44,12 @@
                                     <a class="nav-link text-dark tab tab_div" asp-area="" asp-page="/CompanyPages/EstateMng/Index">My Estate</a>
                                 </li>
                             }
+                            else if (Context.User.Identity.IsAuthenticated && (Context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Role)).Value == "CUSTOMER"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark tab tab_div" asp-area="" asp-page="/CustomerPages/ViewAuction">Joined Auction</a>
+                                </li>
+                            }
                         }
                         @{
                             if (Context.User.Identity.IsAuthenticated && (Context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Role)).Value == "ADMIN"))
@@ -67,14 +73,24 @@
                         @{
                             if (Context.User.Identity.IsAuthenticated)
                             {
-                                <li class="nav-item">
+                                <li class="nav-item position-relative hover_dropdown">
                                     <a class="navbar-brand" asp-page="/CustomerPages/Profile/Detail">
                                         <img src=@Url.Content(Context.User.Claims.FirstOrDefault(c => c.Type.Equals("Avatar")).Value) width="40" height="40" />
-                                        <span style="font-size: 0.8rem;">@Context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Name))?.Value</span>
                                     </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-page="/Logout">Logout</a>
+                                    <div class="user_menu_hover">
+                                    </div>
+                                    <div class="user_menu">
+                                        <span class="fw-bold">@Context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Name))?.Value</span><br>
+                                        <span style="font-size: .7rem;">@Context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Email))?.Value </span><hr />
+                                        <div class="user_choices">
+                                            <a asp-page="/CustomerPages/Profile/Detail"><span><i class="fa-solid fa-user"></i> Profile</span></a><br>
+                                            <a href="#"><span><i class="fa-solid fa-wallet"></i> My wallet</span></a>
+                                        </div>
+                                        <div class="logout_btn">
+                                            <a asp-area="" asp-page="/Logout">Logout</a>
+                                        </div>
+                                    </div>
+
                                 </li>
                             }
                             else

@@ -17,3 +17,154 @@
 .breadcrumb-item {
     font-size: .9rem;
 }
+
+.carousel{
+
+}
+
+.sectionTxt{
+    position: relative;
+}
+
+.sectionTxt:after {
+    content: ' ';
+    position: absolute;
+    top: 90%;
+    left: 50%;
+    height: 1.5rem;
+    width: 11rem;
+    transform: translateX(-50%);
+    background: url(https://i.ibb.co/pj84C9k/pngegg-2.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    z-index: 1;
+}
+
+.estate_card {
+    width: 40rem;
+    height: 33rem;
+    margin: 0 2rem 2.5rem;
+    border-radius: .35rem;
+    box-shadow: 0 2.5rem 3rem -1.5rem rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    img {
+        filter: blur(0);
+    }
+}
+
+.es_name {
+    font-size: 1rem;
+    font-weight: bolder;
+    text-transform: uppercase;
+    background: black;
+    color: rgba(255, 255, 255, 0.9);
+    height: 2rem;
+    padding: .1rem .8rem;
+    span {
+             display: inline-block;
+             line-height: 2rem;
+         }
+}
+
+.carousel{
+    height: 20rem;
+    overflow: hidden;
+    img{
+        width: 100%;
+        height: auto;
+        transition: .3s;
+        margin-top: -3rem;
+       }
+}
+
+.carousel{
+    img:hover{
+           transform: scale(1.5);
+       }
+}
+
+.es_status {
+    position: absolute;
+    bottom: 5rem;
+    right: 1rem;
+    z-index: 1;
+    span {
+        font-size: 1rem;
+        font-weight: bold;
+        display: inline-block;
+        color: white;
+        display: inline-block;
+        background: rgba(0, 0, 0, 0.6);
+        padding: .2rem .6rem;
+        border-radius: 1rem;
+    }
+    .status_available{
+        background: green;
+    }
+    .status_sold, .status_unavailable{
+        background: rgb(199, 0, 57 );
+    }
+}
+
+.house_info {
+    margin: 1rem 0 .4rem;
+    color: black;
+    font-weight: bold;
+    span {
+             margin-right: 4rem;
+         }
+}
+
+
+.estate_info {
+    padding: .8rem 2.5em;
+    .es_cate{
+        display: inline-block;
+        font-size: .8rem;
+        background-color: rgba(0, 0, 0, 0.35);
+        color: rgba(255, 255, 255, 1);
+        border-radius: .2rem;
+        padding: .1rem .3rem;
+    }
+    .es_location {
+        color: black;
+        font-weight: bold;
+    }
+}
+
+
+.buttons {
+    text-align: center;
+    margin-top: 1rem;
+    a {
+          text-decoration: none;
+          height: 2rem;
+          line-height: 2rem;
+          font-weight: bold;
+          color: white;
+          display: inline-block;
+          width: 100%;
+          border-radius: .2rem;
+        background-color: #0B60B0;
+
+      }
+}
+
+
+.create_btn{
+    width: 100%;
+    display: flex;
+    a{
+         display: inline-block;
+         text-decoration: none;
+         background: #0B60B0;
+         color: white;
+         padding: .1rem .8rem;
+         border-radius: .3rem;
+         font-size: 1.2rem;
+    margin-bottom: 1rem;
+
+     }
+    
+}

@@ -5,115 +5,157 @@
     ViewData["Title"] = "Detail";
 }
 
-<h1>Detail</h1>
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">Home</li>
+            <li class="breadcrumb-item">Company account</li>
+            <li class="breadcrumb-item">Myy estates</li>
+            <li class="breadcrumb-item"><a href="#">Estate detail</a></li>
+        </ol>
+    </nav>
+</div>
 
-<div>
-    <h4>Estate</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-12">
-            <div class="container-fluid w-500 d-flex flex-row justify-content-around">
-                @foreach (var Image in Model.Images)
-                {
-                    <img src=@Url.Content(Image) width="80" height="80" />
-                }
+
+<div class="row detail_wrapper">
+    <div class="col-md-6 estate_info_wrapper">
+        <h1 class="text-uppercase">@Model.Estate.Name</h1>
+        @if (Model.Estate.EstateCategory is not null && Model.Estate.EstateCategory.Count > 0)
+        {
+            foreach (var categoryDetail in Model.Estate.EstateCategory)
+            {
+                <div class="es_cate">@categoryDetail.CategoryDetail.CategoryName</div>
+            }
+        }
+        else
+        {
+            <p class="text-danger">No Category, something wrong</p>
+        }
+        <p>Owned by <span class="fst-italic text-secondary">@@@Model.Estate.Company.CompanyName</span> company</p>
+        <div class="d-flex justify-content-start house_info">
+            <span title="estate width"><i class="fa-solid fa-ruler-vertical"></i> @Model.Estate.Width m</span>
+            <span title="estate length"><i class="fa-solid fa-ruler-horizontal"></i> @Model.Estate.Length m</span>
+            <span title="total area"><i class="fa-solid fa-chart-area"></i> @Model.Estate.Area m²</span>
+            <span title="number of floor"><i class="fa-solid fa-layer-group"></i> @Model.Estate.Floor</span>
+        </div>
+        <div class="fw-bold my-3">
+            <span class=""><i class="fa-solid fa-location-dot"></i> @Model.Estate.Location</span><br>
+        </div>
+        <hr />
+        <p class="p-0 m-0 fw-bold text-secondary">Description</p>
+        <p>@Model.Estate.Description</p>
+        <div class="es_status">
+            @if (Model.Estate.Status.ToString() == "CREATED")
+            {
+                <span class="status_available">available</span>
+            }
+            else if (Model.Estate.Status.ToString() == "FINISHED")
+            {
+                <span class="status_sold">sold</span>
+            }
+            else
+            {
+                <span class="status_unavailable">unavailable</span>
+            }
+        </div>
+    </div>
+    <div class="col-md-6 estate_img_wrapper">
+        <div class="row">
+            @if(Model.Images.Count > 0)
+            {
+                var firstImg = Model.Images[0];
+                <img src=@Url.Content(firstImg) class="d-block main_img" />
+                <div class="d-flex justify-content-center align-items-center sub_img_wrapper">
+                    @foreach (var Image in Model.Images)
+                    {
+                        <img src=@Url.Content(Image) width="80" height="80" class="sub_img" />
+                    }
+                </div>
+            }
+            else
+            {
+                <img src="https://i.ibb.co/pnxpB5w/digital-marketing-agency-ntwrk-g39p1k-Djv-SY-unsplash.jpg" class="d-block main_img" />
+            }
+        </div>
+
+
+    </div>
+</div>
+<div class="container mt-5">
+    <h4>Estate auctions</h4>
+
+    @if (Model.Estate.Auctions is not null && Model.Estate.Auctions.Count > 0)
+    {
+        <div class="row" id="auctions-container">
+            @foreach (var auc in Model.Estate.Auctions)
+            {
+                int remainDays = (auc.EndDate - auc.StartDate).Days;
+                // add id="@auc.AuctionId" for signalR function
+                <div class="col-md-4" id="@auc.AuctionId">
+                    <form method="post">
+                        <div class="rounded">
+                            <div class="rounded-top estate_img"></div>
+                            <div class="company-and-estate-data mt-4 px-4">
+                                <h5 class="text-uppercase" style="font-weight: bold;">Auction #@auc.AuctionId</h5>
+                                <div class="d-flex align-items-center my-2">
+                                    @foreach (var cate in auc.Estate.EstateCategory)
+                                    {
+                                        <div class="cate">
+                                            <span>@cate.CategoryDetail.CategoryName</span>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="img_info d-flex flex-row align-items-center justify-content-between" style="padding-right: 1rem;">
+                                    <div>
+                                        <span><i class="fa-regular fa-clock"></i> @remainDays days left</span>
+                                    </div>
+                                    <div>
+                                        <span><i class="fa-regular fa-user"></i> @auc.MaxParticipant</span>
+                                    </div>
+                                    <div>
+                                        <img src="https://i.ibb.co/W2JWQs2/area-1.png"><span>@auc.Estate.Area m²</span>
+                                    </div>
+                                </div>
+                                <div class="currentBid">
+                                    <span>Current Bid:  </span><span style="font-weight: bold;">$9000</span>
+                                </div>
+                                <div class="detailBtn">
+                                    <a asp-page="./CustomerPages/DetailAuction" asp-route-id="@auc.AuctionId">See detail</a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            }
+        </div>
+
+       @*  foreach (var auction in Model.Estate.Auctions)
+        {
+            <div class="border border-1 p-3">
+                <p>@auction.AuctionId</p>
+                <p>@auction.RegistrationDate</p>
+                <p>@auction.StartDate</p>
+                <p>@auction.EndDate</p>
+                <p class="text-danger">@auction.Status</p>
+                <p>@auction.WantedPrice</p>
+                <p>@auction.IncrementPrice</p>
             </div>
-            
-        </dt>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Estate.Company)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Estate.Company.CMND)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Estate.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Estate.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Estate.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Estate.Description)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Estate.Width)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Estate.Width)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Estate.Length)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Estate.Length)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Estate.Area)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Estate.Area)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Estate.Floor)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Estate.Floor)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Estate.Location)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Estate.Location)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Estate.Status)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Estate.Status)
-        </dd>
-        @{
-            <p class="text-success"> Category</p>
-            if (Model.Estate.EstateCategory is not null && Model.Estate.EstateCategory.Count > 0)
-            {
-                foreach (var categoryDetail in Model.Estate.EstateCategory)
-                {
-                    <div class="d-inline">@categoryDetail.CategoryDetail.CategoryName</div>
-                }
-            }
-            else
-            {
-                <p class="text-danger">No Category, something wrong</p>
-            }
-        }
-        @{
-            <p class="text-success"> Auction</p>
-            <a class="btn btn-primary" asp-page="../AuctionMng/CreateAuction" asp-route-estateId="@Model.Estate.EstateId">Create Auciton</a>
-            if (Model.Estate.Auctions is not null && Model.Estate.Auctions.Count > 0)
-            {
-                foreach (var auction in Model.Estate.Auctions)
-                {
-                    <div class="m-3 border border-1 p-3">
-                        <p>@auction.AuctionId</p>
-                        <p>@auction.RegistrationDate</p>
-                        <p>@auction.StartDate</p>
-                        <p>@auction.EndDate</p>
-                        <p class="text-danger">@auction.Status</p>
-                        <p>@auction.WantedPrice</p>
-                        <p>@auction.IncrementPrice</p>
-                    </div>
-                }
-            }
-            else
-            {
-                <p class="text-danger">No Auction, Go Create</p>
-            }
-        }
-    </dl>
+        } *@
+    }
+    else
+    {
+        <div class="empty_list">
+            <img src="https://i.ibb.co/8XVtHxg/empty-project.png" />
+            <p>Estate has no auctions</p>
+            <a class="create_btn" asp-page="../AuctionMng/CreateAuction" asp-route-estateId="@Model.Estate.EstateId">Create Auction</a>
+        </div>
+    }
+    <div class="back_btn">
+        <a asp-page="./Index"><i class="fa-solid fa-arrow-left"></i> Back to List</a>
+    </div>
 </div>
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.Estate?.EstateId">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
-</div>
+<script>
+    $('.sub_img').click(function () {
+        $('.main_img').attr('src', $(this).attr('src'))
+    })
+</script>

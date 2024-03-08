@@ -16,35 +16,49 @@ namespace RazorAucionWebapp.Pages.CustomerPages.Profile
     {
         private readonly AccountServices _accountServices;
 
-		public DetailModel(AccountServices accountServices)
-		{
-			_accountServices = accountServices;
-		}
+        public DetailModel(AccountServices accountServices)
+        {
+            _accountServices = accountServices;
+        }
 
-		public Account Account { get; set; } = default!;
+        public Account Account { get; set; } = default!;
         private int _userId { get; set; }
+        [BindProperty]
+        public string Avatar { get; set; }
         public async Task<IActionResult> OnGetAsync()
         {
             try
             {
                 await PopulateData();
-            }catch (Exception ex) 
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
                 return BadRequest();
             }
+            await GetAvatar();
             return Page();
         }
-        private async Task PopulateData() 
+        private async Task PopulateData()
         {
             var tryGetId = int.TryParse(HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("Id"))?.Value, out var userId);
             if (tryGetId is false)
                 throw new Exception("unauthorized user");
             _userId = userId;
-            var tryGetAccountDetail = await _accountServices.GetInclude(_userId,"");
+            var tryGetAccountDetail = await _accountServices.GetInclude(_userId, "");
             if (tryGetAccountDetail is null)
                 throw new Exception("id for this account is invalid");
             Account = tryGetAccountDetail;
+        }
+
+        private async Task<bool> GetAvatar()
+        {
+            Avatar = HttpContext.User.FindFirst("Avatar").Value;
+            if (Avatar != "")
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

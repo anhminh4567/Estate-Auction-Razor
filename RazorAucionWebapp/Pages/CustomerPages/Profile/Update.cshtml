@@ -10,70 +10,112 @@
         @TempData["Failed"]
     </div>
 }
-<div class="row my-2">
-    <button id="updateFormBtn" class="col-auto btn btn-primary">Update Profile</button>
-    <button id="changeFormBtn" class="col-auto btn btn-outline-primary">Change Password</button>
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">Home</li>
+            <li class="breadcrumb-item">Customer account</li>
+            <li class="breadcrumb-item">Profile</li>
+            <li class="breadcrumb-item"><a href="#">Edit</a></li>
+        </ol>
+    </nav>
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-end">
+            <button id="updateFormBtn" class="active_form_btn">Update Profile</button>
+            <button id="changeFormBtn" class="inactive_form_btn">Change Password</button>
+        </div>
+    </div>
+
+    <div class="profile_wrapper">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="left_profile">
+                    <div class="user_img">
+                        <div class="relative_user_img">
+                            <img id="previewImg" src=@Url.Content(Model.Avatar) width="20" height="20" />
+                            <label class="choose_img_btn" for="uploadImg"><i class="fa-solid fa-pencil"></i></label>
+                            <a id="ImageUpdateConfirm" data-bs-toggle="modal" data-bs-target="#updateModal">Save image</a>
+                        </div>
+                        
+                    </div>
+
+                    <form method="post" id="avatarForm" asp-page-handler="ImageUpdate" enctype="multipart/form-data" style="display: none;">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="row my-2">
+                            <input type="hidden" asp-for="Id" />
+                            <input type="file" id="uploadImg" asp-for="ImageFile" accept=".png,.jpeg, .jpg" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="right_profile">
+                    <h5 style="color: black;">User information</h5>
+                    <hr />
+                    <form method="post" id="updateForm" asp-page-handler="update">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Id" />
+                        <div class="row">
+                            <div class="col-md-6">
+                                @Html.DisplayNameFor(model => model.Name)<br />
+                                <input asp-for="Name" />
+                                <span class="text-danger">@TempData["Name"]</span>
+                            </div>
+                            <div class="col-md-6">
+                                @Html.DisplayNameFor(model => model.Tel)<br />
+                                <input asp-for="Tel" />
+                                <span class="text-danger">@TempData["Email"]</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                @Html.DisplayNameFor(model => model.Email)<br />
+                                <input asp-for="Email" />
+                                <span class="text-danger">@TempData["Email"]</span>
+                            </div>
+                            <div class="col-md-6">
+                                @Html.DisplayNameFor(model => model.Dob)<br />
+                                <input asp-for="Dob" />
+                                <span class="text-danger">@TempData["Dob"]</span>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4">
+                                <div>Type your password to confirm</div>
+                                <input asp-for="Pass" />
+                                <span class="text-danger">@TempData["Pass"]</span>
+                                <div class="detailBtn">
+                                    <a id="UpdateConfirm" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#updateModal">Save</a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <form method="post" id="changeForm" asp-page-handler="change" style="display:none;">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Id" />
+                        <div>
+                            <div>Old Password</div>
+                            <input asp-for="@Model.Pass" />
+                            <span class="text-danger">@TempData["OldPass"]</span>
+                        </div>
+                        <div>
+                            <div>New Password</div>
+                            <input asp-for="@Model.NewPass" />
+                            <span asp-asp-validation-for="Model.NewPass" />
+                            <span class="text-danger">@TempData["NewPass"]</span>
+                        </div>
+                        <br />
+                        <div class="detailBtn">
+                            <a id="ChangeConfirm" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#updateModal">Save</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
-<img id="previewImg" src=@Url.Content(Model.Avatar) width="80" height="80" />
-<form method="post" id="avatarForm" asp-page-handler="ImageUpdate" enctype="multipart/form-data">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="row my-2">
-        <label>Avatar (if you want to update new avatar)</label>
-        <input type="hidden" asp-for="Id" />
-        <input type="file" id="uploadImg" asp-for="ImageFile" accept=".png,.jpeg, .jpg" />
-    </div>
-    <a id="ImageUpdateConfirm" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#updateModal">Submit</a>
-</form>
-<br />
-<div class="h1">Profile</div>
-<form class="ms-3" method="post" id="updateForm" asp-page-handler="update">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <input type="hidden" asp-for="Id" />
-    <div class="row my-2">
-        @Html.DisplayNameFor(model => model.Name)
-        <input asp-for="Name" />
-        <span class="text-danger">@TempData["Name"]</span>
-    </div>
-    <div class="row my-2">
-        @Html.DisplayNameFor(model => model.Email)
-        <input asp-for="Email" />
-        <span class="text-danger">@TempData["Email"]</span>
-    </div>
-    <div class="row my-2">
-        @Html.DisplayNameFor(model => model.Tel)
-        <input asp-for="Tel" />
-        <span class="text-danger">@TempData["Email"]</span>
-    </div>
-    <div class="row my-2">
-        @Html.DisplayNameFor(model => model.Dob)
-        <input asp-for="Dob" />
-        <span class="text-danger">@TempData["Dob"]</span>
-    </div>
-    <div class="row my-2">
-        <div>Type in your password</div>
-        <input asp-for="Pass" />
-        <span class="text-danger">@TempData["Pass"]</span>
-    </div>
-    <br/>
-    <a id="UpdateConfirm" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#updateModal">Save</a>
-</form>
-<form method="post" id="changeForm" asp-page-handler="change" style="display:none;">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <input type="hidden" asp-for="Id" />
-    <div>
-        <div>Old Password</div>
-        <input asp-for="@Model.Pass" />
-        <span class="text-danger">@TempData["OldPass"]</span>
-    </div>
-    <div>
-        <div>New Password</div>
-        <input asp-for="@Model.NewPass" />
-        <span asp-asp-validation-for="Model.NewPass" />
-        <span class="text-danger">@TempData["NewPass"]</span>
-    </div>
-    <br />
-    <a id="ChangeConfirm" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#updateModal">Save</a>
-</form>
 <script>
     function ChangeImg(input){
         var reader = new FileReader();
@@ -97,16 +139,20 @@
         $('#test').hide();
         $('#changeForm').hide();
         $('#updateForm').show();
-        $('#updateFormBtn').attr('class', 'col-auto btn btn-primary')
-        $('#changeFormBtn').attr('class', 'col-auto btn btn-outline-primary')
+        $('#updateFormBtn').attr('class', 'active_form_btn')
+        $('#changeFormBtn').attr('class', 'inactive_form_btn')
     })
     $('#changeFormBtn').click(function () {
         $('#test').show();
         $('#changeForm').show();
         $('#updateForm').hide();
-        $('#changeFormBtn').attr('class', 'col-auto btn btn-primary')
-        $('#updateFormBtn').attr('class', 'col-auto btn btn-outline-primary')
+        $('#changeFormBtn').attr('class', 'active_form_btn')
+        $('#updateFormBtn').attr('class', 'inactive_form_btn')
     })
+    $('#sumbitImg').click(function () {
+        console.log("clickeddd");
+        $('#ImageUpdateConfirm').click();
+    });
     $('#ImageUpdateConfirm').click(function () {
         $('#modal-desc').html('Are you sure to update your avatar?')
         $('#modal-confirm').attr('form', 'avatarForm')

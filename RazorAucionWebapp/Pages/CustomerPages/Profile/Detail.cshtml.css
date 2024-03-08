@@ -1,0 +1,134 @@
+﻿body {
+}
+
+.breadcrumb {
+    margin: 2.5rem 0 1.5rem;
+    a{
+    pointer-events: none;
+    text-decoration: none;
+    color: black;
+}
+
+}
+
+.breadcrumb-item {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.breadcrumb-item {
+    font-size: .9rem;
+}
+
+.detailBtn {
+    width: 100%;
+    margin: 1rem auto;
+    display: flex;
+    justify-content: end;
+}
+
+
+.detailBtn {
+    a{
+    display: inline-block;
+    margin-left: .5rem;
+    background-color: #0B60B0;
+    color: white;
+    width: auto;
+    text-align: center;
+    height: 2rem;
+    text-decoration: none;
+    padding: .2rem .8rem;
+    border-radius: .2rem;
+}
+
+}
+
+.profile_wrapper {
+    height: 25rem;
+    width: 100%;
+    margin: auto;
+    box-shadow: .3rem 0 2.5rem -1.2rem rgba(0, 0, 0, 0.3);
+    border-radius: .3rem;
+    overflow: hidden;
+    position: relative;
+}
+
+.row {
+    height: 100% !important;
+}
+
+.left_profile {
+    height: 100%;
+    background-image: linear-gradient(to bottom right, #419873, #18392b);
+    position: relative;
+    img{
+        height: 10rem;
+        width: 10rem;
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        outline: .1rem solid rgba(255, 255, 255, 0.9);
+        box-sizing: border-box;
+    }
+    span {
+        position: absolute;
+        color: white;
+        top: 55%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.right_profile {
+    padding: 1.5rem;
+}
+
+.info_text {
+    color: rgba(0, 0, 0, 0.5);
+    border: .12rem solid rgba(0, 0, 0, 0.3);
+    border-radius: 0.25rem;
+    padding: .5rem 1rem;
+    margin-bottom: 1.8rem;
+    font-weight: bold;
+    position: relative;
+    span{
+        font-weight: 100;
+        font-size: .72rem;
+        display: inline-block;
+        background: white;
+        position: absolute;
+        top: -30%;
+        padding: 0 .3rem;
+    }
+}
+
+.account_status_pending {
+    display: inline-block;
+    border-radius: .5rem;
+    background-color: rgba(255, 191, 0, 0.25);
+    color: rgba(255, 191, 0, 1);
+    font-weight: bold;
+    padding: .2rem .4rem;
+    font-size: .8rem;
+}
+
+.account_status_active {
+    display: inline-block;
+    border-radius: .5rem;
+    background-color: rgba(34, 139, 34, 0.25);
+    color: rgba(34, 139, 34, 1);
+    font-weight: bold;
+    padding: .2rem .4rem;
+    font-size: .8rem;
+}
+
+.account_status_deactivate {
+    display: inline-block;
+    border-radius: .5rem;
+    background-color: rgba(199, 0, 57, 0.25);
+    color: rgba(199, 0, 57, 1);
+    font-weight: bold;
+    padding: .2rem .4rem;
+    font-size: .8rem;
+}
