@@ -10,7 +10,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item">Home</li>
             <li class="breadcrumb-item">Company account</li>
-            <li class="breadcrumb-item">Myy estates</li>
+            <li class="breadcrumb-item">My estates</li>
             <li class="breadcrumb-item"><a href="#">Estate detail</a></li>
         </ol>
     </nav>
@@ -61,7 +61,7 @@
     </div>
     <div class="col-md-6 estate_img_wrapper">
         <div class="row">
-            @if(Model.Images.Count > 0)
+            @if (Model.Images.Count > 0)
             {
                 var firstImg = Model.Images[0];
                 <img src=@Url.Content(firstImg) class="d-block main_img" />
@@ -89,7 +89,6 @@
         <div class="row" id="auctions-container">
             @foreach (var auc in Model.Estate.Auctions)
             {
-                int remainDays = (auc.EndDate - auc.StartDate).Days;
                 // add id="@auc.AuctionId" for signalR function
                 <div class="col-md-4" id="@auc.AuctionId">
                     <form method="post">
@@ -106,11 +105,24 @@
                                     }
                                 </div>
                                 <div class="img_info d-flex flex-row align-items-center justify-content-between" style="padding-right: 1rem;">
+                                    NOT_STARTED, ONGOING, PENDING_PAYMENT, SUCCESS, CANCELLED,FAILED_TO_PAY
                                     <div>
-                                        <span><i class="fa-regular fa-clock"></i> @remainDays days left</span>
+                                        @if (auc.Status.ToString() == "NOT_STARTED")
+                                        {
+                                            <span class="text-danger">NOT STARTED</span>
+                                        }
+                                        else if (auc.Status.ToString() == "ONGOING")
+                                        {
+                                            int remainDay = (auc.EndDate - DateTime.Today).Days;
+                                            <span><i class="fa-regular fa-user"></i> @remainDay days left</span>
+                                        }
+                                        else 
+                                        {
+                                            <span class="text-danger">NOT AVAILABLE</span>
+                                        }
+
                                     </div>
                                     <div>
-                                        <span><i class="fa-regular fa-user"></i> @auc.MaxParticipant</span>
                                     </div>
                                     <div>
                                         <img src="https://i.ibb.co/W2JWQs2/area-1.png"><span>@auc.Estate.Area m²</span>
@@ -129,18 +141,18 @@
             }
         </div>
 
-       @*  foreach (var auction in Model.Estate.Auctions)
-        {
-            <div class="border border-1 p-3">
-                <p>@auction.AuctionId</p>
-                <p>@auction.RegistrationDate</p>
-                <p>@auction.StartDate</p>
-                <p>@auction.EndDate</p>
-                <p class="text-danger">@auction.Status</p>
-                <p>@auction.WantedPrice</p>
-                <p>@auction.IncrementPrice</p>
-            </div>
-        } *@
+        @*  foreach (var auction in Model.Estate.Auctions)
+    {
+    <div class="border border-1 p-3">
+    <p>@auction.AuctionId</p>
+    <p>@auction.RegistrationDate</p>
+    <p>@auction.StartDate</p>
+    <p>@auction.EndDate</p>
+    <p class="text-danger">@auction.Status</p>
+    <p>@auction.WantedPrice</p>
+    <p>@auction.IncrementPrice</p>
+    </div>
+    } *@
     }
     else
     {
