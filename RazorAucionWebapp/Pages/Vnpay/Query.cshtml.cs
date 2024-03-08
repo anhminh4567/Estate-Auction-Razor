@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Repository.Database.Model;
+using Service.Services;
 using Service.Services.VnpayService.VnpayUtility;
 
 namespace RazorAucionWebapp.Pages.Vnpay
@@ -8,14 +9,21 @@ namespace RazorAucionWebapp.Pages.Vnpay
 	public class QueryModel : PageModel
 	{
 		private VnpayQuery _vnpayQuery;
-		public QueryModel(VnpayQuery query)
+		private readonly TransactionServices _transactionServices;
+
+		public QueryModel(VnpayQuery vnpayQuery, TransactionServices transactionServices)
 		{
-			_vnpayQuery = query;
+			_vnpayQuery = vnpayQuery;
+			_transactionServices = transactionServices;
 		}
 
-		public IActionResult OnGet()
+		public async Task<IActionResult> OnGet(int? transactionId)
 		{
-			_vnpayQuery.btnQuery_Click(HttpContext, new Repository.Database.Model.Transaction() { vnp_TxnRef = "638441328050377825", vnp_TransactionDate = 20240221172044 });
+			if(transactionId is null) {
+				return BadRequest();
+			}
+			var getTransaction = await _transactionServices.GetById(transactionId.Value);
+			_vnpayQuery.btnQuery_Click(HttpContext, getTransaction);
 			return Page();
 		}
 	}

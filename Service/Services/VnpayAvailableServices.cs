@@ -30,17 +30,17 @@ namespace Service.Services
 			_vnpayBuildUrl = vnpayBuildUrl;
 			_vnpayReturn = vnpayReturn;
 		}
-		public string? GeneratePayUrl(HttpContext httpContext, Account account, int amount) 
+		public async Task<string?> GeneratePayUrl(HttpContext httpContext, Account account, int amount) 
 		{
-			return _vnpayBuildUrl.btnPay_Click(httpContext, account, amount);
+			return await _vnpayBuildUrl.btnPay_Click(httpContext, account, amount);
 		}
 		public VnpayQueryResult? QueryVnpayTransaction(HttpContext httpContext, Transaction transaction)
 		{
 			return _vnpayQuery.btnQuery_Click(httpContext,transaction);
 		}
-		public VnpayReturnResult OnPayResult(HttpContext httpContext) 
+		public async Task< VnpayReturnResult> OnPayResult(HttpContext httpContext) 
 		{
-			return _vnpayReturn.OnTransactionReturn(httpContext);
+			return await _vnpayReturn.OnTransactionReturn(httpContext);
 		}
 		public async Task<(bool isSuccess, string message)> RefundVnpayTransaction(HttpContext httpContext, Transaction transaction, Account account, int RefundValidTimeMinute) 
 		{

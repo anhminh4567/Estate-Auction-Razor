@@ -23,9 +23,9 @@ namespace RazorAucionWebapp.Pages.Vnpay
 		public VnpayReturnResult? VnpayResult { get; set; }
 		private int _userId { get; set; }
 		private Transaction _currentTransaction { get; set; }
-		public IActionResult OnGet()
+		public async Task<IActionResult> OnGet()
 		{
-			var returnResult = _vnpayAvailableServices.OnPayResult(HttpContext);
+			var returnResult = await _vnpayAvailableServices.OnPayResult(HttpContext);
 			if (returnResult is null)
 			{
 				ModelState.AddModelError(string.Empty, "something wrong, why null, why empty, check code implementation");

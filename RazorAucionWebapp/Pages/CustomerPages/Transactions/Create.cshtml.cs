@@ -31,15 +31,7 @@ namespace RazorAucionWebapp.Pages.CustomerPages.Transactions
         [Required]
         [Range(1, int.MaxValue)]
         public int Amount { get; set; }
-        //public int TransactionId { get; set; }
-        //public int? AccountId { get; set; }
-        //public TransactionStatus Status { get; set; }
-        //public string vnp_Amount { get; set; }
-        //public long vnp_TransactionDate { get; set; }
-        //public string vnp_OrderInfo { get; set; }
-        //public string vnp_PayDate { get; set; }
 
-        //private Transaction Transaction { get; set; } = default!;
         private int _userId { get; set; }
         public async Task<IActionResult> OnGetAsync()
         {
@@ -63,7 +55,7 @@ namespace RazorAucionWebapp.Pages.CustomerPages.Transactions
                     return Page();
                 }
                 var getUser = await _accountService.GetById(_userId);
-                var urlRedirect = GenerateUrlRedirect(HttpContext, getUser, Amount);
+                var urlRedirect = await GenerateUrlRedirect(HttpContext, getUser, Amount);
                 if (urlRedirect is null)
                 {
                     ModelState.AddModelError(string.Empty, "something wrong with transactin, return later");
@@ -85,7 +77,7 @@ namespace RazorAucionWebapp.Pages.CustomerPages.Transactions
                     ModelState.AddModelError(string.Empty, "something wrong with transaction, return later");
                     return Page();
                 }
-                urlRedirect = GenerateUrlRedirect(HttpContext, getUser, Amount, saveTransaction.TransactionId);
+                urlRedirect = await GenerateUrlRedirect(HttpContext, getUser, Amount, saveTransaction.TransactionId);
                 return Redirect(url: urlRedirect);
             }
             catch (Exception ex)
@@ -93,16 +85,15 @@ namespace RazorAucionWebapp.Pages.CustomerPages.Transactions
                 Console.WriteLine(ex.Message);
                 return BadRequest();
             }
-            return RedirectToPage("./Index");
         }
-        private string? GenerateUrlRedirect(HttpContext httpContext, Account account, int amount, int transactionId = 0)
+        private async Task<string?> GenerateUrlRedirect(HttpContext httpContext, Account account, int amount, int transactionId = 0)
         {
             if (true)
             {
                 return $"https://localhost:7156/Vnpay/Return?handler=TestTransactionHandler&amount={amount}&transactionId={transactionId}";
             }
             else
-                return _vnpayAvailableServices.GeneratePayUrl(httpContext, account, amount);
+                return await _vnpayAvailableServices.GeneratePayUrl(httpContext, account, amount);
         }
         private (bool isValid, string Message) IsAmountValid(int amount)
         {

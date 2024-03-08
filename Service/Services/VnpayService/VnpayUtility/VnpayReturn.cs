@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Protocols;
+using Repository.Database.Model;
+using Repository.Interfaces.DbTransaction;
 using Service.Services.VnpayService.Model;
 using System;
 using System.Collections.Generic;
@@ -11,11 +13,14 @@ namespace Service.Services.VnpayService.VnpayUtility
 {
     public class VnpayReturn
     {
-        public VnpayReturn()
-        {
-        }
+        private readonly IUnitOfWork _unitOfWork;
 
-        public VnpayReturnResult OnTransactionReturn(HttpContext httpContext)
+		public VnpayReturn(IUnitOfWork unitOfWork)
+		{
+			this._unitOfWork = unitOfWork;
+		}
+
+		public async Task<VnpayReturnResult> OnTransactionReturn(HttpContext httpContext)
         {
             if (httpContext.Request.QueryString.Value.Length > 0)
             {
@@ -65,6 +70,10 @@ namespace Service.Services.VnpayService.VnpayUtility
                         Console.WriteLine("Success");
                         returnResult.Success = true;
                         returnResult.Message = "Success";
+                        var getTransaction = (await _unitOfWork.Repositories.transactionRepository
+                            .GetByCondition(t => t.vnp_TxnRef == orderId.ToString())).First();
+                        getTransaction.Status = Repository.Database.Model.Enum.TransactionStatus.SUCCESS;
+                        await _unitOfWork.Repositories.transactionRepository.UpdateAsync(getTransaction);
                         return returnResult;
                     }
                     else
@@ -72,7 +81,11 @@ namespace Service.Services.VnpayService.VnpayUtility
                         Console.WriteLine("fail");
                         returnResult.Success = false;
                         returnResult.Message = "Fail";
-                        return returnResult;
+						var getTransaction = (await _unitOfWork.Repositories.transactionRepository
+						   .GetByCondition(t => t.vnp_TxnRef == orderId.ToString())).First();
+						getTransaction.Status = Repository.Database.Model.Enum.TransactionStatus.FAIL;
+						await _unitOfWork.Repositories.transactionRepository.UpdateAsync(getTransaction);
+						return returnResult;
                         //Thanh toan khong thanh cong. Ma loi: vnp_ResponseCode
                         //displayMsg.InnerText = "Có lỗi xảy ra trong quá trình xử lý.Mã lỗi: " + vnp_ResponseCode;
                         //log.InfoFormat("Thanh toan loi, OrderId={0}, VNPAY TranId={1},ResponseCode={2}", orderId,vnpayTranId, vnp_ResponseCode);
@@ -87,11 +100,16 @@ namespace Service.Services.VnpayService.VnpayUtility
                 {
                     returnResult.Success = false;
                     returnResult.Message = "Hash Incorect, the result is tampered before";
-                    return returnResult;
+					var getTransaction = (await _unitOfWork.Repositories.transactionRepository
+						   .GetByCondition(t => t.vnp_TxnRef == orderId.ToString())).First();
+					getTransaction.Status = Repository.Database.Model.Enum.TransactionStatus.FAIL;
+					await _unitOfWork.Repositories.transactionRepository.UpdateAsync(getTransaction);
+					return returnResult;
                     //log.InfoFormat("Invalid signature, InputData={0}", Request.RawUrl);
                     //displayMsg.InnerText = "Có lỗi xảy ra trong quá trình xử lý";
                 }
             }
+
             return null;
         }
     }
