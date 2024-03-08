@@ -45,6 +45,23 @@
                                 </li>
                             }
                         }
+                        @{
+                            if (Context.User.Identity.IsAuthenticated && (Context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Role)).Value == "ADMIN"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark tab" asp-area="" asp-page="/AdminPages/Transactions/Index">Transactions</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark tab" asp-area="" asp-page="/AdminPages/EstatesManage/Index">Estates</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark tab" asp-area="" asp-page="/AdminPages/Companies/Index">Companies</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark tab" asp-area="" asp-page="/AdminPages/Accounts/Index">Home</a>
+                                </li>
+                            }
+                        }
                     </ul>
                     <ul class="navbar-nav flex-grow-1 justify-content-end">
                         @{

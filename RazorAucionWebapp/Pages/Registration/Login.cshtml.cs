@@ -44,6 +44,10 @@ namespace RazorAucionWebapp.Pages.Registration
                 }
                 await SetUserIdentity(getAccount);
                 TempData["SuccessLogin"] = "Login Success for user " + getAccount.Email;
+                if (getAccount.Role.Equals(Role.ADMIN))
+                {
+                    return RedirectToPage("/AdminPages/Accounts/Index");
+                }
                 return RedirectToPage("/Index");
             }
             else
