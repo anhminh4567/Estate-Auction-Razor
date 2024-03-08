@@ -1,0 +1,84 @@
+﻿@page
+@model RazorAucionWebapp.Pages.AdminPages.Accounts.IndexModel
+
+@{
+    ViewData["Title"] = "List";
+}
+
+<h1>List</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Accounts[0].Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Accounts[0].Password)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Accounts[0].FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Accounts[0].Dob)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Accounts[0].Telephone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Accounts[0].Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Accounts[0].Role)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Accounts[0].CMND)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Accounts[0].Balance)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Accounts) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Password)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Dob)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Telephone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Role)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CMND)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Balance)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.AccountId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.AccountId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.AccountId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

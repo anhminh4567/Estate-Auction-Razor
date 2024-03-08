@@ -1,0 +1,73 @@
+﻿@page
+@model IndexModel
+
+@{
+	ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+	<a asp-page="./Create" asp-route-accountId="@ViewBag.accountId">Add Balance to this account!</a>
+</p>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Transactions[0].Account)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Transactions[0].Status)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Transactions[0].vnp_TxnRef)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Transactions[0].vnp_Amount)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Transactions[0].vnp_TransactionDate)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Transactions[0].vnp_OrderInfo)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Transactions[0].vnp_PayDate)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model.Transactions)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Account.CMND)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Status)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.vnp_TxnRef)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.vnp_Amount)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.vnp_TransactionDate)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.vnp_OrderInfo)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.vnp_PayDate)
+				</td>
+				<td>
+					<a class="btn btn-primary disabled" asp-page="./Edit" asp-route-id="@item.TransactionId">Edit</a> |
+					<a class="btn btn-primary disabled" asp-page="./Details" asp-route-id="@item.TransactionId">Details</a> |
+					<a class="btn btn-primary disabled" asp-page="./Delete" asp-route-id="@item.TransactionId">Delete</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

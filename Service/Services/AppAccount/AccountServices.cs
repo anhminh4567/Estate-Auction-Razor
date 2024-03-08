@@ -7,6 +7,7 @@ using Repository.Interfaces.DbTransaction;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Security.Principal;
 using System.Text;
@@ -29,8 +30,21 @@ namespace Service.Services.AppAccount
         //{
         //	_accountRepository = accountRepository;
         //}
-
-		public async Task<List<Account>> GetActiveCustomers()
+		private async Task<List<Account>> GetWithCondition(Expression<Func<Account, bool>> expression = null,
+            Func<IQueryable<Account>, IOrderedQueryable<Account>> orderBy = null,
+            string includeProperties = "")
+		{
+			return await _unitOfWork.Repositories.accountRepository.GetByCondition(expression,orderBy,includeProperties);
+		}
+		public async Task<List<Account>> GetAllCustomers()
+		{
+			return await GetWithCondition(a => a.Role == Repository.Database.Model.Enum.Role.CUSTOMER);
+		}
+        public async Task<List<Account>> GetAllCompany()
+        {
+            return await GetWithCondition(a => a.Role == Repository.Database.Model.Enum.Role.COMPANY);
+        }
+        public async Task<List<Account>> GetActiveCustomers()
 		{
 			return await _unitOfWork.Repositories.accountRepository.GetActiveCustomers();	
 		}

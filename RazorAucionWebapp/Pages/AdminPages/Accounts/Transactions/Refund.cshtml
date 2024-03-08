@@ -1,0 +1,64 @@
+﻿@page
+@model RazorAucionWebapp.Pages.AdminPages.Accounts.Transactions.RefundModel
+
+@{
+    ViewData["Title"] = "Refund";
+}
+
+<h1>Refund</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Transaction</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Transaction.Account)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Transaction.Account.CMND)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Transaction.Status)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Transaction.Status)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Transaction.vnp_TxnRef)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Transaction.vnp_TxnRef)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Transaction.vnp_Amount)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Transaction.vnp_Amount)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Transaction.vnp_TransactionDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Transaction.vnp_TransactionDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Transaction.vnp_OrderInfo)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Transaction.vnp_OrderInfo)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Transaction.vnp_PayDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Transaction.vnp_PayDate)
+        </dd>
+    </dl>
+    
+    <form method="post">
+        <input type="hidden" asp-for="Transaction.TransactionId" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-page="./Index">Back to List</a>
+    </form>
+</div>

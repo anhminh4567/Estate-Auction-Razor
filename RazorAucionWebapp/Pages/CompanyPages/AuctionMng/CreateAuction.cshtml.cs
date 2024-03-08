@@ -7,8 +7,11 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using RazorAucionWebapp.MyAttributes;
+using RazorAucionWebapp.MyHub;
+using RazorAucionWebapp.MyHub.HubServices;
 using Repository.Database;
 using Repository.Database.Model.AuctionRelated;
 using Repository.Database.Model.Enum;
@@ -23,17 +26,23 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
         private readonly AuctionServices _auctionServices;
         private readonly EstateServices _estateServices;
         private readonly EstateCategoryDetailServices _estateCategoryDetailServices;
-        public CreateModel(AuctionServices auctionServices, EstateServices estateServices, EstateCategoryDetailServices estateCategoryDetailServices)
-        {
-            _auctionServices = auctionServices;
-            _estateServices = estateServices;
-            _estateCategoryDetailServices = estateCategoryDetailServices;
-        }
-        //public IList<Estate> CompanyEstates { get; set; }
-        //[BindProperty]
-        //[Required]
-        //public DateTime RegistrationDate { get; set; }
-        [BindProperty]
+        private readonly AuctionHubService _auctionHubService;
+
+		public CreateModel(AuctionServices auctionServices, EstateServices estateServices, EstateCategoryDetailServices estateCategoryDetailServices, AuctionHubService auctionHubService)
+		{
+			_auctionServices = auctionServices;
+			_estateServices = estateServices;
+			_estateCategoryDetailServices = estateCategoryDetailServices;
+			_auctionHubService = auctionHubService;
+		}
+
+
+
+		//public IList<Estate> CompanyEstates { get; set; }
+		//[BindProperty]
+		//[Required]
+		//public DateTime RegistrationDate { get; set; }
+		[BindProperty]
         [Required]
         [IsDateAppropriate()]
         public DateTime StartDate { get; set; }
@@ -105,7 +114,9 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
                     return Page();
                 }
                 TempData["SuccessCreateMessage"] = "Successfully add a new auction";
-                return RedirectToPage("./Index");
+                await _auctionHubService.CreateAuctionSuccess(newAuction);
+
+				return RedirectToPage("./Index");
             }
             catch (Exception ex)
             {

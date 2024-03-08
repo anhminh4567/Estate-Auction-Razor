@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\css\HomePage.css" />
     <Content Remove="wwwroot\PublicImages\general\auction_logo.png" />
     <Content Remove="wwwroot\PublicImages\general\estate_banner.jpg" />
     <Content Remove="wwwroot\PublicImages\general\user_icon.png" />
@@ -21,12 +22,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\AdminPages\Accounts\" />
     <Folder Include="wwwroot\PublicImages\storage\estate\" />
 	<Folder Include="wwwroot\PublicImages\storage\user\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson" Version="6.0.27" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.27" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.27" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.27">
@@ -38,6 +39,10 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\PublicImages\storage\user\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\css\HomePage.css" />
   </ItemGroup>
 
 </Project>

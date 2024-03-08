@@ -142,7 +142,7 @@ namespace Service.Services.Auction
                 {
                     throw new Exception("the status is not valid to cancel or you have already cancelled, status now is: " + status.ToString());
                 }
-                auction.Status = AuctionStatus.CANCELLED;
+                //auction.Status = AuctionStatus.CANCELLED;
                 ///
 
                 var joinedAccounts = await _unitOfWork.Repositories.joinedAuctionRepository
@@ -156,7 +156,7 @@ namespace Service.Services.Auction
                     await _unitOfWork.Repositories.accountRepository.UpdateAsync(account);
                 }
                 /// do shit 
-                if (auction.Status.Equals(AuctionStatus.NOT_STARTED) is false ||
+                if (auction.Status.Equals(AuctionStatus.NOT_STARTED) is false &&
                 auction.Status.Equals(AuctionStatus.ONGOING) is false)
                 {
                     throw new Exception("the status is not valid to cancel or you have already cancelled");

@@ -1,8 +1,10 @@
 ﻿using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Pqc.Crypto.Falcon;
 using Repository.Database.Model;
+using Repository.Database.Model.AppAccount;
 using Repository.Interfaces;
 using Repository.Interfaces.DbTransaction;
+using Service.Services.AppAccount;
 using Service.Services.VnpayService.VnpayUtility;
 using System;
 using System.Collections.Generic;
@@ -61,5 +63,34 @@ namespace Service.Services
 				return false;
 			return await Delete(getTransaction);
 		}
+		public async Task<(bool IsSuccess, string? message)> AdminCreateTransaction(Transaction transaction)
+		{
+			try
+			{
+				var getAccount = await _unitOfWork.Repositories.accountRepository.GetAsync(transaction.AccountId.Value);
+				if (getAccount is null)
+					return (false, "cannot find such account");
+                await _unitOfWork.BeginTransaction();
+                var result = await _unitOfWork.Repositories.transactionRepository.CreateAsync(transaction);
+                if (result is not null)
+                {
+                    getAccount.Balance += decimal.Parse(result.vnp_Amount);
+					await _unitOfWork.Repositories.accountRepository.UpdateAsync(getAccount);
+                }
+				else
+				{
+					throw new Exception("failt to create, roll back");
+				}
+				await _unitOfWork.SaveChangesAsync();
+				await _unitOfWork.CommitAsync();
+				return (true, "Success");
+            }
+            catch (Exception ex)
+			{
+				await _unitOfWork.RollBackAsync();
+				return (false, ex.Message);
+			}
+            
+        }
 	}
 }
