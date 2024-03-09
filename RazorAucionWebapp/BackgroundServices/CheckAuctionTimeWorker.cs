@@ -78,12 +78,32 @@ namespace RazorAucionWebapp.BackgroundServices
                                         AuctionId = auc.AuctionId,
                                         BuyerId = getHighestBid.BidderId,
                                         Amount = getHighestBid.Amount,
-                                        RemainAmount = getHighestBid.Amount - 0,
+                                        RemainAmount = getHighestBid.Amount - auc.EntranceFee,
                                         Commission = 0, // this is because commision only apllied when the user has already paid all 
                                     };
                                     var createResult = await auctionRecieptService.Create(newWinnder);
+                                    var getCompanyAccount = await unitOfWork.Repositories.accountRepository.GetAsync(getFullDetail.Estate.CompanyId);
+                                    getCompanyAccount.Balance += getFullDetail.EntranceFee;
+                                    await unitOfWork.Repositories.accountRepository.UpdateAsync(getCompanyAccount);
                                     if (createResult is null)
                                         throw new Exception("something wrong when creating new reciept, in backgroundService");
+									// PEOPLE WHO JOINED,  return entrence fee
+									// PEOPLE WHO JOINED,  return entrence fee
+									var joinedAuctionAccounts = getFullDetail.JoinedAccounts;
+                                    foreach ( var joinedAccount in joinedAuctionAccounts)
+                                    {
+                                        var getAccount = await unitOfWork.Repositories.accountRepository.GetAsync(joinedAccount.AccountId.Value);
+                                        if(getAccount.AccountId != getHighestBid.BidderId)
+                                        {
+                                            getAccount.Balance += auc.EntranceFee;
+                                            // PEOPLE WHO JOINED,  return entrence fee
+											await unitOfWork.Repositories.accountRepository.UpdateAsync(getAccount);
+                                        }
+                                        else
+                                        {
+                                            continue;
+                                        }
+									}
                                     auc.ReceiptId = createResult.ReceiptId;
                                     // auc.Estate.Status = EstateStatus.FINISHED;
                                 }
