@@ -27,21 +27,21 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label asp-for="Name" class="control-label">Name of estate</label>
-                                <input asp-for="Name" class="form-control" />
+                                <input asp-for="Name" class="form-control"/>
                                 <span asp-validation-for="Name" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label asp-for="Width" class="control-label">Width (m)</label>
-                                <input asp-for="Width" class="form-control" />
+                                <input asp-for="Width" class="form-control" placeholder="@Model.Width" value="" />
                                 <span asp-validation-for="Width" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label asp-for="Length" class="control-label">Length (m)</label>
-                                <input asp-for="Length" class="form-control" />
+                                <input asp-for="Length" class="form-control" placeholder="@Model.Length" value="" />
                                 <span asp-validation-for="Length" class="text-danger"></span>
                             </div>
                         </div>
@@ -50,28 +50,28 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label asp-for="Area" class="control-label">Total area (m²)</label>
-                                <input asp-for="Area" class="form-control" />
+                                <input asp-for="Area" class="form-control" placeholder="@Model.Area" value="" />
                                 <span asp-validation-for="Area" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label asp-for="Floor" class="control-label">Number of floors </label>
-                                <input asp-for="Floor" class="form-control" />
+                                <input asp-for="Floor" class="form-control" placeholder="@Model.Floor" value="" />
                                 <span asp-validation-for="Floor" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label asp-for="Location" class="control-label">Address</label>
-                                <input asp-for="Location" class="form-control" />
+                                <input asp-for="Location" class="form-control" placeholder="@Model.Location" value="" />
                                 <span asp-validation-for="Location" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label asp-for="Coordinate" class="control-label">Coordinate</label>
-                                <input asp-for="Coordinate" class="form-control" />
+                                <input asp-for="Coordinate" class="form-control" placeholder="@Model.Coordinate" value="" />
                                 <span asp-validation-for="Coordinate" class="text-danger"></span>
                             </div>
                         </div>

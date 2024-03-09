@@ -28,32 +28,32 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
         private readonly EstateCategoryDetailServices _estateCategoryDetailServices;
         private readonly AuctionHubService _auctionHubService;
 
-		public CreateModel(AuctionServices auctionServices, EstateServices estateServices, EstateCategoryDetailServices estateCategoryDetailServices, AuctionHubService auctionHubService)
-		{
-			_auctionServices = auctionServices;
-			_estateServices = estateServices;
-			_estateCategoryDetailServices = estateCategoryDetailServices;
-			_auctionHubService = auctionHubService;
-		}
+        public CreateModel(AuctionServices auctionServices, EstateServices estateServices, EstateCategoryDetailServices estateCategoryDetailServices, AuctionHubService auctionHubService)
+        {
+            _auctionServices = auctionServices;
+            _estateServices = estateServices;
+            _estateCategoryDetailServices = estateCategoryDetailServices;
+            _auctionHubService = auctionHubService;
+        }
 
 
-
-		//public IList<Estate> CompanyEstates { get; set; }
-		//[BindProperty]
-		//[Required]
-		//public DateTime RegistrationDate { get; set; }
-		[BindProperty]
+        //public IList<Estate> CompanyEstates { get; set; }
+        //[BindProperty]
+        //[Required]
+        //public DateTime RegistrationDate { get; set; }
+        [BindProperty]
+        [DataType(DataType.DateTime)]
         [Required]
         [IsDateAppropriate()]
-        public DateTime StartDate { get; set; }
+        public DateTime StartDate { get; set; } = getDate(5);
         [BindProperty]
         [Required]
         [IsDateAppropriate()]
-        public DateTime EndDate { get; set; }
+        public DateTime EndDate { get; set; } = getDate(10);
         [BindProperty]
         [Required]
         [IsDateAppropriate()]
-        public DateTime EndPayDate { get; set; }
+        public DateTime EndPayDate { get; set; } = getDate(15);
         [BindProperty]
         [Required]
         public decimal WantedPrice { get; set; }
@@ -116,7 +116,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
                 TempData["SuccessCreateMessage"] = "Successfully add a new auction";
                 await _auctionHubService.CreateAuctionSuccess(newAuction);
 
-				return RedirectToPage("./Index");
+                return RedirectToPage("./Index");
             }
             catch (Exception ex)
             {
@@ -133,6 +133,10 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
             _companyId = companyId;
             CurrentEstateId = estateId;
             CurrentEstate = await _estateServices.GetById(CurrentEstateId);
+        }
+        private static DateTime getDate(int month = 0)
+        {
+            return DateTime.Now.AddMonths(month).AddMilliseconds(-DateTime.Now.Millisecond);
         }
     }
 }
