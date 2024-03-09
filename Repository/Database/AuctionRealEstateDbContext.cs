@@ -39,6 +39,7 @@ namespace Repository.Database
         public DbSet<EstateCategories> EstateCategories { get; set; }
         public DbSet<EstateCategoryDetail> EstateCategoryDetails { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
@@ -129,6 +130,14 @@ namespace Repository.Database
                 e.HasKey(ck => new { ck.EstateId, ck.CategoryId } );
                 e.HasOne(e => e.Estate).WithMany( e => e.EstateCategory).HasForeignKey(k => k.EstateId).OnDelete(DeleteBehavior.Cascade);
                 e.HasOne( e => e.CategoryDetail).WithMany(e => e.Categories).HasForeignKey(k => k.CategoryId).OnDelete(DeleteBehavior.Cascade);
+            });
+            builder.Entity<Notification>(e =>
+            {
+                var type = new EnumToStringConverter<NotificationType>();
+                e.Property(e => e.Type).HasConversion(type);
+                e.Property(e => e.IsChecked).HasDefaultValue(false);
+                e.Property(e => e.CreatedDate).HasDefaultValue(DateTime.Now);
+                e.ToTable("Notifications");
             });
         }
     }

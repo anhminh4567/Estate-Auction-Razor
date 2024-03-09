@@ -30,5 +30,6 @@ namespace Repository.Database.Model.AppAccount
         public IList<AccountImages> AccountImages { get; set; }
 		public IList<JoinedAuction>? JoinedAuctions { get; set; }
         public IList<AuctionReceiptPayment>? ReceiptPayments { get; set; }
+        public IList<Notification>? Notifications { get; set; }
 	}
 }

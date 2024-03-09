@@ -39,7 +39,7 @@
 			<div class="col-md-6">
 				<div class="form-group">
 					<label asp-for="EndPayDate" class="control-label">EndPayDate</label>
-					<input asp-for="EndPayDate" class="form-control" />
+					<input asp-for="EndPayDate" class="form-control"/>
 					<span asp-validation-for="EndPayDate" class="text-danger"></span>
 				</div>
 			</div>
@@ -48,28 +48,28 @@
 			<div class="col-md-6">
 				<div class="form-group">
 					<label asp-for="WantedPrice" class="control-label">Wanted price</label>
-					<input asp-for="WantedPrice" class="form-control" />
+					<input asp-for="WantedPrice" class="form-control" placeholder="@Model.WantedPrice" value="" />
 					<span asp-validation-for="WantedPrice" class="text-danger"></span>
 				</div>
 			</div>
 			<div class="col-md-6">
 				<div class="form-group">
 					<label asp-for="IncrementPrice" class="control-label">Bid increment price</label>
-					<input asp-for="IncrementPrice" class="form-control" />
+					<input asp-for="IncrementPrice" class="form-control" placeholder="@Model.IncrementPrice" value="" />
 					<span asp-validation-for="IncrementPrice" class="text-danger"></span>
 				</div>
 			</div>
 			<div class="col-md-6">
 				<div class="form-group">
 					<label asp-for="EntranceFee" class="control-label">EntranceFee</label>
-					<input asp-for="EntranceFee" class="form-control" />
+					<input asp-for="EntranceFee" class="form-control" placeholder="@Model.EntranceFee" value="" />
 					<span asp-validation-for="EntranceFee" class="text-danger"></span>
 				</div>
 			</div>
 		</div>
 		<div class="form-group mb-3">
 			<label asp-for="MaxParticipant" class="control-label">Max participants</label>
-			<input asp-for="MaxParticipant" class="form-control" />
+			<input asp-for="MaxParticipant" class="form-control" placeholder="@Model.MaxParticipant" value=""/>
 			<span asp-validation-for="MaxParticipant" class="text-danger"></span>
 		</div>
 		@*<div class="form-group">
