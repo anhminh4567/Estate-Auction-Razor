@@ -12,8 +12,8 @@ using Repository.Database;
 namespace Repository.Migrations
 {
     [DbContext(typeof(AuctionRealEstateDbContext))]
-    [Migration("20240306025150_first")]
-    partial class first
+    [Migration("20240309052923_First")]
+    partial class First
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -233,7 +233,7 @@ namespace Repository.Migrations
                     b.Property<DateTime>("PayTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 3, 6, 9, 51, 50, 610, DateTimeKind.Local).AddTicks(5455));
+                        .HasDefaultValue(new DateTime(2024, 3, 9, 12, 29, 23, 863, DateTimeKind.Local).AddTicks(7978));
 
                     b.Property<int?>("ReceiptId")
                         .HasColumnType("int");
@@ -274,6 +274,47 @@ namespace Repository.Migrations
                     b.HasIndex("BidderId");
 
                     b.ToTable("Bids", (string)null);
+                });
+
+            modelBuilder.Entity("Repository.Database.Model.Notification", b =>
+                {
+                    b.Property<int>("NotificationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NotificationId"), 1L, 1);
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2024, 3, 9, 12, 29, 23, 865, DateTimeKind.Local).AddTicks(1086));
+
+                    b.Property<bool>("IsChecked")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("NotificationId");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("CompanyId");
+
+                    b.ToTable("Notifications", (string)null);
                 });
 
             modelBuilder.Entity("Repository.Database.Model.RealEstate.Estate", b =>
@@ -497,7 +538,7 @@ namespace Repository.Migrations
                     b.HasOne("Repository.Database.Model.AuctionRelated.Auction", "Auction")
                         .WithOne("AuctionReceipt")
                         .HasForeignKey("Repository.Database.Model.AuctionRelated.AuctionReceipt", "AuctionId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Repository.Database.Model.AppAccount.Account", "Buyer")
@@ -544,6 +585,25 @@ namespace Repository.Migrations
                     b.Navigation("Auction");
 
                     b.Navigation("Bidder");
+                });
+
+            modelBuilder.Entity("Repository.Database.Model.Notification", b =>
+                {
+                    b.HasOne("Repository.Database.Model.AppAccount.Account", "Account")
+                        .WithMany("Notifications")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Repository.Database.Model.AppAccount.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("Repository.Database.Model.RealEstate.Estate", b =>
@@ -623,6 +683,8 @@ namespace Repository.Migrations
                     b.Navigation("Bids");
 
                     b.Navigation("JoinedAuctions");
+
+                    b.Navigation("Notifications");
 
                     b.Navigation("ReceiptPayments");
 

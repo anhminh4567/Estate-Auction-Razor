@@ -84,7 +84,7 @@ namespace Repository.Database
             builder.Entity<Auction>(a => 
             {
                 a.HasOne(a => a.Estate).WithMany(e => e.Auctions).HasForeignKey(k => k.EstateId); 
-				a.HasOne(a => a.AuctionReceipt).WithOne(a => a.Auction).HasForeignKey<AuctionReceipt>(a => a.AuctionId).IsRequired(true).OnDelete(DeleteBehavior.SetNull);
+				a.HasOne(a => a.AuctionReceipt).WithOne(a => a.Auction).HasForeignKey<AuctionReceipt>(a => a.AuctionId).IsRequired(true).OnDelete(DeleteBehavior.Cascade);
 			});
             builder.Entity<AuctionReceipt>(a => 
             {

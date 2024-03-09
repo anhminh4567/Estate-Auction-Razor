@@ -231,7 +231,7 @@ namespace Repository.Migrations
                     b.Property<DateTime>("PayTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 3, 9, 11, 52, 34, 786, DateTimeKind.Local).AddTicks(187));
+                        .HasDefaultValue(new DateTime(2024, 3, 9, 12, 29, 23, 863, DateTimeKind.Local).AddTicks(7978));
 
                     b.Property<int?>("ReceiptId")
                         .HasColumnType("int");
@@ -291,7 +291,7 @@ namespace Repository.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 3, 9, 11, 52, 34, 787, DateTimeKind.Local).AddTicks(2237));
+                        .HasDefaultValue(new DateTime(2024, 3, 9, 12, 29, 23, 865, DateTimeKind.Local).AddTicks(1086));
 
                     b.Property<bool>("IsChecked")
                         .ValueGeneratedOnAdd()
@@ -536,7 +536,7 @@ namespace Repository.Migrations
                     b.HasOne("Repository.Database.Model.AuctionRelated.Auction", "Auction")
                         .WithOne("AuctionReceipt")
                         .HasForeignKey("Repository.Database.Model.AuctionRelated.AuctionReceipt", "AuctionId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Repository.Database.Model.AppAccount.Account", "Buyer")
