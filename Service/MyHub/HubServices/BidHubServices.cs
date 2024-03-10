@@ -9,7 +9,6 @@ namespace Service.MyHub.HubServices
 	{
 		private readonly IHubContext<BidHub> _bidHub;
 		private readonly IUnitOfWork _unitOfWork;
-
 		public BidHubServices(IHubContext<BidHub> bidHub, IUnitOfWork unitOfWork)
 		{
 			_bidHub = bidHub;

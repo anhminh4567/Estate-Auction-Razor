@@ -85,6 +85,13 @@ namespace Service.Services.Auction
 			}
 			return result;
 		}
+		public async Task<List<Repository.Database.Model.AuctionRelated.Auction>> GetAuctionsInclude(Expression<Func<Repository.Database.Model.AuctionRelated.Auction, bool>> expression = null,
+			Func<IQueryable<Repository.Database.Model.AuctionRelated.Auction>, IOrderedQueryable<Repository.Database.Model.AuctionRelated.Auction>> orderBy = null,
+			string includeProperties = "")
+		{
+			return await _unitOfWork.Repositories.auctionRepository
+				.GetByCondition(expression, orderBy, includeProperties);
+		}
 		public async Task<List<Repository.Database.Model.AuctionRelated.Auction>> GetByEstateId(int estateId)
 		{
 			return await _unitOfWork.Repositories.auctionRepository.GetByEstateId(estateId);
@@ -141,12 +148,12 @@ namespace Service.Services.Auction
 				var startTime = auction.StartDate;
 				var endTime = auction.EndDate;
 				var status = auction.Status;
-				if (DateTime.Compare(DateTime.Now, endTime) >= 0)
-				{
-					throw new Exception("over time to cancel");
-				}
+				//if (DateTime.Compare(DateTime.Now, endTime) >= 0)
+				//{
+				//	throw new Exception("over time to cancel");
+				//}
 				if (status.Equals(AuctionStatus.SUCCESS) ||
-					//status.Equals(AuctionStatus.PENDING_PAYMENT) ||
+					//status.Equals(AuctionStatus.PENDING_PAYMENT) || 
 					status.Equals(AuctionStatus.CANCELLED))
 				{
 					throw new Exception("the status is not valid to cancel or you have already cancelled, status now is: " + status.ToString());
@@ -176,13 +183,21 @@ namespace Service.Services.Auction
 					{
 						throw new Exception("Error in update cancel auction");
 					}
+					else
+					{
+						await _unitOfWork.SaveChangesAsync();
+						await _unitOfWork.CommitAsync();
+						//SIGNALR
+						await _auctionHubService.UpdateAuctionSuccess(auction);
+						return (true, "success");
+					}
 				}
 				else
 				{
 					var joinedAccounts = await _unitOfWork.Repositories.joinedAuctionRepository
 					.GetByCondition(j => j.AuctionId == auction.AuctionId, includeProperties: "Account");//auction.JoinedAccounts;
-					// do shit 
-					// Hoàn lại tiền Entrence Fee cho mọi nguời trong JoinedAuction có Status là REGISTERD 
+																										 // do shit 
+																										 // Hoàn lại tiền Entrence Fee cho mọi nguời trong JoinedAuction có Status là REGISTERD 
 					foreach (var joinedOne in joinedAccounts)
 					{
 						var account = joinedOne.Account;
@@ -222,7 +237,7 @@ namespace Service.Services.Auction
 				var estate = await _unitOfWork.Repositories.estateRepository.GetAsync(auction.EstateId);
 				var status = auction.Status;
 				if (status.Equals(AuctionStatus.SUCCESS) ||
-				   //status.Equals(AuctionStatus.PENDING_PAYMENT) ||
+					//status.Equals(AuctionStatus.PENDING_PAYMENT) ||
 					status.Equals(AuctionStatus.CANCELLED))
 				{
 					await _unitOfWork.BeginTransaction();
@@ -300,7 +315,7 @@ namespace Service.Services.Auction
 				else
 				{
 					var result = await CancelAuction(auction);
-					if(result.IsSuccess == false)
+					if (result.IsSuccess == false)
 					{
 						throw new Exception(result.message);
 					}

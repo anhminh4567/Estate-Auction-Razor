@@ -10,7 +10,7 @@ namespace Service.MyHub
 
 		public override async Task OnConnectedAsync()
 		{
-			await Groups.AddToGroupAsync(Context.ConnectionId, "all");
+			await Groups.AddToGroupAsync(Context.ConnectionId, "all"); 
 		}
 
 		public override async Task OnDisconnectedAsync(Exception? exception)
