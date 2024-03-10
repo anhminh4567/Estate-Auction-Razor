@@ -5,7 +5,7 @@ using Repository.Database.Model.AuctionRelated;
 using Repository.Database.Model.RealEstate;
 using Repository.Interfaces.DbTransaction;
 
-namespace RazorAucionWebapp.MyHub.HubServices
+namespace Service.MyHub.HubServices
 {
 	public class AuctionHubService
 	{

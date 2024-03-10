@@ -10,12 +10,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using RazorAucionWebapp.MyAttributes;
-using RazorAucionWebapp.MyHub;
-using RazorAucionWebapp.MyHub.HubServices;
 using Repository.Database;
 using Repository.Database.Model.AuctionRelated;
 using Repository.Database.Model.Enum;
 using Repository.Database.Model.RealEstate;
+using Service.MyHub.HubServices;
 using Service.Services.Auction;
 using Service.Services.RealEstate;
 
@@ -28,20 +27,22 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
         private readonly EstateCategoryDetailServices _estateCategoryDetailServices;
         private readonly AuctionHubService _auctionHubService;
 
-        public CreateModel(AuctionServices auctionServices, EstateServices estateServices, EstateCategoryDetailServices estateCategoryDetailServices, AuctionHubService auctionHubService)
-        {
-            _auctionServices = auctionServices;
-            _estateServices = estateServices;
-            _estateCategoryDetailServices = estateCategoryDetailServices;
-            _auctionHubService = auctionHubService;
-        }
+		public CreateModel(AuctionServices auctionServices, EstateServices estateServices, EstateCategoryDetailServices estateCategoryDetailServices, AuctionHubService auctionHubService)
+		{
+			_auctionServices = auctionServices;
+			_estateServices = estateServices;
+			_estateCategoryDetailServices = estateCategoryDetailServices;
+			_auctionHubService = auctionHubService;
+		}
 
 
-        //public IList<Estate> CompanyEstates { get; set; }
-        //[BindProperty]
-        //[Required]
-        //public DateTime RegistrationDate { get; set; }
-        [BindProperty]
+
+
+		//public IList<Estate> CompanyEstates { get; set; }
+		//[BindProperty]
+		//[Required]
+		//public DateTime RegistrationDate { get; set; }
+		[BindProperty]
         [DataType(DataType.DateTime)]
         [Required]
         [IsDateAppropriate()]
@@ -81,7 +82,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
                 return NotFound();
             }
             await PopulateData(estateId.Value);
-            return Page();
+			return Page();
         }
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
@@ -114,7 +115,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
                     return Page();
                 }
                 TempData["SuccessCreateMessage"] = "Successfully add a new auction";
-                await _auctionHubService.CreateAuctionSuccess(newAuction);
+                //await _auctionHubService.CreateAuctionSuccess(newAuction);
 
                 return RedirectToPage("./Index");
             }

@@ -11,6 +11,7 @@ using Repository.Database;
 using Repository.Database.Model.AppAccount;
 using Repository.Database.Model.AuctionRelated;
 using Repository.Database.Model.Enum;
+using Service.MyHub.HubServices;
 using Service.Services.AppAccount;
 using Service.Services.Auction;
 using Service.Services.RealEstate;
@@ -23,15 +24,18 @@ namespace RazorAucionWebapp.Pages.CustomerPages
         private readonly AuctionServices _auctionServices;
         private readonly AuctionReceiptServices _auctionReceiptServices;
         private readonly JoinedAuctionServices _joinedAuctionServices;
+        private readonly BidHubServices _bidHubServices;
 
-        public BidAuctionModel(BidServices bidServices, AuctionServices auctionServices, AuctionReceiptServices auctionReceiptServices, JoinedAuctionServices joinedAuctionServices)
-        {
-            _bidServices = bidServices;
-            _auctionServices = auctionServices;
-            _auctionReceiptServices = auctionReceiptServices;
-            _joinedAuctionServices = joinedAuctionServices;
-        }
-        public Auction Auction { get; set; } = default!;
+		public BidAuctionModel(BidServices bidServices, AuctionServices auctionServices, AuctionReceiptServices auctionReceiptServices, JoinedAuctionServices joinedAuctionServices, BidHubServices bidHubServices)
+		{
+			_bidServices = bidServices;
+			_auctionServices = auctionServices;
+			_auctionReceiptServices = auctionReceiptServices;
+			_joinedAuctionServices = joinedAuctionServices;
+			_bidHubServices = bidHubServices;
+		}
+
+		public Auction Auction { get; set; } = default!;
         public List<Bid> AuctionBids { get; set; }
 
         //public List<Account>? JoinedAccounts { get; set; }
@@ -52,7 +56,10 @@ namespace RazorAucionWebapp.Pages.CustomerPages
             try
             {
                 await PopulateData();
-                return Page();
+                ///testing only, reemove when finished
+				//await _bidHubServices.SendNewBid(new Bid() { Amount = 20000,AuctionId = auctionId.Value} , new Account() { FullName = "minh"} );
+
+				return Page();
             }
             catch (Exception ex)
             {

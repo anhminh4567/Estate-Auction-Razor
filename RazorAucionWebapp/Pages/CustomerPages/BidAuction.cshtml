@@ -9,7 +9,7 @@
 	<h4>Auction Detail</h4>
 	<div>
 		<div class="text-danger" asp-validation-summary="ModelOnly"></div>
-		<input type="hidden" asp-for="AuctionID"/>
+		<input type="hidden" asp-for="AuctionID" />
 		<div class="auction">
 			<p>start: @Model.Auction.StartDate</p>
 			<p>end: @Model.Auction.EndDate</p>
@@ -48,13 +48,13 @@
 			}
 		</div>
 		<h4>Bids Detail</h4>
-		<div class="Bids">
+		<div class="Bids" id="bids_container">
 			@{
 				if (Model.Auction.Bids is not null && Model.Auction.Bids.Count > 0)
 				{
 					foreach (var bid in Model.Auction.Bids)
 					{
-						<div class="bidder-and-bid">
+						<div class="bidder-and-bid" id="@bid.BidId">
 							<p class="d-inline p-3 m-3 text-primary">amount: @bid.Amount</p>
 							<p class="d-inline p-3 m-3 text-primary">amount: @bid.Time</p>
 							<p class="d-inline p-3 m-3 text-primary">amount: @bid.Bidder.FullName</p>
@@ -121,4 +121,31 @@
 	@{
 		await Html.RenderPartialAsync("_ValidationScriptsPartial");
 	}
+	<script>
+		const connection = new signalR.HubConnectionBuilder()
+			.withAutomaticReconnect()
+			.withUrl("/bidrealtime")
+			.build();
+		connection.on("OnNewBid", function (newBid, bidder) {
+			//lay attribute nhu class bht, vd, newbid.amount, bidder.fullname
+			console.log(newBid);
+			console.log(bidder);
+		});
+		connection.on("OnDeleteBids", function (deletedBidsId) {
+			console.log(deletedBidsId);
+			var bidContainer = $("#bids_container")
+			deletedBidsId.foreach((id) => {
+				console.log(id)
+				// mo trong <div> nay, tim div nao cos id nam trong deletedBidsId, xoa no khoi container nay
+			});
+		});
+
+		connection.start().then((result) => {
+			console.log(result)
+		}).catch((error) => {
+			console.error(error);
+		});
+
+	</script>
 }
+

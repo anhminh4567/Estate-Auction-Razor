@@ -2,10 +2,10 @@ global using Repository.Interfaces.AppAccount;
 using Microsoft.Extensions.Options;
 using RazorAucionWebapp.BackgroundServices;
 using RazorAucionWebapp.Configure;
-using RazorAucionWebapp.MyHub;
-using RazorAucionWebapp.MyHub.HubServices;
 using Repository.Database;
 using Repository.Database.Model.Enum;
+using Service.MyHub;
+using Service.MyHub.HubServices;
 using System.Security.Claims;
 using System.Text.Json;
 
@@ -44,6 +44,8 @@ builder.Services.AddSignalR(config =>
     options.PayloadSerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 });
 builder.Services.AddScoped<AuctionHubService>();
+builder.Services.AddScoped<AccountHubService>();
+builder.Services.AddScoped<BidHubServices>();
 builder.Services.AddAuthentication("cookie")
     .AddCookie("cookie", options =>
     {
@@ -96,9 +98,12 @@ app.Use( async (context, next) =>
 });
 app.UseAuthentication();
 app.UseAuthorization();
-
-    app.MapRazorPages();
-    app.MapHub<AuctionHub>("auctionrealtime");
-
-
+app.UseEndpoints(endpoint =>
+{
+	endpoint.MapRazorPages();
+	endpoint.MapHub<AuctionHub>("auctionrealtime");
+	endpoint.MapHub<AccountHub>("accountrealtime");
+	endpoint.MapHub<BidHub>("bidrealtime");
+});
+ 
 app.Run();

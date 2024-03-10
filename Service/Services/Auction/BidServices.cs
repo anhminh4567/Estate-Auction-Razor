@@ -4,6 +4,7 @@ using Repository.Database.Model.Enum;
 using Repository.Interfaces.AppAccount;
 using Repository.Interfaces.Auction;
 using Repository.Interfaces.DbTransaction;
+using Service.MyHub.HubServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,24 +18,27 @@ namespace Service.Services.Auction
     public class BidServices
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly BidHubServices _bidHubServices;
 
-        public BidServices(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
+		public BidServices(IUnitOfWork unitOfWork, BidHubServices bidHubServices)
+		{
+			_unitOfWork = unitOfWork;
+			_bidHubServices = bidHubServices;
+		}
 
-        //private readonly IBidRepository _bidRepository;
-        //private readonly IAuctionRepository _auctionRepository;
-        //private readonly IAccountRepository _accountRepository;
-        //private readonly IJoinedAuctionRepository _joinedAuctionRepository;
-        //public BidServices(IBidRepository bidRepository, IAuctionRepository auctionRepository, IAccountRepository accountRepository, IJoinedAuctionRepository joinedAuctionRepositor)
-        //{
-        //	_bidRepository = bidRepository;
-        //	_auctionRepository = auctionRepository;
-        //	_accountRepository = accountRepository;
-        //	_joinedAuctionRepository = joinedAuctionRepositor;
-        //}
-        public async Task<List<Bid>> GetByAccountId(int accountId)
+
+		//private readonly IBidRepository _bidRepository;
+		//private readonly IAuctionRepository _auctionRepository;
+		//private readonly IAccountRepository _accountRepository;
+		//private readonly IJoinedAuctionRepository _joinedAuctionRepository;
+		//public BidServices(IBidRepository bidRepository, IAuctionRepository auctionRepository, IAccountRepository accountRepository, IJoinedAuctionRepository joinedAuctionRepositor)
+		//{
+		//	_bidRepository = bidRepository;
+		//	_auctionRepository = auctionRepository;
+		//	_accountRepository = accountRepository;
+		//	_joinedAuctionRepository = joinedAuctionRepositor;
+		//}
+		public async Task<List<Bid>> GetByAccountId(int accountId)
         {
             if (accountId == 0)
                 throw new ArgumentNullException("argument is wrong");
@@ -91,7 +95,9 @@ namespace Service.Services.Auction
         }
         public async Task<bool> DeleteRange(List<Bid> listBid)
         {
-            return await _unitOfWork.Repositories.bidRepository.DeleteRange(listBid);
+            var result =  await _unitOfWork.Repositories.bidRepository.DeleteRange(listBid);
+            await _bidHubServices.DeleteBids(listBid);
+            return result;
         }
         public async Task<(bool IsSuccess,string? message, Bid? returnBid)> PlaceBid(int accountId, int auctionId, decimal amount)
         {
@@ -157,7 +163,12 @@ namespace Service.Services.Auction
                 {
                     return (false, "cannot create bid, something wrong, try again later",null);
                 }
-                return (true, "Success", createResult);
+                var getAccountPlacedThisBid = await _unitOfWork.Repositories.accountRepository.GetAsync(createResult.BidderId);
+
+                //SIGNALR 
+                await _bidHubServices.SendNewBid(createResult,getAccountPlacedThisBid);
+
+				return (true, "Success", createResult);
             }catch (Exception ex) {
                 return (false, ex.Message,null);
             }

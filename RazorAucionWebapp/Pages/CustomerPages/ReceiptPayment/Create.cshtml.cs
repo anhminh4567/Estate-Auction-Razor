@@ -86,7 +86,8 @@ namespace RazorAucionWebapp.Pages.CustomerPages.ReceiptPayment
                     auctionReceipt: AuctionReceipt,
                     auctionReceiptPayment: AuctionReceiptPayment,
                     PayAmount: PayAmount,
-                    commissionPercentage: _bindAppsettings.CommissionPercentage);
+                    commissionPercentage: _bindAppsettings.CommissionPercentage,
+                    commissionFixedPrice: _bindAppsettings.ComissionFixedPrice);
                 if (result.IsSuccess)
                 {
                     return RedirectToPage("./Index", new { auctionId = Auction.AuctionId });

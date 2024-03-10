@@ -102,77 +102,74 @@
 			var auctionId = auction.auctionId;
 			var newDiv =
 				`<div class="col-md-4" id="${auctionId}">
-<form method="post">
-<div class="rounded">
-<div class="rounded-top estate_img"></div>
-<div class="company-and-estate-data mt-4 px-4">
-<h5 class="text-uppercase" style="font-weight: bold;">${estate.name}</h5>
-`
+		<form method="post">
+		<div class="rounded">
+		<div class="rounded-top estate_img"></div>
+		<div class="company-and-estate-data mt-4 px-4">
+		<h5 class="text-uppercase" style="font-weight: bold;">${estate.name}</h5>
+		`
 			var categoriesDiv = $(`<div class="d-flex align-items-center my-2">`)
-			estateCategories.forEach( (categories) => {
+			estateCategories.forEach((categories) => {
 				categoriesDiv.append(`
-<div class="cate">
-<span>${categories.categoryName}</span>
-</div>
-				`);
+		<div class="cate">
+		<span>${categories.categoryName}</span>
+		</div>
+						`);
 			});
 			newDiv += categoriesDiv.prop("outerHTML");
 
 			var detail = $(`<div class="img_info d-flex flex-row align-items-center justify-content-between" style = "padding-right: 1rem;" >`)
 			detail.append(`
-<div>
-<img src="https://i.ibb.co/64H3WR3/clock.png"><span>${dayremain} days left</span>
-</div>
-			`);
+		<div>
+		<img src="https://i.ibb.co/64H3WR3/clock.png"><span>${dayremain} days left</span>
+		</div>
+					`);
 			detail.append(`
-<div>
-<img src="https://i.ibb.co/4jNgVvY/user.png"><span>${auction.maxParticipant}</span>
-</div>
-`);
+		<div>
+		<img src="https://i.ibb.co/4jNgVvY/user.png"><span>${auction.maxParticipant}</span>
+		</div>
+		`);
 			detail.append(`
-<div>
-<img src="https://i.ibb.co/W2JWQs2/area-1.png"><span>${area} m²</span>
-</div>
-`);
+		<div>
+		<img src="https://i.ibb.co/W2JWQs2/area-1.png"><span>${area} m²</span>
+		</div>
+		`);
 
 			newDiv += detail.prop("outerHTML");
 			var currentBidDiv = $(`<div class="currentBid">`)
 			currentBidDiv.append(`
-<span>Current Bid: </span><span style="font-weight: bold;">$ ${highestbid.amount}</span >
-`);
+		<span>Current Bid: </span><span style="font-weight: bold;">$ ${highestbid.amount}</span >
+		`);
 
 			newDiv += currentBidDiv.prop("outerHTML");
 			var detailBtn = $(`<div class="detailBtn">`);
 			detailBtn.append(`<a href="/CustomerPages/DetailAuction?id=${auctionId}">See detail</a>`);
 			newDiv += detailBtn.prop("outerHTML");
 			newDiv +=
-`</div>
-</div>
-</form>
-</div>`;
-		console.log(newDiv);
-		$("#auctions-container").append(newDiv);
-				});
-
-
-				connection.on("DeletedObject", function (auction) {
-					var jsonObj = JSON.parse(auction);
-
-				})
-				connection.on("UpdatedObject", function (auction) {
-
-				})
+				`</div>
+		</div>
+		</form>
+		</div>`;
+			console.log(newDiv);
+			$("#auctions-container").append(newDiv);
+		});
 
 
 
-	connection.on("UpdatedObject", function(obj) {
-		console.log(obj);
-	})
-	connection.start().then((result) => {
-		console.log(result)
-	}).catch( (error) => {
-		console.error(error);}
-	);
+
+
+
+
+		connection.on("UpdatedObject", function (auction, estate) {
+			console.log(auction);
+			console.log(estate);
+		});
+		connection.start().then((result) => {
+			console.log(result)
+		}).catch((error) => {
+			console.error(error);
+		}
+		);
 	</script>
 }
 

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using RazorAucionWebapp.MyHub.HubServices;
 using Repository.Database;
 using Repository.Database.Model.AuctionRelated;
+using Service.MyHub.HubServices;
 using Service.Services.AppAccount;
 using Service.Services.Auction;
 using Service.Services.RealEstate;
@@ -55,7 +55,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
             }
             Auction = getAuctionDetail;
             //await _auctionHubService.UpdateAuctionSuccess(Auction);
-            await _auctionHubService.CreateAuctionSuccess(Auction);
+            //await _auctionHubService.CreateAuctionSuccess(Auction);
             return Page();
         }
         private async Task PopulateData(int id) 

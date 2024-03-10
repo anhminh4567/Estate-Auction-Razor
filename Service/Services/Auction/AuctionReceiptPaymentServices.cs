@@ -70,7 +70,8 @@ namespace Service.Services.Auction
             AuctionReceipt auctionReceipt,
             List<AuctionReceiptPayment> auctionReceiptPayment,
             decimal PayAmount,
-            decimal commissionPercentage)
+            decimal commissionPercentage,
+            decimal commissionFixedPrice)
 		{
             if(commissionPercentage <= 0) 
             {
@@ -130,7 +131,8 @@ namespace Service.Services.Auction
                 if (auctionReceipt.RemainAmount == 0)
                 {
                     /////////// UPDATE APP COMISSION///////////
-                    auctionReceipt.Commission = auctionReceipt.Amount * (commissionPercentage / 100);
+                    //auctionReceipt.Commission = auctionReceipt.Amount * (commissionPercentage / 100);
+                    auctionReceipt.Commission = commissionFixedPrice;
                     var update1 = await _unitOfWork.Repositories.auctionReceiptRepository.UpdateAsync(auctionReceipt);
 
 

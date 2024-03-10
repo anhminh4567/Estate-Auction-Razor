@@ -78,10 +78,11 @@ namespace RazorAucionWebapp.BackgroundServices
                                         AuctionId = auc.AuctionId,
                                         BuyerId = getHighestBid.BidderId,
                                         Amount = getHighestBid.Amount,
-                                        RemainAmount = getHighestBid.Amount - auc.EntranceFee,
+                                        RemainAmount = getHighestBid.Amount - auc.EntranceFee, // entrence fee is immmedeiately added to company account
                                         Commission = 0, // this is because commision only apllied when the user has already paid all 
                                     };
                                     var createResult = await auctionRecieptService.Create(newWinnder);
+                                    // Add Entrence Fee to Company Account ( from the winner )
                                     var getCompanyAccount = await unitOfWork.Repositories.accountRepository.GetAsync(getFullDetail.Estate.CompanyId);
                                     getCompanyAccount.Balance += getFullDetail.EntranceFee;
                                     await unitOfWork.Repositories.accountRepository.UpdateAsync(getCompanyAccount);

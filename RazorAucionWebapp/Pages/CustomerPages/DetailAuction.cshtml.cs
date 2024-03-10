@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Repository.Database.Model.AppAccount;
 using Repository.Database.Model.AuctionRelated;
+using Service.MyHub.HubServices;
 using Service.Services.AppAccount;
 using Service.Services.Auction;
 using Service.Services.RealEstate;
@@ -13,13 +14,16 @@ namespace RazorAucionWebapp.Pages.CustomerPages
     {
 		private readonly BidServices _bidServices;
 		private readonly AuctionServices _auctionServices;
-		public DetailAuctionModel(BidServices bidServices, AuctionServices auctionServices)
+        private readonly AuctionHubService _auctionHubService;
+
+		public DetailAuctionModel(BidServices bidServices, AuctionServices auctionServices, AuctionHubService auctionHubService)
 		{
 			_bidServices = bidServices;
 			_auctionServices = auctionServices;
-
+			_auctionHubService = auctionHubService;
 		}
-        public Auction Auction { get; set; } = default!;
+
+		public Auction Auction { get; set; } = default!;
         public List<Bid> AuctionBids { get; set; }
         public List<Account>? JoinedAccounts { get; set; }
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -27,7 +31,8 @@ namespace RazorAucionWebapp.Pages.CustomerPages
             if (id is null)
                 return BadRequest();
             await PopulateData(id.Value);
-            return Page();
+            await _auctionHubService.CreateAuctionSuccess(auction: Auction);
+			return Page();
         }
         private async Task PopulateData(int auctionId)
         {
