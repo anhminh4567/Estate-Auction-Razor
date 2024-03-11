@@ -12,7 +12,7 @@ using Repository.Database;
 namespace Repository.Migrations
 {
     [DbContext(typeof(AuctionRealEstateDbContext))]
-    [Migration("20240309052923_First")]
+    [Migration("20240311042159_First")]
     partial class First
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -233,7 +233,7 @@ namespace Repository.Migrations
                     b.Property<DateTime>("PayTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 3, 9, 12, 29, 23, 863, DateTimeKind.Local).AddTicks(7978));
+                        .HasDefaultValue(new DateTime(2024, 3, 11, 11, 21, 59, 427, DateTimeKind.Local).AddTicks(6814));
 
                     b.Property<int?>("ReceiptId")
                         .HasColumnType("int");
@@ -293,7 +293,7 @@ namespace Repository.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2024, 3, 9, 12, 29, 23, 865, DateTimeKind.Local).AddTicks(1086));
+                        .HasDefaultValue(new DateTime(2024, 3, 11, 11, 21, 59, 429, DateTimeKind.Local).AddTicks(1402));
 
                     b.Property<bool>("IsChecked")
                         .ValueGeneratedOnAdd()

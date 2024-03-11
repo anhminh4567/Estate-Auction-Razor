@@ -168,7 +168,7 @@ namespace Repository.Migrations
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsChecked = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 3, 9, 12, 29, 23, 865, DateTimeKind.Local).AddTicks(1086))
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 3, 11, 11, 21, 59, 429, DateTimeKind.Local).AddTicks(1402))
                 },
                 constraints: table =>
                 {
@@ -356,7 +356,7 @@ namespace Repository.Migrations
                     AccountId = table.Column<int>(type: "int", nullable: true),
                     ReceiptId = table.Column<int>(type: "int", nullable: true),
                     PayAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    PayTime = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 3, 9, 12, 29, 23, 863, DateTimeKind.Local).AddTicks(7978))
+                    PayTime = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 3, 11, 11, 21, 59, 427, DateTimeKind.Local).AddTicks(6814))
                 },
                 constraints: table =>
                 {
