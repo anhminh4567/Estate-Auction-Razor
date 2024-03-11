@@ -138,7 +138,7 @@ namespace Service.Services.RealEstate
 		{
             var isDeletable = true;
             if (estate.Status.Equals(EstateStatus.REMOVED) 
-                || estate.Status.Equals(EstateStatus.BANNDED) 
+                || estate.Status.Equals(EstateStatus.BANNED) 
                 || estate.Status.Equals(EstateStatus.FINISHED))
             {
                 return (false, "cannot delete, estate is already " + estate.Status.ToString());
@@ -186,7 +186,7 @@ namespace Service.Services.RealEstate
 		}
 		public async Task<(bool IsSuccess, string? message)> AdminBannedEstate(Estate estate) 
 		{
-			estate.Status = Repository.Database.Model.Enum.EstateStatus.BANNDED;
+			estate.Status = Repository.Database.Model.Enum.EstateStatus.BANNED;
             try
             {
                 var getAuctions = await _unitOfWork.Repositories.auctionRepository.GetByEstateId(estate.EstateId);

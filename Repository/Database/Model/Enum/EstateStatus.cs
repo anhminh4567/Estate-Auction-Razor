@@ -8,6 +8,6 @@ namespace Repository.Database.Model.Enum
 {
 	public enum EstateStatus
 	{
-		CREATED,BANNDED, REMOVED, FINISHED
+		CREATED, BANNED, REMOVED, FINISHED
 	}
 }

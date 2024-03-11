@@ -62,7 +62,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
                 var getEstate = await _estateServices.GetIncludes(id.Value, "Auctions");
                 Estate = getEstate;
                 //var isDeletable = true;
-                //if(getEstate.Status.Equals(EstateStatus.REMOVED) || getEstate.Status.Equals(EstateStatus.BANNDED) || getEstate.Status.Equals(EstateStatus.FINISHED))
+                //if(getEstate.Status.Equals(EstateStatus.REMOVED) || getEstate.Status.Equals(EstateStatus.BANNED) || getEstate.Status.Equals(EstateStatus.FINISHED))
                 //{
                 //    ModelState.AddModelError(string.Empty, "cannot delete, estate is already " + getEstate.Status.ToString());
                 //    return Page();

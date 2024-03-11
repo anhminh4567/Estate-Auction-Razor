@@ -5,56 +5,81 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<style>
+    .companies-table-container {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Companies[0].CompanyName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Companies[0].Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Companies[0].Address)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Companies[0].EstablishDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Companies[0].DateStartOnPlatform)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Companies) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.CompanyName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Address)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EstablishDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateStartOnPlatform)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.AccountId">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.AccountId">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.AccountId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        .companies-table-container h1 {
+            margin-bottom: 20px;
+        }
+
+        .companies-table-container a {
+            color: #007bff;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
+            .companies-table-container a:hover {
+                text-decoration: underline;
+            }
+
+        .companies-table-container table {
+            width: 100%;
+        }
+
+        .companies-table-container th {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+
+        .companies-table-container td, .companies-table-container th {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #dee2e6;
+        }
+
+        .companies-table-container tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+</style>
+
+<div class="companies-table-container">
+    <h1>Index</h1>
+    <p>
+        <a asp-page="Create">Create New</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Companies[0].CompanyName)</th>
+                <th>@Html.DisplayNameFor(model => model.Companies[0].Description)</th>
+                <th>@Html.DisplayNameFor(model => model.Companies[0].Address)</th>
+                <th>@Html.DisplayNameFor(model => model.Companies[0].EstablishDate)</th>
+                <th>@Html.DisplayNameFor(model => model.Companies[0].DateStartOnPlatform)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Companies)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.CompanyName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Address)</td>
+                    <td>@Html.DisplayFor(modelItem => item.EstablishDate)</td>
+                    <td>@Html.DisplayFor(modelItem => item.DateStartOnPlatform)</td>
+                    <td>
+                        <a class="btn btn-sm btn-primary" asp-page="./Edit" asp-route-id="@item.AccountId">Edit</a>
+                        <a class="btn btn-sm btn-info" asp-page="./Details" asp-route-id="@item.AccountId">Details</a>
+                        <a class="btn btn-sm btn-danger" asp-page="./Delete" asp-route-id="@item.AccountId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
