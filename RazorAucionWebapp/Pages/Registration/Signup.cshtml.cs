@@ -14,11 +14,12 @@ namespace RazorAucionWebapp.Pages.Registration
     {
 		private readonly AccountServices _accountServices;
 		private readonly BindAppsettings _bindAppsettings;
-
-		public SignupModel(AccountServices accountServices, BindAppsettings bindAppsettings)
+		private readonly AccountImagesServices _accountImagesServices;
+		public SignupModel(AccountServices accountServices, BindAppsettings bindAppsettings, AccountImagesServices accountImagesServices)
 		{
 			_accountServices = accountServices;
 			_bindAppsettings = bindAppsettings;
+			_accountImagesServices = accountImagesServices;
 		}
 
 		[BindProperty]

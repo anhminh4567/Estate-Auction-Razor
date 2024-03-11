@@ -18,13 +18,29 @@ var appSettings = JsonSerializer.Deserialize<BindAppsettings>(json, new JsonSeri
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorPages(opt => 
-{
-    //opt.Conventions.AuthorizeFolder("/AdminPages", "Admin");
-    //opt.Conventions.AuthorizeFolder("/CompanyPages", "Company");
-    //opt.Conventions.AuthorizeFolder("/CustomerPages", "Customer");
+//builder.Services.AddRazorPages(opt => 
+//{
+//    opt.Conventions.AuthorizeFolder("/AdminPages", "Admin");
+//	opt.Conventions.AuthorizeFolder("/AdminPages", "VerifiedUser");
 
-});
+//	opt.Conventions.AuthorizeFolder("/CompanyPages", "Company");
+//	opt.Conventions.AuthorizeFolder("/CompanyPages", "Admin");
+//	opt.Conventions.AuthorizeFolder("/CompanyPages", "VerifiedUser");
+
+//	opt.Conventions.AuthorizeFolder("/Vnpay", "VerifiedUser");
+
+//	opt.Conventions.AuthorizeFolder("/CustomerPages", "Customer");
+//	opt.Conventions.AuthorizeFolder("/CustomerPages", "Company");
+//	opt.Conventions.AuthorizeFolder("/CustomerPages", "Admin");
+//	opt.Conventions.AllowAnonymousToPage("/CustomerPages/DetailAuction");
+
+//	opt.Conventions.AuthorizePage("/CustomerPages/Transactions/Create", "VerifiedUser");
+//	opt.Conventions.AuthorizePage("/CustomerPages/ReceiptPayment/Create", "VerifiedUser");
+//	opt.Conventions.AuthorizePage("/CustomerPages/BidAuction", "VerifiedUser");
+//	opt.Conventions.AuthorizePage("/CustomerPages/JoinAuction", "VerifiedUser");
+
+	
+//});
 
 builder.Services.AddDbContext<AuctionRealEstateDbContext>();
 
@@ -55,29 +71,32 @@ builder.Services.AddAuthentication("cookie")
         options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
     });
 
-//builder.Services.AddAuthorization(config =>
-//{
-//    config.AddPolicy("Admin", c =>
-//    {
-//        c.RequireAuthenticatedUser();
-//        c.RequireRole("ADMIN");
-//    });
-//    config.AddPolicy("Customer", c =>
-//    {
-//        c.RequireAuthenticatedUser();
-//        c.RequireRole("CUSTOMER");
-//    });
-//    config.AddPolicy("Company", c =>
-//    {
-//        c.RequireAuthenticatedUser();
-//        c.RequireRole("COMPANY");
-//    });
-//    config.AddPolicy("VerifiedUser", c =>
-//    {
-//        c.RequireClaim("IsVerified", "true");
-//    });
-//});
- var app = builder.Build();
+builder.Services.AddAuthorization(config =>
+{
+    config.AddPolicy("Admin", c =>
+    {
+        c.RequireRole("ADMIN");
+		c.RequireClaim("Status", "ACTIVED");
+		c.RequireAuthenticatedUser();
+	});
+    config.AddPolicy("Customer", c =>
+    {
+        c.RequireRole("CUSTOMER");
+		c.RequireAuthenticatedUser();
+	});
+    config.AddPolicy("Company", c =>
+    {
+        c.RequireRole("COMPANY");
+		c.RequireClaim("Status", "ACTIVED");
+		c.RequireAuthenticatedUser();
+	});
+    config.AddPolicy("VerifiedUser", c =>
+    {
+        c.RequireClaim("Status", "ACTIVED");
+		c.RequireAuthenticatedUser();
+	});
+});
+var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

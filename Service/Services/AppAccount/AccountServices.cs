@@ -1,6 +1,7 @@
 ﻿using Repository.Database.Model;
 using Repository.Database.Model.AppAccount;
 using Repository.Database.Model.AuctionRelated;
+using Repository.Database.Model.Enum;
 using Repository.Interfaces;
 using Repository.Interfaces.AppAccount;
 using Repository.Interfaces.DbTransaction;
@@ -71,6 +72,12 @@ namespace Service.Services.AppAccount
 			var getAcc = await GetByEmail(email);
 			return getAcc is not null ? true // not null mean existed
 				 : false;
+		}
+		public async Task<bool> IsAccountActive(Account account)
+		{
+			if (account.Status.Equals(AccountStatus.ACTIVED))
+				return true;
+			return false;
 		}
 		public async Task<Account?> Create(Account newAccount) 
 		{

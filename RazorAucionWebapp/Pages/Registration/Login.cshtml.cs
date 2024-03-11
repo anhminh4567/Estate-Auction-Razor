@@ -9,6 +9,7 @@ using Service.Services.AppAccount;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Security.Claims;
 
 namespace RazorAucionWebapp.Pages.Registration
@@ -43,7 +44,16 @@ namespace RazorAucionWebapp.Pages.Registration
                 //admin in appsettings
                 if(Email == _bindAppsettings.Admin.Email && Password == _bindAppsettings.Admin.Password)
                 {
-					return RedirectToPage("/AdminPages/Accounts/Index");
+                    var adminAccount = new Account() 
+                    {
+                        Email = _bindAppsettings.Admin.Email,
+                        Role = Role.ADMIN,
+                        Status =  AccountStatus.ACTIVED,
+                        FullName = "ADMIN USER",
+                        AccountId = 0
+                    };
+                    await SetUserIdentity(adminAccount);
+                    return RedirectToPage("/AdminPages/Accounts/Index");
 				}
                 var getAccount = await _accountServices.GetByEmailPassword(Email, Password);
                 if (getAccount is null)
