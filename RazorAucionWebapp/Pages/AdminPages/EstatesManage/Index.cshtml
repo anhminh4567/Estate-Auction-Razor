@@ -46,12 +46,16 @@
     .estate-table-container tbody tr:nth-child(even) {
         background-color: #f2f2f2;
     }
+
+    .btn-primary {
+        color: white;
+    }
 </style>
 
 <div class="estate-table-container">
     <h1>Estate Management</h1>
     <p>
-        <a asp-page="/AdminPages/EstateCategories/Index">Categories</a>
+        <a class="btn btn-primary" style="color:white" asp-page="/AdminPages/EstateCategories/Index">Estate Categories</a>
     </p>
     <table>
         <thead>

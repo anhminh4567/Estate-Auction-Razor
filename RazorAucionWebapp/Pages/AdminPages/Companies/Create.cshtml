@@ -1,89 +1,135 @@
 ﻿@page
 @using Repository.Database.Model.Enum;
-@model 			CreateModel
+@model CreateModel
 
 @{
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>Company</h4>
-<hr />
-<form method="post">
-    <input asp-for="Company.CMND" type="hidden" />
-    <input asp-for="Company.Balance" type="hidden" />
-    <input asp-for="Company.Status" type="hidden" />
-    <input asp-for="Company.Role" type="hidden" />
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="row border border-2 m-3 p-3">
-        <div class="col-md-6">
-            <div class="form-group">
-                <label asp-for="Company.FullName" class="control-label"></label>
-                <input asp-for="Company.FullName" class="form-control" />
-                <span asp-validation-for="Company.FullName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Company.Email" class="control-label"></label>
-                <input asp-for="Company.Email" class="form-control" />
-                <span asp-validation-for="Company.Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Company.Telephone" class="control-label"></label>
-                <input asp-for="Company.Telephone" class="form-control" />
-                <span asp-validation-for="Company.Telephone" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Company.Dob" class="control-label"></label>
-                <input type="date" value="2000-01-01" asp-for="Company.Dob" class="form-control" />
-                <span asp-validation-for="Company.Dob" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Company.Password" class="control-label"></label>
-                <input asp-for="Company.Password" type="password" class="form-control" />
-                <span asp-validation-for="Company.Password" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="col-md-6">
-                <div class="form-group">
-                    <label asp-for="Company.CompanyName" class="control-label"></label>
-                    <input asp-for="Company.CompanyName" class="form-control" />
-                    <span asp-validation-for="Company.CompanyName" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Company.Description" class="control-label"></label>
-                    <input asp-for="Company.Description" class="form-control" />
-                    <span asp-validation-for="Company.Description" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Company.Address" class="control-label"></label>
-                    <input asp-for="Company.Address" class="form-control" />
-                    <span asp-validation-for="Company.Address" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Company.EstablishDate" class="control-label"></label>
-                    <input asp-for="Company.EstablishDate" type="date" value="2000-01-01" class="form-control" />
-                    <span asp-validation-for="Company.EstablishDate" class="text-danger"></span>
-                </div>
-                <br/>
-                <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-primary" />
-                </div>
-        </div>
-        <div class="col-md-4"></div>
-    </div>
-</form>
-
-<div>
-    <a asp-page="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
 <style>
-    .customer-select:hover{
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .form-container {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 80%;
+        max-width: 800px;
+    }
+
+    .form-container h1 {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    input[type="date"] {
+        width: 100%;
+    }
+
+    input[type="submit"] {
+        width: 100%;
+    }
+
+    .btn-back {
+        margin-top: 20px;
+    }
+
+    .customer-select:hover {
         color: black;
         background-color: dimgrey;
     }
 </style>
+
+<div class="container">
+    <div class="form-container">
+        <h1>Create</h1>
+        <form method="post">
+            <input asp-for="Company.CMND" type="hidden" />
+            <input asp-for="Company.Balance" type="hidden" />
+            <input asp-for="Company.Status" type="hidden" />
+            <input asp-for="Company.Role" type="hidden" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Company.FullName" class="control-label"></label>
+                        <input asp-for="Company.FullName" class="form-control" />
+                        <span asp-validation-for="Company.FullName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Company.Email" class="control-label"></label>
+                        <input asp-for="Company.Email" class="form-control" />
+                        <span asp-validation-for="Company.Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Company.Telephone" class="control-label"></label>
+                        <input asp-for="Company.Telephone" class="form-control" />
+                        <span asp-validation-for="Company.Telephone" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Company.Dob" class="control-label"></label>
+                        <input type="date" value="2000-01-01" asp-for="Company.Dob" class="form-control" />
+                        <span asp-validation-for="Company.Dob" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Company.Password" class="control-label"></label>
+                        <input asp-for="Company.Password" type="password" class="form-control" />
+                        <span asp-validation-for="Company.Password" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Company.CompanyName" class="control-label"></label>
+                        <input asp-for="Company.CompanyName" class="form-control" />
+                        <span asp-validation-for="Company.CompanyName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Company.Description" class="control-label"></label>
+                        <input asp-for="Company.Description" class="form-control" />
+                        <span asp-validation-for="Company.Description" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Company.Address" class="control-label"></label>
+                        <input asp-for="Company.Address" class="form-control" />
+                        <span asp-validation-for="Company.Address" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Company.EstablishDate" class="control-label"></label>
+                        <input asp-for="Company.EstablishDate" type="date" value="2000-01-01" class="form-control" />
+                        <span asp-validation-for="Company.EstablishDate" class="text-danger"></span>
+                    </div>
+                    <br />
+@*                     <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-primary" />
+                    </div> *@
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+
+        <div class="btn-back">
+            <a asp-page="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

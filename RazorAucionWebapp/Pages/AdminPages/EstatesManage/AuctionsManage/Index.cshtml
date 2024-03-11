@@ -5,92 +5,105 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<style>
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Auctions[0].Estate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Auctions[0].RegistrationDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Auctions[0].StartDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Auctions[0].EndDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Auctions[0].EndPayDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Auctions[0].EntranceFee)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Auctions[0].WantedPrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Auctions[0].IncrementPrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Auctions[0].MaxParticipant)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Auctions[0].Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Auctions[0].ReceiptId)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Auctions) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Estate.Coordinate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RegistrationDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndPayDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EntranceFee)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.WantedPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IncrementPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MaxParticipant)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReceiptId)
-            </td>
-            <td>
-@*                <a asp-page="./Edit" asp-route-id="@item.AuctionId">Edit</a> |
-*@                <a asp-page="./Details" asp-route-id="@item.AuctionId">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.AuctionId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    .table-container {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 95%;
+        max-width: 1200px;
+    }
+
+    .table-container h1 {
+            margin-bottom: 20px;
+            text-align: center;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .table th,
+        .table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .table td {
+            vertical-align: middle;
+        }
+
+    .action-links a {
+        color: #007bff;
+        text-decoration: none;
+        margin-right: 10px;
+    }
+
+        .action-links a:hover {
+            text-decoration: underline;
+        }
+</style>
+
+<div class="container">
+    <div class="table-container">
+        <h1>Index</h1>
+        <p>
+            <a asp-page="Create" class="btn btn-primary">Create New</a>
+        </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Estate Coordinate</th>
+                    <th>Registration Date</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>End Pay Date</th>
+                    <th>Entrance Fee</th>
+                    <th>Wanted Price</th>
+                    <th>Increment Price</th>
+                    <th>Max Participant</th>
+                    <th>Status</th>
+                    <th>Receipt ID</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Auctions)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Estate.Coordinate)</td>
+                        <td>@Html.DisplayFor(modelItem => item.RegistrationDate)</td>
+                        <td>@Html.DisplayFor(modelItem => item.StartDate)</td>
+                        <td>@Html.DisplayFor(modelItem => item.EndDate)</td>
+                        <td>@Html.DisplayFor(modelItem => item.EndPayDate)</td>
+                        <td>@Html.DisplayFor(modelItem => item.EntranceFee)</td>
+                        <td>@Html.DisplayFor(modelItem => item.WantedPrice)</td>
+                        <td>@Html.DisplayFor(modelItem => item.IncrementPrice)</td>
+                        <td>@Html.DisplayFor(modelItem => item.MaxParticipant)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                        <td>@Html.DisplayFor(modelItem => item.ReceiptId)</td>
+                        <td class="action-links">
+                            <a asp-page="./Details" asp-route-id="@item.AuctionId">Details</a> |
+                            <a asp-page="./Delete" asp-route-id="@item.AuctionId">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

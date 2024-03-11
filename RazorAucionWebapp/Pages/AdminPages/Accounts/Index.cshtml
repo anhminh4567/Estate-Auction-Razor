@@ -5,77 +5,86 @@
     ViewData["Title"] = "List";
 }
 
-<h1>List</h1>
+<style>
+    .accounts-table-container {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Accounts[0].Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Accounts[0].Password)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Accounts[0].FullName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Accounts[0].Dob)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Accounts[0].Telephone)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Accounts[0].Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Accounts[0].Role)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Accounts[0].CMND)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Accounts[0].Balance)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Accounts) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Dob)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Telephone)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Role)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CMND)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Balance)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.AccountId">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.AccountId">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.AccountId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        .accounts-table-container h1 {
+            margin-bottom: 20px;
+        }
+
+        .accounts-table-container a {
+            color: #007bff;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
+            .accounts-table-container a:hover {
+                text-decoration: underline;
+            }
+
+        .accounts-table-container table {
+            width: 100%;
+        }
+
+        .accounts-table-container th {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+
+        .accounts-table-container td, .accounts-table-container th {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #dee2e6;
+        }
+
+        .accounts-table-container tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+</style>
+
+<div class="accounts-table-container">
+    <h1>List</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Accounts[0].Email)</th>
+                <th>@Html.DisplayNameFor(model => model.Accounts[0].Password)</th>
+                <th>@Html.DisplayNameFor(model => model.Accounts[0].FullName)</th>
+                <th>@Html.DisplayNameFor(model => model.Accounts[0].Dob)</th>
+                <th>@Html.DisplayNameFor(model => model.Accounts[0].Telephone)</th>
+                <th>@Html.DisplayNameFor(model => model.Accounts[0].Status)</th>
+                <th>@Html.DisplayNameFor(model => model.Accounts[0].Role)</th>
+                <th>@Html.DisplayNameFor(model => model.Accounts[0].CMND)</th>
+                <th>@Html.DisplayNameFor(model => model.Accounts[0].Balance)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Accounts)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Password)</td>
+                    <td>@Html.DisplayFor(modelItem => item.FullName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Dob)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Telephone)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Role)</td>
+                    <td>@Html.DisplayFor(modelItem => item.CMND)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Balance)</td>
+                    <td>
+@*                         <a class="btn btn-sm btn-primary" asp-page="./Edit" asp-route-id="@item.AccountId">Edit</a>
+ *@                        <a class="btn btn-sm btn-info" asp-page="/AdminPages/Accounts/Detail" asp-route-id="@item.AccountId">Details</a>
+@*                         <a class="btn btn-sm btn-danger" asp-page="./Delete" asp-route-id="@item.AccountId">Delete</a>
+ *@                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
