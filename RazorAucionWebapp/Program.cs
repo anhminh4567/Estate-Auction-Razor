@@ -46,7 +46,7 @@ builder.Services.AddDbContext<AuctionRealEstateDbContext>();
 
 builder.Services.AddMyRepositories();
 builder.Services.AddMyServices();
-
+builder.Services.AddRazorPages();
 builder.Services.AddSingleton<ServerDefaultValue>();
 builder.Services.AddSingleton(appSettings);
 
