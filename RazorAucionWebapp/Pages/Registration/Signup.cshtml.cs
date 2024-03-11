@@ -93,10 +93,19 @@ namespace RazorAucionWebapp.Pages.Registration
 				new Claim(ClaimTypes.Name,account.FullName),
 				new Claim("Status",account.Status.ToString()),
 				new Claim("Id",account.AccountId.ToString()),
+                new Claim("Avatar", await GetAvatar(account.AccountId))
 			};
-			var claimIdentity = new ClaimsIdentity(claims, "cookie", ClaimTypes.Email, ClaimTypes.Role);
+            var claimIdentity = new ClaimsIdentity(claims, "cookie", ClaimTypes.Email, ClaimTypes.Role);
 			var claimPrinciple = new ClaimsPrincipal(claimIdentity);
 			await HttpContext.SignInAsync("cookie", claimPrinciple);
 		}
+        private async Task<string> GetAvatar(int id)
+        {
+            var path = "~/PublicImages/";
+            var Image = await _accountImagesServices.GetAccountAvatar(id);
+            if (Image is null) path += "general/user_icon.png";
+            else path += Path.Combine("storage", Image.Path);
+            return path;
+        }
     }
 }
