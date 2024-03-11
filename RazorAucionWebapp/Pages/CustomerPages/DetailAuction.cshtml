@@ -94,7 +94,16 @@
 	<div class="row">
 		<div class="d-inline">
 			<a class="d-inline btn btn-primary p-2" asp-page="./BidAuction" asp-route-auctionId="@Model.Auction.AuctionId">Go to bid page</a>
-			<a class="d-inline btn btn-secondary p-2" asp-page="./JoinAuction" asp-route-id="@Model.Auction.AuctionId">Join Auction !</a>
+			@{
+				if (HttpContext.User.Identity.IsAuthenticated)
+				{
+					<a class="d-inline btn btn-secondary p-2" asp-page="./JoinAuction" asp-route-id="@Model.Auction.AuctionId">Join auction !</a>
+				}
+				else
+				{
+					<a class="d-inline btn btn-secondary p-2" asp-page="/Registration/Login">Login to join!</a>
+				}
+			}
 		</div>
 	</div>
 </div>
