@@ -1,4 +1,5 @@
-﻿using Repository.Database.Model.AppAccount;
+﻿using RazorAucionWebapp.Configure;
+using Repository.Database.Model.AppAccount;
 using Repository.Database.Model.AuctionRelated;
 using Repository.Database.Model.Enum;
 using Service.Services.AppAccount;
@@ -32,6 +33,7 @@ namespace RazorAucionWebapp.BackgroundServices
 				var auctionRecieptPaymentService = scope.ServiceProvider.GetRequiredService<AuctionReceiptPaymentServices>();
 				var accountService = scope.ServiceProvider.GetRequiredService<AccountServices>();
 				var getAllAuctionReceipt = await auctionRecieptService.GetWithCondition(includeProperties: "Auction,Buyer,Payments");
+				var getBindAppsetting = scope.ServiceProvider.GetRequiredService<BindAppsettings>();
 				foreach (var Receipt in getAllAuctionReceipt)
 				{
 					var auction = Receipt.Auction;
@@ -49,12 +51,17 @@ namespace RazorAucionWebapp.BackgroundServices
 						if (remainAmount > 0) // the user haven't paid off the debt
 						{
 							auction.Status = AuctionStatus.FAILED_TO_PAY;
-							buyer.Balance += Receipt.Amount - Receipt.RemainAmount;
+							var amountUserHavePaid = Receipt.Amount - Receipt.RemainAmount;
+							//entrence fee ko trar laij cho thang nay do vi pham luat
+							// Compnay balance cung ko dc cong, do ngay khi thang bid, balance cua Company da dc cong
+							buyer.Balance += amountUserHavePaid - auction.EntranceFee;
 							// remove all Payment if the account is not paid on time
 							if (payments.Count > 0)
 							{
 								await auctionRecieptPaymentService.DeleteRange(payments.ToList());
 							}
+							Receipt.Commission = getBindAppsetting.ComissionFixedPrice; // van lay tien commission cho app
+							Receipt.RemainAmount = Receipt.Amount - auction.EntranceFee;// remain se la tien tong tru di entrence fee, do company van an entrence fee
 							await auctionRecieptService.Update(Receipt);
 							await accountService.Update(buyer);
 							await DoSomethingIfFailed(Receipt);

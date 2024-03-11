@@ -1,4 +1,11 @@
 ﻿@page
 @model RazorAucionWebapp.Pages.Vnpay.RefundModel
 @{
+	var successMessage = TempData.TryGetValue("RefundSuccess", out var message);
+	if (message is not null)
+	{
+		<div>
+			<p class="text-success">@message</p>
+		</div>
+	}
 }

@@ -154,7 +154,10 @@ namespace Service.Services.Auction
 				//}
 				if (status.Equals(AuctionStatus.SUCCESS) ||
 					//status.Equals(AuctionStatus.PENDING_PAYMENT) || 
-					status.Equals(AuctionStatus.CANCELLED))
+					status.Equals(AuctionStatus.CANCELLED) ||
+					status.Equals(AuctionStatus.FAILED_TO_PAY)
+					) 
+
 				{
 					throw new Exception("the status is not valid to cancel or you have already cancelled, status now is: " + status.ToString());
 				}
@@ -200,16 +203,22 @@ namespace Service.Services.Auction
 																										 // Hoàn lại tiền Entrence Fee cho mọi nguời trong JoinedAuction có Status là REGISTERD 
 					foreach (var joinedOne in joinedAccounts)
 					{
+						// neu nguoi do da quit hoac bi banned thi ko hoan tien, quit thi hoan tien luc quit roi 
+						if (joinedOne.Status.Equals(JoinedAuctionStatus.QUIT) is true 
+							|| joinedOne.Status.Equals(JoinedAuctionStatus.BANNED) is true)
+						{
+							continue;
+						}
 						var account = joinedOne.Account;
 						account.Balance += auction.EntranceFee;
 						await _unitOfWork.Repositories.accountRepository.UpdateAsync(account);
 					}
 					// do shit 
-					if (auction.Status.Equals(AuctionStatus.NOT_STARTED) is false &&
-					auction.Status.Equals(AuctionStatus.ONGOING) is false)
-					{
-						throw new Exception("the status is not valid to cancel or you have already cancelled");
-					}
+					//if (auction.Status.Equals(AuctionStatus.NOT_STARTED) is false &&
+					//auction.Status.Equals(AuctionStatus.ONGOING) is false)
+					//{
+					//	throw new Exception("the status is not valid to cancel or you have already cancelled");
+					//}
 					auction.Status = Repository.Database.Model.Enum.AuctionStatus.CANCELLED;
 					var result = await _unitOfWork.Repositories.auctionRepository.UpdateAsync(auction);
 					if (result)
@@ -236,9 +245,10 @@ namespace Service.Services.Auction
 			{
 				var estate = await _unitOfWork.Repositories.estateRepository.GetAsync(auction.EstateId);
 				var status = auction.Status;
-				if (status.Equals(AuctionStatus.SUCCESS) ||
+				if (status.Equals(AuctionStatus.SUCCESS) // 3 th còn lại được cái trên lo 
 					//status.Equals(AuctionStatus.PENDING_PAYMENT) ||
-					status.Equals(AuctionStatus.CANCELLED))
+					//status.Equals(AuctionStatus.CANCELLED)
+					)
 				{
 					await _unitOfWork.BeginTransaction();
 					switch (status)

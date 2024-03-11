@@ -16,7 +16,7 @@ namespace Repository.Implementation
 		{
 		}
 
-		public async Task<List<Transaction>?> GetByAccountId(int accountId)
+		public async Task<List<Transaction>> GetByAccountId(int accountId)
 		{
 			return await _set.Where(t => t.AccountId == accountId).ToListAsync();
 		}

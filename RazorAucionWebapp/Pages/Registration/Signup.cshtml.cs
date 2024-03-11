@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using RazorAucionWebapp.Configure;
 using Repository.Database.Model.AppAccount;
 using Service.Services.AppAccount;
 using System.ComponentModel.DataAnnotations;
@@ -12,9 +13,12 @@ namespace RazorAucionWebapp.Pages.Registration
     public class SignupModel : PageModel
     {
 		private readonly AccountServices _accountServices;
-		public SignupModel(AccountServices accountServices)
+		private readonly BindAppsettings _bindAppsettings;
+
+		public SignupModel(AccountServices accountServices, BindAppsettings bindAppsettings)
 		{
 			_accountServices = accountServices;
+			_bindAppsettings = bindAppsettings;
 		}
 
 		[BindProperty]
@@ -51,6 +55,10 @@ namespace RazorAucionWebapp.Pages.Registration
 			if (await _accountServices.IsEmailExisted(Email))
 			{
 				ModelState.AddModelError(string.Empty,"email exist");
+				return Page();
+			}
+			if(Email.Equals(_bindAppsettings.Admin.Email,StringComparison.CurrentCultureIgnoreCase)) {
+				ModelState.AddModelError(string.Empty, "email exist");
 				return Page();
 			}
 			var newAcc = new Account()

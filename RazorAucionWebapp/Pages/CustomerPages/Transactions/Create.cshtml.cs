@@ -56,28 +56,28 @@ namespace RazorAucionWebapp.Pages.CustomerPages.Transactions
                 }
                 var getUser = await _accountService.GetById(_userId);
                 var urlRedirect = await GenerateUrlRedirect(HttpContext, getUser, Amount);
-                if (urlRedirect is null)
-                {
-                    ModelState.AddModelError(string.Empty, "something wrong with transactin, return later");
-                    return Page();
-                }
-                var newTransaction = new Transaction()
-                {
-                    AccountId = _userId,
-                    Status = TransactionStatus.PENDING,
-                    vnp_Amount = Amount.ToString(),
-                    vnp_OrderInfo = "TEST ORDER, MUST NOT USE TO REFUND, CANNOT REFUND",
-                    vnp_PayDate = DateTime.Now.ToString(),
-                    vnp_TransactionDate = DateTime.Now.Ticks,
-                    vnp_TxnRef = string.Empty,
-                };
-                var saveTransaction = await _transactionServices.Create(newTransaction);
-                if (saveTransaction is null)
-                {
-                    ModelState.AddModelError(string.Empty, "something wrong with transaction, return later");
-                    return Page();
-                }
-                urlRedirect = await GenerateUrlRedirect(HttpContext, getUser, Amount, saveTransaction.TransactionId);
+                //if (urlRedirect is null)
+                //{
+                //    ModelState.AddModelError(string.Empty, "something wrong with transactin, return later");
+                //    return Page();
+                //}
+                //var newTransaction = new Transaction()
+                //{
+                //    AccountId = _userId,
+                //    Status = TransactionStatus.PENDING,
+                //    vnp_Amount = Amount.ToString(),
+                //    vnp_OrderInfo = "TEST ORDER, MUST NOT USE TO REFUND, CANNOT REFUND",
+                //    vnp_PayDate = DateTime.Now.ToString(),
+                //    vnp_TransactionDate = DateTime.Now.Ticks,
+                //    vnp_TxnRef = string.Empty,
+                //};
+                //var saveTransaction = await _transactionServices.Create(newTransaction);
+                //if (saveTransaction is null)
+                //{
+                //    ModelState.AddModelError(string.Empty, "something wrong with transaction, return later");
+                //    return Page();
+                //}
+                //urlRedirect = await GenerateUrlRedirect(HttpContext, getUser, Amount, saveTransaction.TransactionId);
                 return Redirect(url: urlRedirect);
             }
             catch (Exception ex)
@@ -88,7 +88,7 @@ namespace RazorAucionWebapp.Pages.CustomerPages.Transactions
         }
         private async Task<string?> GenerateUrlRedirect(HttpContext httpContext, Account account, int amount, int transactionId = 0)
         {
-            if (true)
+            if (true == false)
             {
                 return $"https://localhost:7156/Vnpay/Return?handler=TestTransactionHandler&amount={amount}&transactionId={transactionId}";
             }
@@ -98,11 +98,17 @@ namespace RazorAucionWebapp.Pages.CustomerPages.Transactions
         private (bool isValid, string Message) IsAmountValid(int amount)
         {
             //do some logic here, not yet
-            if (true)
+            if (true == false)
                 return (true, $"{Amount} is valid.");
             else
-                return (false, "amount is not valid, try enter different amount");
-        }
+            {
+                if(amount >= 10000  && amount <= 100000000)
+                {
+                    return (true, "amount is valid");
+                }
+				return (false, "amount is not valid,it must be in between 10000k and 100000000k");
+			}
+		}
         private void PopulateData()
         {
             var tryGetUserId = int.TryParse(HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("Id"))?.Value, out var userId);

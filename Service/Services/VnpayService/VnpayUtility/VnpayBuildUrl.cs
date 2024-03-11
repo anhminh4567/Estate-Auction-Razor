@@ -32,8 +32,39 @@ namespace Service.Services.VnpayService.VnpayUtility
 		{
 			_amount = amount;
 			_bankCode = bankcode;
+			
+			
+			//Get payment input
+			OrderInfo order = new OrderInfo();
+			///Save order to db
+			order.OrderId = DateTime.Now.Ticks; // Giả lập mã giao dịch hệ thống merchant gửi sang VNPAY
+			order.Amount = _amount; // Giả lập số tiền thanh toán hệ thống merchant gửi sang VNPAY 100,000 VND
+			order.Status = "0"; //0: Trạng thái thanh toán "chờ thanh toán" hoặc "Pending"
+			order.OrderDesc = "desc";
+			order.CreatedDate = DateTime.Now;
+
+			// tao moi transactin de lay transction id tren return url
+			await _unitOfWork.BeginTransaction();
+			var newTransaction = new Transaction()
+			{
+				AccountId = acc.AccountId,
+				Status = TransactionStatus.PENDING,
+				vnp_Amount = amount.ToString(),
+				vnp_OrderInfo = "By user id:" + acc.AccountId.ToString(),
+				vnp_TransactionDate = long.Parse(order.CreatedDate.ToString("yyyyMMddHHmmss")),
+				vnp_TxnRef = order.OrderId.ToString(),
+				vnp_PayDate = DateTime.Now.ToString("yyyyMMddHHmmss"),
+			};
+			var creatResult = await _unitOfWork.Repositories.transactionRepository.CreateAsync(newTransaction);
+			if(creatResult is null ) 
+			{
+				await _unitOfWork.RollBackAsync();
+				return null;
+			}
+
+
 			//Get Config Info
-			string vnp_Returnurl = VnpayDefaultValue.Vnp_Returnurl; //URL nhan ket qua tra ve 
+			string vnp_Returnurl = VnpayDefaultValue.Vnp_Returnurl += creatResult.TransactionId ; //URL nhan ket qua tra ve 
 			string vnp_Url = VnpayDefaultValue.Vnp_Url; //URL thanh toan cua VNPAY 
 			string vnp_TmnCode = VnpayDefaultValue.Vnp_TmnCode; //Ma website
 			string vnp_HashSecret = VnpayDefaultValue.Vnp_HashSecret; //Chuoi bi mat
@@ -43,14 +74,6 @@ namespace Service.Services.VnpayService.VnpayUtility
 				//lblMessage.Text = "Vui lòng cấu hình các tham số: vnp_TmnCode,vnp_HashSecret trong file web.config";
 				return string.Empty;
 			}
-			//Get payment input
-			OrderInfo order = new OrderInfo();
-			///Save order to db
-			order.OrderId = DateTime.Now.Ticks; // Giả lập mã giao dịch hệ thống merchant gửi sang VNPAY
-			order.Amount = _amount; // Giả lập số tiền thanh toán hệ thống merchant gửi sang VNPAY 100,000 VND
-			order.Status = "0"; //0: Trạng thái thanh toán "chờ thanh toán" hoặc "Pending"
-			order.OrderDesc = "desc";
-			order.CreatedDate = DateTime.Now;
 
 			DateTime vnp_expiredDate = order.CreatedDate.AddMinutes(_transactionDuration);
 			string locale = "";//cboLanguage.SelectedItem.Value;
@@ -114,17 +137,10 @@ namespace Service.Services.VnpayService.VnpayUtility
 			vnpay.AddRequestData("vnp_Inv_Type", "I"); // I - ca nhan || O - to chuc
 
 			string paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
-			var newTransaction = new Transaction()
-			{
-				AccountId = acc.AccountId,
-				Status = TransactionStatus.PENDING,
-				vnp_Amount = amount.ToString(),
-				vnp_OrderInfo = "By user id:" + acc.AccountId.ToString(),
-				vnp_TransactionDate = long.Parse(order.CreatedDate.ToString("yyyyMMddHHmmss")),
-				vnp_TxnRef = order.OrderId.ToString(),
-				vnp_PayDate = DateTime.Now.ToString(),
-			};
-			await  _unitOfWork.Repositories.transactionRepository.CreateAsync(newTransaction);
+
+
+			await _unitOfWork.CommitAsync();
+
 			//Response.Redirect(paymentUrl);
 			return paymentUrl;
 		}

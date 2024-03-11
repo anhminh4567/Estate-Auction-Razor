@@ -1,72 +1,82 @@
 ﻿@page
+@using Repository.Database.Model.Enum;
 @model RazorAucionWebapp.Pages.CustomerPages.Transactions.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Transaction History</h1>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
 <table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Transaction[0].Account)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Transaction[0].Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Transaction[0].vnp_TxnRef)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Transaction[0].vnp_Amount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Transaction[0].vnp_TransactionDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Transaction[0].vnp_OrderInfo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Transaction[0].vnp_PayDate)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Transaction) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Account.CMND)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.vnp_TxnRef)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.vnp_Amount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.vnp_TransactionDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.vnp_OrderInfo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.vnp_PayDate)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.TransactionId">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.TransactionId">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.TransactionId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Transactions[0].Status)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Transactions[0].vnp_TxnRef)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Transactions[0].vnp_Amount)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Transactions[0].vnp_TransactionDate)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Transactions[0].vnp_OrderInfo)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Transactions[0].vnp_PayDate)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model.Transactions)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Status)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.vnp_TxnRef)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.vnp_Amount)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.vnp_TransactionDate)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.vnp_OrderInfo)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.vnp_PayDate)
+				</td>
+				<td>
+					@{
+						var tryParsePayDate1 = DateTime.TryParse(item.vnp_PayDate, out var dateTime);
+						if (tryParsePayDate1 is false)
+						{
+							dateTime = DateTime.ParseExact(item.vnp_PayDate, "yyyyMMddHHmmss", null);
+						}
+						if (DateTime.Compare(dateTime.AddMinutes(Model.RefundValidTime), DateTime.Now) <= 0) // means when the time + minute refund is lower than time.now (means pass the time to refund)
+						{
+							<a class="btn btn-danger disabled" href="#">Refund</a>
+						}
+						else if (item.Status.Equals(TransactionStatus.CANCELLED))
+						{
+							<a class="btn btn-danger disabled" href="#">Refund</a>
+						}
+						else
+						{
+							<a class="btn btn-danger" asp-page="../../Vnpay/Refund" asp-route-transactionId="@item.TransactionId">Refund</a>
+						}
+					}
+
+				</td>
+			</tr>
+		}
+	</tbody>
 </table>

@@ -214,14 +214,21 @@ namespace Service.Services.AppAccount
                         await _unitOfWork.BeginTransaction();
 
                         var getBids = await _unitOfWork.Repositories.bidRepository.GetByCondition(b => b.AuctionId == auctionId && b.BidderId == userId);//await _bidServices.GetByAuctionId_AccountId(AuctionId, _userId);
-                                                                                                                                                         // REMOVE ALL BID OF THE USER IF EXIST
+                        
+                        // neu AUCTION chua dien ra (NOT_STARTED)  ma quit thi hoan tien
+                        if(getAuction.Status.Equals(AuctionStatus.NOT_STARTED))
+                        {
+							getUser.Balance += getAuction.EntranceFee;
+							await _unitOfWork.Repositories.accountRepository.UpdateAsync(getUser);// _accountServices.Update(getUser);
+						}
+                        
+                        // REMOVE ALL BID OF THE USER IF EXIST
                         if (getBids is not null && getBids.Count > 0)
                         {
                             await _unitOfWork.Repositories.bidRepository.DeleteRange(getBids);
                         }
                         await _unitOfWork.Repositories.joinedAuctionRepository.DeleteAsync(joinedAuction); //_joinedAuctionServices.DeleteRange(new List<JoinedAuction>() { JoinedAuction });
-                        getUser.Balance += getAuction.EntranceFee;
-                        await _unitOfWork.Repositories.accountRepository.UpdateAsync(getUser);// _accountServices.Update(getUser);
+                        
                         
                         
                         await _unitOfWork.SaveChangesAsync();
@@ -231,7 +238,7 @@ namespace Service.Services.AppAccount
                     }
                     else
                     {
-                        return (false, "cannot delete, status not valid");
+                        return (false, "cannot quit , status not valid");
                     }
                 }
                 else

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using RazorAucionWebapp.Configure;
 using Repository.Database.Model.AppAccount;
 using Repository.Database.Model.Enum;
 using Repository.Interfaces.AppAccount;
@@ -16,13 +17,16 @@ namespace RazorAucionWebapp.Pages.Registration
     {
         private readonly AccountServices _accountServices;
         private readonly AccountImagesServices _accountImagesServices;
-        public LoginModel(AccountServices account, AccountImagesServices accountImagesServices)
-        {
-            _accountServices = account;
-            _accountImagesServices = accountImagesServices;
-        }
+        private readonly BindAppsettings _bindAppsettings;
 
-        [BindProperty]
+		public LoginModel(AccountServices accountServices, AccountImagesServices accountImagesServices, BindAppsettings bindAppsettings)
+		{
+			_accountServices = accountServices;
+			_accountImagesServices = accountImagesServices;
+			_bindAppsettings = bindAppsettings;
+		}
+
+		[BindProperty]
         [Required]
         [DataType(DataType.EmailAddress)]
         public string? Email { get; set; }
@@ -36,6 +40,11 @@ namespace RazorAucionWebapp.Pages.Registration
         {
             if (ModelState.IsValid)
             {
+                //admin in appsettings
+                if(Email == _bindAppsettings.Admin.Email && Password == _bindAppsettings.Admin.Password)
+                {
+					return RedirectToPage("/AdminPages/Accounts/Index");
+				}
                 var getAccount = await _accountServices.GetByEmailPassword(Email, Password);
                 if (getAccount is null)
                 {
@@ -44,10 +53,10 @@ namespace RazorAucionWebapp.Pages.Registration
                 }
                 await SetUserIdentity(getAccount);
                 TempData["SuccessLogin"] = "Login Success for user " + getAccount.Email;
-                if (getAccount.Role.Equals(Role.ADMIN))
-                {
-                    return RedirectToPage("/AdminPages/Accounts/Index");
-                }
+                //if (getAccount.Role.Equals(Role.ADMIN))
+                //{
+                //    return RedirectToPage("/AdminPages/Accounts/Index");
+                //}
                 return RedirectToPage("/Index");
             }
             else

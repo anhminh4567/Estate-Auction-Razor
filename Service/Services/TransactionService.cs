@@ -36,7 +36,7 @@ namespace Service.Services
 		{
 			return (await _unitOfWork.Repositories.transactionRepository.GetByCondition(t => t.TransactionId == id,includeProperties: includeProperties)).FirstOrDefault();
 		}
-		public  async Task<List<Transaction>?> GetByAccountId(int accountId) 
+		public  async Task<List<Transaction>> GetByAccountId(int accountId) 
 		{
 			return await _unitOfWork.Repositories.transactionRepository.GetByAccountId(accountId);
 		}

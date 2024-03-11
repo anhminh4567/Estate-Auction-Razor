@@ -84,7 +84,7 @@
                                         <span style="font-size: .7rem;">@Context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Email))?.Value </span><hr />
                                         <div class="user_choices">
                                             <a asp-page="/CustomerPages/Profile/Detail"><span><i class="fa-solid fa-user"></i> Profile</span></a><br>
-                                            <a href="#"><span><i class="fa-solid fa-wallet"></i> My wallet</span></a>
+                                            <a asp-page="/CustomerPages/Transactions/Index"><span><i class="fa-solid fa-wallet"></i> My wallet</span></a>
                                         </div>
                                         <div class="logout_btn">
                                             <a asp-area="" asp-page="/Logout">Logout</a>
