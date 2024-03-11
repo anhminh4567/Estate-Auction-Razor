@@ -57,26 +57,24 @@ namespace Service.Services.AppAccount
                 return false;
             return true;
         }
-        public async Task<bool> CheckIfUserIsQualifiedToJoin(Account account, Repository.Database.Model.AuctionRelated.Auction auction) //supplement the above function
+        public async Task<(bool IsValid, string message)> CheckIfUserIsQualifiedToJoin(Account account, Repository.Database.Model.AuctionRelated.Auction auction) //supplement the above function
         {
             if (account.Role.Equals(Role.CUSTOMER) is false)
-                return false;
+                return ( false, "not a customer");
+            // check xem co JoinedAuction cua account do ko ( BUT neu no QUIT hay baneed thi no van xem la da tham gia roi )
             if ((await CheckIfUserHasJoinedTheAuction(account, auction)) is false)
-                return true;
-            // CHECK USER ACCOUNT STATUS
-            // CHECK USER ACCOUNT STATUS
-            // CHECK AUCTION STATUS
-            // CHECK AUCTION STATUS
+                return (true, "user havee not joined before");
             var aucStatus = auction.Status;
             if (aucStatus.Equals(AuctionStatus.CANCELLED) ||
-            aucStatus.Equals(AuctionStatus.PENDING_PAYMENT) ||
-            aucStatus.Equals(AuctionStatus.SUCCESS))
-                return false;
-            //CHECK IF YOU ARE BANNED BEFORE
+                aucStatus.Equals(AuctionStatus.PENDING_PAYMENT) ||
+                aucStatus.Equals(AuctionStatus.SUCCESS) ||
+				aucStatus.Equals(AuctionStatus.FAILED_TO_PAY))
+				return (false," auction is already over");
+            //CHECK neu nguoi do bi ban hay quit 
             var getUserJoinedAuction = await GetByAccountId_AuctionId(account.AccountId, auction.AuctionId);
             if (getUserJoinedAuction.Status.Equals(JoinedAuctionStatus.BANNED) || getUserJoinedAuction.Status.Equals(JoinedAuctionStatus.REGISTERED))
-                return false;
-            return true;
+                return (false, "user has already joined or banned");
+            return (true,"user is valid, but he has joiend before");
         }
         public async Task<(bool IsSuccess, string? message)> BanUserFromAuction(JoinedAuction joinedAuction)
         {
@@ -142,44 +140,54 @@ namespace Service.Services.AppAccount
                     .GetByCondition(a => a.AuctionId == auctionId, includeProperties: "JoinedAccounts"))
                     .FirstOrDefault();
                 var userBalance = getUser.Balance;
+                // Check xem user co du tien hay ko 
                 var isBalanceEnough = (userBalance >= getAuction.EntranceFee);
                 if (isBalanceEnough)
                 {
-                    if (//Auction.Status.Equals(AuctionStatus.ONGOING) == false &&
+                    // CHI CO THE THAM GIA NEU AuctionStauts = NOT_STARTED ( ON_GOING cung ko duoc, ON_GOING chi co the quit auction ) 
+                    if (getAuction.Status.Equals(AuctionStatus.ONGOING) == false &&
                         getAuction.Status.Equals(AuctionStatus.NOT_STARTED) == false)
                     {
                         return (false, "auction is happening");
                     }
+                    // Tong so nguoi tham gia > max ==> ko tham gia duoc nua
                     if (getAuction.JoinedAccounts.Count >= getAuction.MaxParticipant)
                     {
                         return (false, "reach max participant");
                     }
                     var isValidToJoin = await CheckIfUserIsQualifiedToJoin(getUser, getAuction);
-                    if (isValidToJoin == false)
+                    if (isValidToJoin.IsValid == false)
                     {
-                        return (false, "unqualified condition to join");
+                        return (false, isValidToJoin.message);
                     }
-
-                    await _unitOfWork.BeginTransaction();
-
-
-                    getUser.Balance -= getAuction.EntranceFee;
-                    // Chưa có chuyênr tiền vào company, mới trừ tiền của customer 
-                    var updateResult = await _unitOfWork.Repositories.accountRepository.UpdateAsync(getUser);
-                    if (updateResult is false)
-                        throw new Exception("fail to update user balance");
-                    var newUserJoined = new JoinedAuction()
+                    if(isValidToJoin.IsValid == true) // user chua join auction
                     {
-                        AccountId = getUser.AccountId,
-                        AuctionId = getAuction.AuctionId,
-                        RegisterDate = DateTime.Now,
-                        Status = Repository.Database.Model.Enum.JoinedAuctionStatus.REGISTERED
-                    };
-                    var createResult = await _unitOfWork.Repositories.joinedAuctionRepository.CreateAsync(newUserJoined);
-                    if (createResult is null)
-                        throw new Exception("someting wrong wiith create JoinedAuction, try again");
-                    await _unitOfWork.SaveChangesAsync();
-                    await _unitOfWork.CommitAsync();
+						await _unitOfWork.BeginTransaction();
+
+
+						getUser.Balance -= getAuction.EntranceFee;
+						// Chưa có chuyênr tiền vào company, mới trừ tiền của customer 
+						var updateResult = await _unitOfWork.Repositories.accountRepository.UpdateAsync(getUser);
+						if (updateResult is false)
+							throw new Exception("fail to update user balance");
+						var newUserJoined = new JoinedAuction()
+						{
+							AccountId = getUser.AccountId,
+							AuctionId = getAuction.AuctionId,
+							RegisterDate = DateTime.Now,
+							Status = JoinedAuctionStatus.REGISTERED
+						};
+						var createResult = await _unitOfWork.Repositories.joinedAuctionRepository.CreateAsync(newUserJoined);
+						if (createResult is null)
+							throw new Exception("someting wrong wiith create JoinedAuction, try again");
+						await _unitOfWork.SaveChangesAsync();
+						await _unitOfWork.CommitAsync();
+                    }
+                    else
+                    {
+                        return (false, isValidToJoin.message);
+                    }
+                   
                     return (true, "Success");
                 }
                 else
@@ -206,7 +214,7 @@ namespace Service.Services.AppAccount
             try
             {
                 if (getAuction.Status.Equals(AuctionStatus.NOT_STARTED) ||
-                getAuction.Status.Equals(AuctionStatus.ONGOING))
+                    getAuction.Status.Equals(AuctionStatus.ONGOING))
                 {
                     if (joinedAuction.Status.Equals(JoinedAuctionStatus.REGISTERED))
                     {
@@ -215,7 +223,7 @@ namespace Service.Services.AppAccount
 
                         var getBids = await _unitOfWork.Repositories.bidRepository.GetByCondition(b => b.AuctionId == auctionId && b.BidderId == userId);//await _bidServices.GetByAuctionId_AccountId(AuctionId, _userId);
                         
-                        // neu AUCTION chua dien ra (NOT_STARTED)  ma quit thi hoan tien
+                        // neu AUCTION chua dien ra (NOT_STARTED)  ma quit thi hoan tien || neu ( ONGOING ) ==> Ko hoan tien
                         if(getAuction.Status.Equals(AuctionStatus.NOT_STARTED))
                         {
 							getUser.Balance += getAuction.EntranceFee;
@@ -227,9 +235,9 @@ namespace Service.Services.AppAccount
                         {
                             await _unitOfWork.Repositories.bidRepository.DeleteRange(getBids);
                         }
-                        await _unitOfWork.Repositories.joinedAuctionRepository.DeleteAsync(joinedAuction); //_joinedAuctionServices.DeleteRange(new List<JoinedAuction>() { JoinedAuction });
-                        
-                        
+						// Xoa joinedAuction cua nguoi do 
+						await _unitOfWork.Repositories.joinedAuctionRepository.DeleteAsync(joinedAuction); //_joinedAuctionServices.DeleteRange(new List<JoinedAuction>() { JoinedAuction });
+
                         
                         await _unitOfWork.SaveChangesAsync();
                         await _unitOfWork.CommitAsync();
@@ -238,7 +246,7 @@ namespace Service.Services.AppAccount
                     }
                     else
                     {
-                        return (false, "cannot quit , status not valid");
+                        return (false, "cannot quit , user status is not valid, user status is " + joinedAuction.Status);
                     }
                 }
                 else

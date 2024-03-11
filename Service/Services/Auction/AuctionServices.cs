@@ -120,6 +120,7 @@ namespace Service.Services.Auction
 			if (getEstate is not null)
 			{
 				var tryGetEstateAuctionStatus = await _unitOfWork.Repositories.auctionRepository.GetByEstateId(getEstate.EstateId);
+				//check status cua tung auction, neu co cai nao != CANCELLD && != FAILED_TO_PAY ( tuc la vd: SUCCESS, ONGOING, NOT_STARTEED_PENDING )... ==> ko hop li de tao moi
 				foreach (var auc in tryGetEstateAuctionStatus)
 				{
 					if (auc.Status != Repository.Database.Model.Enum.AuctionStatus.CANCELLED &&
@@ -171,14 +172,17 @@ namespace Service.Services.Auction
 					{
 						throw new Exception("with status " + status + " the receipt can never be null, something really wrong");
 					}
+					// tru tien entrencee fee da lay ngay luc thang cua compnay
 					var getCompany = await _unitOfWork.Repositories.accountRepository.GetAsync(getEstate.CompanyId);
 					getCompany.Balance -= auction.EntranceFee;
+					// tra la het tien ( ke ca entrence fee ) cho customer do day la cancel boi Compnay ( bad type )
 					var getWinner = await _unitOfWork.Repositories.accountRepository.GetAsync(getReceipt.BuyerId.Value);
 					var amountUserHavePaid = getReceipt.Amount - getReceipt.RemainAmount;
 					getWinner.Balance += amountUserHavePaid;
 					// update lai company, buyder balance, xoa receipt
 					var update1 = await _unitOfWork.Repositories.accountRepository.UpdateAsync(getWinner);
 					var update2 = await _unitOfWork.Repositories.accountRepository.UpdateAsync(getCompany);
+					// HIEN KO NEN XOA RECEIPT, do receipt app phai an tien 
 					var update3 = await _unitOfWork.Repositories.auctionReceiptRepository.DeleteAsync(getReceipt);
 					auction.Status = AuctionStatus.CANCELLED;
 					var update4 = await _unitOfWork.Repositories.auctionRepository.UpdateAsync(auction);
@@ -195,7 +199,7 @@ namespace Service.Services.Auction
 						return (true, "success");
 					}
 				}
-				else
+				else // NOT_STARTED, ONGOING
 				{
 					var joinedAccounts = await _unitOfWork.Repositories.joinedAuctionRepository
 					.GetByCondition(j => j.AuctionId == auction.AuctionId, includeProperties: "Account");//auction.JoinedAccounts;
@@ -219,7 +223,7 @@ namespace Service.Services.Auction
 					//{
 					//	throw new Exception("the status is not valid to cancel or you have already cancelled");
 					//}
-					auction.Status = Repository.Database.Model.Enum.AuctionStatus.CANCELLED;
+					auction.Status = AuctionStatus.CANCELLED;
 					var result = await _unitOfWork.Repositories.auctionRepository.UpdateAsync(auction);
 					if (result)
 					{

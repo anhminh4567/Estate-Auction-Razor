@@ -58,6 +58,7 @@ namespace RazorAucionWebapp.BackgroundServices
                         if (auc.Status.Equals(AuctionStatus.ONGOING) && auc.EndDate.CompareTo(DateTime.Now) <= 0)
                         {
                             var getFullDetail = await auctionService.GetInclude(auc.AuctionId, "JoinedAccounts,Bids,Estate");
+                            // Neu ko ai bid, ko ai jon ==> cancel auction
                             if (getFullDetail.Bids is null ||
                                 getFullDetail.JoinedAccounts is null ||
                                 getFullDetail.Bids.Count() == 0 ||
@@ -94,10 +95,11 @@ namespace RazorAucionWebapp.BackgroundServices
                                     foreach ( var joinedAccount in joinedAuctionAccounts)
                                     {
                                         var getAccount = await unitOfWork.Repositories.accountRepository.GetAsync(joinedAccount.AccountId.Value);
+                                        // chi tra lai tien cho nhung nguoi jion ( exclude 1 thang bid )
                                         if(getAccount.AccountId != getHighestBid.BidderId)
-                                        {
-                                            getAccount.Balance += auc.EntranceFee;
+										{
                                             // PEOPLE WHO JOINED,  return entrence fee
+											getAccount.Balance += auc.EntranceFee;
 											await unitOfWork.Repositories.accountRepository.UpdateAsync(getAccount);
                                         }
                                         else

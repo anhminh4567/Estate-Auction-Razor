@@ -118,11 +118,13 @@ namespace Service.Services.Auction
                 {
                     return (false, "this auction has already finished, you cannot bid anymore", null);
                 }
+                // lay account nguoi dung hien taij trong joinedAccounts
                 var getJoinedAccount = joinedAccounts?.FirstOrDefault(a => a.AccountId == accountId);
                 if (getJoinedAccount is null)
                 {
                     return (false, "user has not joined auction yet to bid",null);
                 }
+                // neu nguoi dung bi bann ==> fail
                 if (getJoinedAccount.Status.Equals(JoinedAuctionStatus.BANNED))
                 {
                     return (false, "user is banned",null);
