@@ -5,81 +5,53 @@
 	ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
-<p>
-	<a class="btn btn-primary disabled" href="#">Create New</a>
-</p>
-<table class="table">
-	<thead>
-		<tr>
-			@* <th>
-			@Html.DisplayNameFor(model => model.Auctions[0].Estate)
-			</th>*@
-			<th>
-				@Html.DisplayNameFor(model => model.Auctions[0].AuctionId)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Auctions[0].RegistrationDate)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Auctions[0].StartDate)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Auctions[0].EndDate)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Auctions[0].WantedPrice)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Auctions[0].IncrementPrice)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Auctions[0].MaxParticipant)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Auctions[0].Status)
-			</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var item in Model.Auctions)
-		{
-			<tr>
-				@*            <td>
-			@Html.DisplayFor(modelItem => item.Estate.Description)
-			</td>*@
-				<td>
-					@Html.DisplayFor(modelItem => item.AuctionId)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.RegistrationDate)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.StartDate)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.EndDate)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.WantedPrice)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.IncrementPrice)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.MaxParticipant)
-				</td>
-				<td class="text-danger">
-					@Html.DisplayFor(modelItem => item.Status)
-				</td>
-				<td>
-					<a asp-page="./Update" asp-route-id="@item.AuctionId">Edit</a> |
-					<a asp-page="./Detail" asp-route-id="@item.AuctionId">Details</a> |
-					<a asp-page="./Delete" asp-route-id="@item.AuctionId">Delete</a>
-				</td>
-			</tr>
-		}
-	</tbody>
-</table>
+<div class="container">
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item">Home</li>
+			<li class="breadcrumb-item">Company account</li>
+			<li class="breadcrumb-item"><a href="#">My Auctions</a></li>
+		</ol>
+	</nav>
+	@if (Model.Auctions is not null && Model.Auctions.Count > 0)
+	{
+		<div class="auctions_wrapper">
+			<table class="auctions_table">
+				<tr>
+					<th>#</th>
+					<th>Register Date</th>
+					<th>Duration</th>
+					<th>Wanted Price</th>
+					<th>Status</th>
+					<th>Jump price</th>
+					<th>Current Bid</th>
+					<th></th>
+				</tr>
+				@foreach (var auc in Model.Auctions)
+				{
+					<tr>
+						<td>@auc.AuctionId</td>
+						<td>@auc.RegistrationDate.ToString("dd/MM/yyy")</td>
+						<td>@auc.StartDate.ToString("dd/MM/yyy") - @auc.EndDate.Date.ToString("dd/MM/yyy")</td>
+						<td>@auc.WantedPrice</td>
+						<td>@auc.Status</td>
+						<td>@auc.IncrementPrice</td>
+						<td>$ 999</td>
+						<td class="detailBtn">
+							<a href="/CompanyPages/AuctionMng/Detail?id=@auc.AuctionId">
+								Detail
+							</a>
+						</td>
+					</tr>
+				}
+			</table>
+		</div>
+	}
+	else
+	{
+		<div class="empty_list">
+			<img src="https://i.ibb.co/8XVtHxg/empty-project.png" />
+			<p>Estate has no auctions</p>
+		</div>
+	}
+</div>

@@ -5,127 +5,340 @@
 	ViewData["Title"] = "Detail";
 }
 
-<h1>Detail</h1>
+
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">Home</li>
+            <li class="breadcrumb-item">Company account</li>
+            <li class="breadcrumb-item">My Auctions</li>
+            <li class="breadcrumb-item"><a href="#">Auction detail</a></li>
+        </ol>
+    </nav>
+    
+    <div class="d-flex justify-content-between">
+        <h1 class="fw-bold text-uppercase mt-5">Detail Auction #@Model.Auction.AuctionId</h1>
+        @if(Model.Auction.Status.ToString() == "ONGOING")
+        {
+            <div class="deleteBtn">
+                <a asp-page="Delete" asp-route-id="@Model.Auction?.AuctionId">Cancel</a>
+            </div>
+        }
+    </div>
+
+    <div class="auction_detail_wrapper">
+        <div class="row">
+            <div class="col-md-7 estate_img_wrapper">
+                <div class="img_section">
+                    @if (Model.Images.Count > 0)
+                    {
+                        var firstImg = Model.Images[0];
+                        <img src=@Url.Content(firstImg) class="d-block main_img" />
+                        <div class="d-flex justify-content-center align-items-center sub_img_wrapper">
+                            @foreach (var Image in Model.Images)
+                            {
+                                <img src=@Url.Content(Image) width="80" height="80" class="sub_img" />
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <img src="https://i.ibb.co/pnxpB5w/digital-marketing-agency-ntwrk-g39p1k-Djv-SY-unsplash.jpg" class="d-block main_img" />
+                    }
+                </div>
+
+            </div>
+            <div class="col-md-5 position-relative">
+                <div id="auction_details_list">
+                    <div id="auction_details">
+                        <div class="d-flex justify-content-between">
+                            <h3 class="fw-bold text-uppercase" style="letter-spacing: .1rem">Auction #@Model.Auction.AuctionId</h3>
+                            <div class="d-flex align-content-center flex-wrap">
+                                @{
+                                    var auc_status_style = "";
+                                    bool isAuctioning = false;
+                                    switch (@Model.Auction.Status.ToString())
+                                    {
+                                        case "NOT_STARTED":
+                                        case "PENDING_PAYMENT":
+                                        case "CANCELLED":
+                                        case "FAILED_TO_PAY":
+                                            auc_status_style = "auc_status_red";
+                                            break;
+                                        case "ONGOING":
+                                            auc_status_style = "auc_status_green";
+                                            isAuctioning = true;
+                                            break;
+                                        case "SUCCESS":
+                                            auc_status_style = "auc_status_green";
+                                            break;
+                                        default:
+                                            auc_status_style = "auc_status_red";
+                                            break;
+                                    }
+                                }
+                                <p class="fw-bold @auc_status_style">@Model.Auction.Status.ToString()</p>
+                                @* <p><i class="fa-solid fa-user"></i> ??/@Model.Auction.MaxParticipant</p> *@
+                            </div>
+                        </div>
+
+                        @if (isAuctioning)
+                        {
+                            <div>
+                                <p class="jump_price position-relative">
+                                    <i class="fa-solid fa-square-plus"></i>
+                                    <span>
+                                        $ @Model.Auction.IncrementPrice
+                                    </span>
+                                    <span class="jumpprice_hover">
+                                        <i class="fa-regular fa-circle-question"></i>
+                                    </span>
+                                </p>
+                                @* <p>wanted price: @Model.Auction.WantedPrice</p> *@
+                                <a class="d-inline btn btn-primary p-2" asp-page="./BidAuction" asp-route-auctionId="@Model.Auction.AuctionId">BID NOW</a>
+                                @{
+                                    if (HttpContext.User.Identity.IsAuthenticated)
+                                    {
+                                        <a class="d-inline btn btn-secondary p-2" asp-page="./JoinAuction" asp-route-id="@Model.Auction.AuctionId">Join auction !</a>
+                                    }
+                                    else
+                                    {
+                                        <a class="d-inline btn btn-secondary p-2" asp-page="/Registration/Login">Login to join!</a>
+                                    }
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="empty_bid_list">
+                                <img src="https://i.ibb.co/b3MF6jS/close.png" width="40" height="40" />
+                                <p>Auction is currently inactive!</p>
+                            </div>
+                        }
+
+                        @* <div class="auction_duration mt-3">
+                        <p>
+                        <span class="duration_hms">
+                        @Model.Auction.StartDate.Hour
+                        </span> :
+                        <span class="duration_hms">
+                        @Model.Auction.StartDate.Minute
+                        </span> :
+                        <span class="duration_hms mr-5">
+                        @Model.Auction.StartDate.Second
+                        </span>
+                        @Model.Auction.StartDate.ToString("dd.MM.yyy")
+                        </p>
+                        <i class="fa-solid fa-minus"></i>
+                        <p>
+                        <span class="duration_hms">
+                        @Model.Auction.EndDate.Hour
+                        </span> :
+                        <span class="duration_hms">
+                        @Model.Auction.EndDate.Minute
+                        </span> :
+                        <span class="duration_hms mr-5">
+                        @Model.Auction.EndDate.Second
+                        </span>
+                        @Model.Auction.EndDate.ToString("dd.MM.yyy")
+                        </p>
+                        </div> *@
+                    </div>
+                    <div id="auction_estate_details" style="display: none;">
+                        <div class="d-flex justify-content-between">
+                            <h3 class="fw-bold text-uppercase">Estate #@Model.Auction.Estate.EstateId</h3>
+                            @{
+                                var estate_status_style = "CREATED,BANNDED, REMOVED, FINISHED";
+                                var estate_status_string = Model.Auction.Estate.Status.ToString();
+                                switch (Model.Auction.Estate.Status.ToString())
+                                {
+                                    case "CREATED":
+                                        estate_status_style = "auc_status_green";
+                                        estate_status_string = "AVAILABLE";
+                                        break;
+                                    case "BANNDED":
+                                    case "REMOVED":
+                                    case "FINISHED":
+                                        estate_status_style = "auc_status_red";
+                                        break;
+                                }
+                            }
+                            <p class="fw-bold @estate_status_style">@estate_status_string</p>
+                        </div>
+                        <table class="estate_info_table">
+                            <tr>
+                                <td><i class="fa-solid fa-house"></i> Name</td>
+                                <td>:  @Model.Auction.Estate.Name</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fa-solid fa-location-dot"></i> Address  </td>
+                                <td>:  @Model.Auction.Estate.Location</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fa-solid fa-table-list"></i> Categories  </td>
+                                <td>
+                                    :
+                                    @{
+                                        if (Model.Auction.Estate.EstateCategory is not null && Model.Auction.Estate.EstateCategory.Count > 0)
+                                        {
+                                            foreach (var categoryDetail in Model.Auction.Estate.EstateCategory)
+                                            {
+                                                <span>@categoryDetail.CategoryDetail.CategoryName</span>
+                                                @if (categoryDetail != Model.Auction.Estate.EstateCategory.Last())
+                                                {
+                                                    <span>, </span>
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger">No Category, something wrong</span>
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><i class="fa-solid fa-square-poll-vertical"></i> Measurements</td>
+                                <td> </td>
+                            </tr>
+                        </table>
+                        <div class="d-flex justify-content-center house_info">
+                            <span title="estate width"><i class="fa-solid fa-ruler-vertical"></i> @Model.Auction.Estate.Width m</span>
+                            <span title="estate length"><i class="fa-solid fa-ruler-horizontal"></i> @Model.Auction.Estate.Length m</span>
+                            <span title="total area"><i class="fa-solid fa-chart-area"></i> @Model.Auction.Estate.Area m²</span>
+                            <span title="number of floor"><i class="fa-solid fa-layer-group"></i> @Model.Auction.Estate.Floor</span>
+                        </div>
+                        <hr />
+                        <p class="fw-bold text-secondary mb-1">Description</p>
+                        <p class="des_paragraph">@Model.Auction.Estate.Description</p>
+                    </div>
+                    <div id="auction_bid_detail" style="display: none;">
+                        <h3 class="fw-bold text-uppercase mb-3">Bid records</h3>
+                        <div class="d-flex flex-column-reverse justify-content-center align-items-center bid_record_list_wrapper">
+                            @{
+                                if (Model.Auction.Bids is not null && Model.Auction.Bids.Count > 0)
+                                {
+                                    foreach (var bid in Model.Auction.Bids)
+                                    {
+                                        var leading_bid_style = "bid_record_list";
+                                        bool isFirst = false;
+                                        if (bid == Model.Auction.Bids.Last())
+                                        {
+                                            leading_bid_style = "leading_bid";
+                                            isFirst = true;
+                                        }
+                                        <div class="@leading_bid_style">
+                                            @if (isFirst)
+                                            {
+                                                <img src="https://i.ibb.co/tqYcp8z/gold-medal.png" width="40" height="40" />
+                                            }
+                                            <div class="d-flex justify-content-between bid_record">
+                                                <span class="">@bid.Bidder.FullName</span>
+                                                <span class="">$ @bid.Amount</span>
+                                                @*<p class="d-inline p-3 m-3 text-primary">amount: @bid.Time</p>*@
+                                            </div>
+
+                                        </div>
+                                    }
+                                    <p class="fw-bold"><span class="text-danger">@Model.Auction.Bids.Last().Bidder.FullName</span> is the highest bidder!</p>
+                                }
+                                else
+                                {
+                                    <div class="empty_bid_list">
+                                        <img src="https://i.ibb.co/8bWQRX7/no-task.png" width="40" height="40" />
+                                        <p>Auction has no bids yet!</p>
+                                    </div>
+                                }
+                            }
+                        </div>
+
+                    </div>
+                    <div id="auction_participants" style="display: none;">
+                        <div class="d-flex justify-content-between">
+                            <h3 class="fw-bold text-uppercase mb-3">Participants</h3>
+                            <p class="fw-bold joined_user"><i class="fa-solid fa-user"></i> ??/@Model.Auction.MaxParticipant</p>
+                        </div>
+
+                        @{
+                            if (Model.Auction.JoinedAccounts is not null && Model.Auction.JoinedAccounts.Count > 0)
+                            {
+                                <table class="joined_account_table">
+                                    <tr>
+                                        <td>Id</td>
+                                        <td>Name</td>
+                                        <td>Email</td>
+                                        <td>Join date</td>
+                                    </tr>
+                                    @foreach (var joinedAccount in Model.Auction.JoinedAccounts)
+                                    {
+                                        <tr>
+                                            <td>@joinedAccount.Account.AccountId</td>
+                                            <td>@joinedAccount.Account.FullName</td>
+                                            <td>@joinedAccount.Account.Email</td>
+                                            <td>@joinedAccount.RegisterDate.ToString("dd/MM/yyy")</td>
+                                        </tr>
+                                    }
+                                </table>
+
+                            }
+                            else
+                            {
+                                <div class="empty_join_list">
+                                    <img src="https://i.ibb.co/C5Cpv6B/suspect.png" width="40" height="40" />
+                                    <p class="">No one has joined yet!</p>
+                                </div>
+                            }
+                        }
+
+                    </div>
+                    <div class="det_btns">
+                        <div class="show_details_btn active_btn_choice" data-target="auction_details"><i class="fa-solid fa-circle-info"></i></div>
+                        <div class="show_details_btn inactive_btn_choice" data-target="auction_estate_details"><i class="fa-solid fa-house"></i></div>
+                        <div class="show_details_btn inactive_btn_choice" data-target="auction_bid_detail"><i class="fa-solid fa-ranking-star"></i></div>
+                        <div class="show_details_btn inactive_btn_choice" data-target="auction_participants"><i class="fa-solid fa-user-group"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="AuctionReceipt">
+    <ul>
+        @{
+            if (Model.Auction.AuctionReceipt is not null)
+            {
+                var acc = Model.Auction.AuctionReceipt;
+                <li>
+                    <p>@acc.Buyer.FullName</p>
+                    <p>@acc.Buyer.Email</p>
+                    <p>@acc.Commission</p>
+                    <p>@acc.Amount</p>
+                    <p>@acc.RemainAmount</p>
+                    @*<p>@acc.RegiisterFee</p>*@
+                    <a class="btn btn-primary" asp-page="./Receipts/Detail" asp-route-auctionId="@Model.Auction.AuctionId">detail auctionReceipt</a>
+                </li>
+            }
+        }
+    </ul>
+</div>
 
 <div>
-	<h4>Auction</h4>
-	<hr />
-	<dl class="row">
-		@*        <dt class="col-sm-2">
-		@Html.DisplayNameFor(model => model.Auction.Estate)
-		</dt>
-		<dd class="col-sm-10">
-		@Html.DisplayFor(model => model.Auction.Estate.Description)
-		</dd>*@
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Auction.RegistrationDate)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Auction.RegistrationDate)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Auction.StartDate)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Auction.StartDate)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Auction.EndDate)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Auction.EndPayDate)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Auction.EndPayDate)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Auction.EndDate)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Auction.EntranceFee)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Auction.EntranceFee)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Auction.WantedPrice)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Auction.WantedPrice)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Auction.IncrementPrice)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Auction.IncrementPrice)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Auction.MaxParticipant)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Auction.MaxParticipant)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Auction.Status)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Auction.Status)
-		</dd>
-	</dl>
-	<hr />
-	<div class="estate">
-		<ul>
-			<li>@Model.Auction.Estate.EstateId</li>
-			<li>@Model.Auction.Estate.Name</li>
-			<li>@Model.Auction.Estate.Description</li>
-			<li>@Model.Auction.Estate.Width</li>
-			<li>@Model.Auction.Estate.Length</li>
-		</ul>
-		<button class="btn btn-primary">Detail</button>
-	</div>
-	<div class="joinAuction">
-		<ul>
-			@{
-				if (Model.Auction.JoinedAccounts is not null && Model.Auction.JoinedAccounts.Count > 0)
-					foreach (var acc in Model.Auction.JoinedAccounts)
-					{
-						<li>
-							<p>@acc.Account.FullName</p>
-							<p>@acc.Account.Email</p>
-							<p>@acc.Status</p>
-							<p>@acc.RegisterDate</p>
-							@*<p>@acc.RegiisterFee</p>*@
-							<a class="btn btn-primary" asp-page="./JoinedAccounts/Index" asp-route-auctionId="@Model.Auction.AuctionId">detail JoinedAccounts</a>
-						</li>
-					}
-			}
-		</ul>
-	</div>
-	<div class="AuctionReceipt">
-		<ul>
-			@{
-				if (Model.Auction.AuctionReceipt is not null)
-				{
-					var acc = Model.Auction.AuctionReceipt;
-					<li>
-						<p>@acc.Buyer.FullName</p>
-						<p>@acc.Buyer.Email</p>
-						<p>@acc.Commission</p>
-						<p>@acc.Amount</p>
-						<p>@acc.RemainAmount</p>
-						@*<p>@acc.RegiisterFee</p>*@
-						<a class="btn btn-primary" asp-page="./Receipts/Detail" asp-route-auctionId="@Model.Auction.AuctionId">detail auctionReceipt</a>
-					</li>
-				}
-			}
-		</ul>
-	</div>
-	<div class="bids">
-		<p>total bid: @Model.Auction.Bids.Count</p>
-		<button btn btn-primary>detail</button>
-	</div>
+    <a asp-page="./Update" asp-route-id="@Model.Auction?.AuctionId">Update</a> |
+    <a asp-page="./Index">Back to List</a>
 </div>
-<div>
-	<a asp-page="./Update" asp-route-id="@Model.Auction?.AuctionId">Update</a> |
-	<a asp-page="./Index">Back to List</a>
-</div>
+<script>
+    $('.sub_img').click(function () {
+        $('.main_img').attr('src', $(this).attr('src'))
+    });
+    $(".show_details_btn").click(function () {
+        $(".show_details_btn").removeClass("active_btn_choice").addClass("inactive_btn_choice");
+        $(this).removeClass("inactive_btn_choice").addClass("active_btn_choice");
+
+        var targetDiv = $(this).data("target");
+        $("#" + targetDiv).show().siblings().hide();
+        $(".det_btns").show();
+        console.log(targetDiv + '');
+    });
+</script>
+

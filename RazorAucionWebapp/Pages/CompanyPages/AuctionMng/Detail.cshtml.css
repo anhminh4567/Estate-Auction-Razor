@@ -1,0 +1,302 @@
+﻿body {
+    background-color: transparent;
+}
+
+.breadcrumb {
+    margin: 2.5rem 0 1.5rem;
+    a
+
+{
+    pointer-events: none;
+    text-decoration: none;
+    color: black;
+}
+
+}
+
+.breadcrumb-item {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.breadcrumb-item {
+    font-size: .9rem;
+}
+
+.auction_detail_wrapper{
+    height: 33rem;
+    padding: 2rem 3rem 1.5rem 1.5rem;
+    box-shadow: 0 0 3rem -1rem rgba(0, 0, 0, 0.35);
+    border-radius: 1rem;
+}
+
+.estate_img_wrapper{
+    
+}
+
+.img_section{
+    width: 100%;
+    height: 100%;
+}
+
+.main_img {
+    width: 100%;
+    height: 23rem;
+    object-fit: cover;
+    padding: 0 !important;
+    border: .1rem solid rgba(0, 0, 0, 0.05);
+    border-radius: .3rem;
+    overflow: hidden;
+}
+
+.sub_img_wrapper{
+    img {
+        margin: .5rem .2rem;
+        outline: .05rem solid rgba(0, 0, 0, 0.3);
+        width: 5rem;
+        height: 4rem;
+        object-fit: cover;
+    }
+}
+
+.sub_img_wrapper{
+    img:hover {
+        outline: .25rem solid rgba(0, 0, 0, 0.3);
+    }
+}
+
+#auction_details_list {
+    margin-left: 1.5rem;
+    margin-right: 1rem;
+    padding: 0 1.5rem 0 0;
+    height: 28rem;
+    overflow: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    border-right: .1rem solid rgba(0, 0, 0, 0.2);
+}
+
+#auction_details_list::webkit-scrollbar {
+    display: none;
+}
+
+.auc_status{
+    font-size: .9rem;
+}
+
+.show_details_btn {
+    cursor: pointer;
+}
+
+.det_btns{
+    position: absolute;
+    right: -.75rem;
+    top: 3rem;
+}
+
+.show_details_btn{
+    border: .1rem solid rgba(0, 0, 0, 0.2);
+    border-left: none;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 1.5rem;
+    color: rgba(0, 0, 0, 0.75);
+    border-radius: 0 .4rem .4rem 0; 
+    padding: .1rem .3rem;
+}
+
+.active_btn_choice {
+    background: white;
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.inactive_btn_choice {
+    background: rgba(0, 0, 0, 0.1);
+    color: rgba(0, 0, 0, 0.4);
+}
+
+.auc_status_red {
+    font-size: .85rem;
+    display: inline-block;
+    padding: .15rem .3rem;
+    background: rgba(205, 92, 92 , 0.35);
+    border-radius: .4rem;
+    color: #7C0A02;
+}
+
+.auc_status_green {
+    font-size: .85rem;
+    display: inline-block;
+    padding: .15rem .3rem;
+    background: rgba(60,179,113, 0.35);
+    border-radius: .4rem;
+    color: #228B22;
+}
+
+.auction_duration{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    i{
+         display: inline-block;
+         margin: .2rem 0;
+         font-size: 1.2rem;
+         font-weight: bold;
+     }
+    p {
+          display: inline-block;
+          padding: .5rem 1rem;
+          background: rgba(0, 0, 0, 0.4);
+          color: rgba(255, 255, 255, 0.9);
+          margin: 0;
+          border-radius: .3rem;
+          width: 100%;
+          font-size: 1.2rem;
+      }
+}
+
+.duration_hms {
+    display: inline-block;
+    background: rgba(0, 0, 0, 0.7);
+    width: 2.2rem;
+    text-align: center;
+    padding: 0 .2rem;
+    border-radius: .2rem;
+    font-weight: normal;
+}
+
+
+.house_info {
+    margin: .5rem 0 1rem;
+    color: black;
+    span {
+             margin-right: 2rem;
+             font-size: .9rem;
+         }
+}
+
+.estate_info_table{
+    font-size: .9rem;
+    tr{
+        td{
+              padding: .3rem 0;
+          }
+        td:first-child{
+            width: 30%;
+            font-weight: bold;
+            color: rgba(0, 0, 0, 0.8);
+        }
+        
+      }
+}
+
+.joined_user {
+    padding: .2rem .5rem;
+    color: rgba(255, 255, 255, 1);
+    background: #0B60B0;
+    border-radius: .2rem;
+}
+
+.des_paragraph {
+    display: inline-block;
+    font-size: .9rem;
+}
+
+.empty_bid_list, .empty_join_list {
+    background-color: rgba(0, 0, 0, 0.1);
+    width: 100%;
+    height: 24.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: .3rem;
+    img{
+           display: block;
+            height: 5rem;
+            width: auto;
+       }
+    p{
+        font-weight: bold;
+        margin-top: .5rem;
+        color: rgba(0, 0, 0, 0.7);
+    }
+}
+
+.bid_record_list {
+    width: 75%;
+    padding: .2rem .5rem;
+    border-radius: .3rem;
+    margin-bottom: .4rem;
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    box-shadow: -.3rem -1.3rem .5rem rgba(0, 0, 0, 0.2) inset;
+    outline: .15rem solid black;
+}
+
+.leading_bid {
+    width: 95%;
+    margin: 1rem 0 1rem;
+    padding: .5rem .8rem;
+    border-radius: .3rem;
+    background: rgba(253, 218, 13, 1);
+    color: black;
+    outline: .2rem solid black;
+    position: relative;
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    box-shadow: -.3rem -1.3rem .5rem rgba(255, 192, 0, 1) inset;
+    span {
+    }
+    img{
+        position: absolute;
+        z-index: 1;
+        width: 3rem;
+        height: 2.8rem;
+        top: -1.6rem;
+        left: 11rem;
+    }
+}
+
+.leading_bid::before {
+	content: "";
+	display: block;
+	transform: translateX(-50%);
+	height: .2rem;
+    width: 4rem;
+	position: absolute;
+	top: 0.2rem;
+	left: 2.7rem;
+    background: rgba(255, 255, 255, 0.8);
+	border-radius: 2rem;	
+}
+
+.leading_bid::after {
+	content: "";
+	display: block;
+	transform: translateX(-50%);
+	height: .2rem;
+    width: .8rem;
+	position: absolute;
+	top: 0.2rem;
+	left: 5.3rem;
+    background: rgba(255, 255, 255, 0.8);
+	border-radius: 2rem;	
+}
+
+.joined_account_table{
+    width: 100%;
+    text-align: center;
+    tr:first-child{
+        background: rgba(0, 0, 0, 0.2);
+        td{
+              font-weight: bold;
+          }
+    }
+    tr:not(:first-child){
+        td {
+               border-bottom: .1rem solid rgba(0, 0, 0, 0.2);
+           }
+    }
+}

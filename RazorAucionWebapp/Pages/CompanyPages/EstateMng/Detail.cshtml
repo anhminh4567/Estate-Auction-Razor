@@ -81,7 +81,13 @@
 	</div>
 </div>
 <div class="container mt-5">
-	<h4>Estate auctions</h4>
+	<div class="d-flex justify-content-between">
+		<h4>Estate auctions</h4>
+
+		<div class="create_btn">
+			<a asp-page="../AuctionMng/CreateAuction" asp-route-estateId="@Model.Estate.EstateId">Create Auction</a>
+		</div>
+	</div>
 
 	@if (Model.Estate.Auctions is not null && Model.Estate.Auctions.Count > 0)
 	{
@@ -122,9 +128,10 @@
 		<div class="empty_list">
 			<img src="https://i.ibb.co/8XVtHxg/empty-project.png" />
 			<p>Estate has no auctions</p>
-			<a class="create_btn" asp-page="../AuctionMng/CreateAuction" asp-route-estateId="@Model.Estate.EstateId">Create Auction</a>
 		</div>
 	}
+	
+
 	<div class="back_btn">
 		<a asp-page="./Index"><i class="fa-solid fa-arrow-left"></i> Back to List</a>
 	</div>

@@ -23,8 +23,12 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
         private readonly AuctionReceiptServices _auctionReceiptService;
         private readonly JoinedAuctionServices _joinedAuctionService;
         private readonly AuctionHubService _auctionHubService;
+        private readonly EstateImagesServices _estateImagesServices;
 
-		public DetailModel(AuctionServices auctionService, EstateServices estateService, BidServices bidService, AuctionReceiptServices auctionReceiptService, JoinedAuctionServices joinedAuctionService, AuctionHubService auctionHubService)
+
+        public DetailModel(AuctionServices auctionService, EstateServices estateService, BidServices bidService, 
+            AuctionReceiptServices auctionReceiptService, JoinedAuctionServices joinedAuctionService, 
+            AuctionHubService auctionHubService, EstateImagesServices estateImagesServices)
 		{
 			_auctionService = auctionService;
 			_estateService = estateService;
@@ -32,9 +36,12 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
 			_auctionReceiptService = auctionReceiptService;
 			_joinedAuctionService = joinedAuctionService;
 			_auctionHubService = auctionHubService;
+            _estateImagesServices = estateImagesServices;
 		}
 
-		public Auction Auction { get; set; } = default!; 
+		public Auction Auction { get; set; } = default!;
+        public List<string> Images { get; set; } = new List<string>();
+
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
@@ -54,6 +61,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
                 return NotFound();
             }
             Auction = getAuctionDetail;
+            await GetImages();
             //await _auctionHubService.UpdateAuctionSuccess(Auction);
             //await _auctionHubService.CreateAuctionSuccess(Auction);
             return Page();
@@ -63,6 +71,14 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
             var getAuctonDetail = await _auctionService.GetInclude(id, "Bids,JoinedAccounts,Estate");
             if (getAuctonDetail is null)
                 throw new Exception("cant find Auctoin with such id");
+        }
+        private async Task GetImages()
+        {
+            var appImages = await _estateImagesServices.GetByEstateId(Auction.Estate.EstateId);
+            foreach (var appImage in appImages)
+            {
+                Images.Add("~/PublicImages/storage/" + appImage.Path);
+            }
         }
     }
 }
