@@ -4,8 +4,49 @@
 @{
     ViewData["Title"] = "Create";
 }
+<style>
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-<h1>Create</h1>
+    .form-container {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 80%;
+        max-width: 800px;
+    }
+
+        .form-container h1 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    input[type="date"] {
+        width: 100%;
+    }
+
+    input[type="submit"] {
+        width: 100%;
+    }
+
+    .btn-back {
+        margin-top: 20px;
+    }
+
+    .customer-select:hover {
+        color: black;
+        background-color: dimgrey;
+    }
+</style>
 <div>
     @if (TempData["AddFail"] is not null)
     {
@@ -14,50 +55,54 @@
             </div>
     }
 </div>
-<h4>EstateCategoryDetail</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post" id="add">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="EstateCategoryDetail.CategoryName" class="control-label">Name</label>
-                <input asp-for="EstateCategoryDetail.CategoryName" class="form-control" />
-                <span asp-validation-for="EstateCategoryDetail.CategoryName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EstateCategoryDetail.Description" class="control-label"></label>
-                <input asp-for="EstateCategoryDetail.Description" class="form-control" />
-                <span asp-validation-for="EstateCategoryDetail.Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <a class="del" data-bs-toggle="modal" data-bs-target="#addModal">Create</a>
-            </div>
-        </form>
-    </div>
-</div>
+<div class="container">
+    <div class="form-container">
+        <h1>Create</h1>
 
-<div>
-    <a asp-page="Index">Back to List</a>
-</div>
-<div class="modal fade" id="addModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                Confirmation
-            </div>
-            <div class="modal-body">
-                <div class="d-flex">
-                    Are you sure to update this category
+        <h4>Estate Category Create</h4>
+        <hr />
+                <form method="post" id="add">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="EstateCategoryDetail.CategoryName" class="control-label">Name</label>
+                        <input asp-for="EstateCategoryDetail.CategoryName" class="form-control" />
+                        <span asp-validation-for="EstateCategoryDetail.CategoryName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="EstateCategoryDetail.Description" class="control-label"></label>
+                        <textarea asp-for="EstateCategoryDetail.Description" class="form-control" ></textarea>
+                        <span asp-validation-for="EstateCategoryDetail.Description" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <a class="del btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">Create</a>
+                    </div>
+                </form>
+
+        <div>
+            <a class="btn btn-secondary" asp-page="Index">Back to List</a>
+        </div>
+        <div class="modal fade" id="addModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        Confirmation
+                    </div>
+                    <div class="modal-body">
+                        <div class="d-flex">
+                            Are you sure to update this category
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <input type="submit" form="add" class="btn btn-success" value="Confirm" />
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <input type="submit" form="add" class="btn btn-success" value="Confirm" />
             </div>
         </div>
     </div>
+    
 </div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

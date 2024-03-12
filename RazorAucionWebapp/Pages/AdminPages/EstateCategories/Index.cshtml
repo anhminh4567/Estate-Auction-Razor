@@ -4,8 +4,52 @@
 @{
     ViewData["Title"] = "Estate Categories";
 }
+<style>
+    .estate-table-container {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
 
-<h1>Index</h1>
+        .estate-table-container h1 {
+            margin-bottom: 20px;
+        }
+
+        .estate-table-container a {
+            color: #007bff;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
+            .estate-table-container a:hover {
+                text-decoration: underline;
+            }
+
+        .estate-table-container table {
+            width: 100%;
+        }
+
+        .estate-table-container th {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+
+        .estate-table-container td, .estate-table-container th {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #dee2e6;
+        }
+
+        .estate-table-container tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+    .btn-primary {
+        color: white;
+    }
+</style>
 <div>
     @if (TempData["AddSuccess"] is not null)
     {
@@ -31,71 +75,77 @@
         </div>
     }
 </div>
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.EstateCategoryDetail[0].CategoryId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EstateCategoryDetail[0].CategoryName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EstateCategoryDetail[0].Description)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.EstateCategoryDetail) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.CategoryId)
-            </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CategoryName)
-                </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.CategoryId">Edit</a> |
-                <a asp-page="./Detail" asp-route-id="@item.CategoryId">Detail</a> |
-                <a class="del" data-bs-toggle="modal" data-bs-target="#delModal" estateName="@item.CategoryName" estateId="@item.CategoryId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
-<script>
-    Array.from(document.getElementsByClassName("del")).forEach(function (p) {
-        p.addEventListener("click", function () {
-            document.getElementsByName("delDesc")[0].innerHTML = p.getAttribute("estateName");
-            document.getElementsByName("delId")[0].value = p.getAttribute("estateId");
-        })
-    });
-</script>
-<div class="modal fade" id="delModal" tabindex="-1">
-    <div class="modal-dialog">
-       <div class="modal-content">
-           <div class="modal-header">
-               Confirmation
-           </div>
-            <div class="modal-body">
-                <div class="d-flex">
-                    Are you sure to remove&nbsp<p name="delDesc" class="text-danger fw-bolder" /><div>?</div>
+
+<div class="estate-table-container">
+    <h1 style="margin-left: 20px">Estate Categories Management</h1>
+    <p>
+        <a class="btn btn-primary" style="color: white" asp-page="Create">Create New</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.EstateCategoryDetail[0].CategoryId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EstateCategoryDetail[0].CategoryName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EstateCategoryDetail[0].Description)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.EstateCategoryDetail)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CategoryId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CategoryName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        <a class="btn btn-primary" style="color: white" asp-page="./Edit" asp-route-id="@item.CategoryId">Edit</a> |
+@*                         <a class="btn btn-info" style="color: white" asp-page="./Detail" asp-route-id="@item.CategoryId">Detail</a> |
+ *@                     <a class="btn btn-danger del" style="color: white" data-bs-toggle="modal" data-bs-target="#delModal" estateName="@item.CategoryName" estateId="@item.CategoryId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <script>
+        Array.from(document.getElementsByClassName("del")).forEach(function (p) {
+            p.addEventListener("click", function () {
+                document.getElementsByName("delDesc")[0].innerHTML = p.getAttribute("estateName");
+                document.getElementsByName("delId")[0].value = p.getAttribute("estateId");
+            })
+        });
+    </script>
+    <div class="modal fade" id="delModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Confirmation
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex">
+                        Are you sure to remove&nbsp<p name="delDesc" class="text-danger fw-bolder" /><div>?</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form method="post">
+                        <input type="hidden" name="delId" />
+                        <input type="submit" class="btn btn-success" value="Confirm" />
+                    </form>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <form method="post">
-                    <input type="hidden" name="delId" />
-                    <input type="submit" class="btn btn-success" value="Confirm" />
-                </form>
-            </div>
-       </div>
+        </div>
     </div>
+
 </div>
