@@ -88,3 +88,39 @@
         text-decoration: none;
     }
 }
+
+.carousel_img_wrapper{
+    border-radius: .3rem .3rem 0 0;
+    overflow: hidden;
+    height: 14rem;
+    img{
+        height: 100%;
+        object-fit: cover;
+        transition: .3s;
+       }
+}
+
+
+.carousel_img_wrapper{
+    img:hover{
+        scale: 1.5;
+       }
+}
+
+.auc_status_red {
+    font-size: .75rem !important;
+    display: inline-block;
+    padding: .15rem .3rem;
+    background: rgba(205, 92, 92, 0.35);
+    border-radius: .4rem;
+    color: #7C0A02;
+}
+
+.auc_status_green {
+    font-size: .85rem;
+    display: inline-block;
+    padding: .15rem .3rem;
+    background: rgba(60,179,113, 0.35);
+    border-radius: .4rem;
+    color: #228B22;
+}

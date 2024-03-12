@@ -1,175 +1,233 @@
 ﻿@page
 @model IndexModel
 @{
-	ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Home page";
 }
 
 @{
-	var result = TempData.TryGetValue("SuccessSignUp", out var message);
-	if (result)
-	{
-		<div class="text-center">
-			<p class="text-success"> @message</p>
-		</div>
-	}
-	else if (result = TempData.TryGetValue("SuccessLogin", out message))
-	{
-		<div class="text-center">
-			<p class="text-success"> @message</p>
-		</div>
-	}
+    var result = TempData.TryGetValue("SuccessSignUp", out var message);
+    if (result)
+    {
+        <div class="text-center">
+            <p class="text-success"> @message</p>
+        </div>
+    }
+    else if (result = TempData.TryGetValue("SuccessLogin", out message))
+    {
+        <div class="text-center">
+            <p class="text-success"> @message</p>
+        </div>
+    }
 }
 <div class="banner carousel mb-5" data-ride="carousel">
-	<div class="carousel-inner">
-		<div class="carousel-item active">
-			<img class="d-block w-100" src="./PublicImages/general/estate_banner.jpg" alt="banner">
-		</div>
-	</div>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img class="d-block w-100" src="./PublicImages/general/estate_banner.jpg" alt="banner">
+        </div>
+    </div>
 
-	<h1>
-		<span>Real Estate</span><br />
-		<span>Auction Page</span>
-	</h1>
+    <h1>
+        <span>Real Estate</span><br />
+        <span>Auction Page</span>
+    </h1>
 </div>
 
 <div class="container mt-5">
-	<h3 class="sectionTxt text-center">BROWSE AUCTIONS</h3>
-	@if (Model.Auctions.Count != 0)
-	{
-		<div class="row m-5" id="auctions-container">
-			@foreach (var auc in Model.Auctions)
-			{
-				float area = auc.Estate.Length * auc.Estate.Width;
-				int remainDays = (auc.EndDate - auc.StartDate).Days;
-				// add id="@auc.AuctionId" for signalR function
-				<div class="col-md-4" id="@auc.AuctionId">
-					<form method="post">
-						<div class="rounded">
-							<div class="rounded-top estate_img"></div>
-							<div class="company-and-estate-data mt-4 px-4">
-								<h5 class="text-uppercase" style="font-weight: bold;">@auc.Estate.Name</h5>
-								<div class="d-flex align-items-center my-2">
-									@foreach (var cate in auc.Estate.EstateCategory)
-									{
-										<div class="cate">
-											<span>@cate.CategoryDetail.CategoryName</span>
-										</div>
-									}
-								</div>
-								<div class="img_info d-flex flex-row align-items-center justify-content-between" style="padding-right: 1rem;">
-									<div>
-										<img src="https://i.ibb.co/64H3WR3/clock.png"><span>@remainDays days left</span>
-									</div>
-									<div>
-										<img src="https://i.ibb.co/4jNgVvY/user.png"><span>@auc.MaxParticipant</span>
-									</div>
-									<div>
-										<img src="https://i.ibb.co/W2JWQs2/area-1.png"><span>@area m²</span>
-									</div>
-								</div>
-								<div class="currentBid">
-									<span>Current Bid:  </span><span style="font-weight: bold;">$9000</span>
-								</div>
-								<div class="detailBtn">
-									<a asp-page="./CustomerPages/DetailAuction" asp-route-id="@auc.AuctionId">See detail</a>
-								</div>
-							</div>
-						</div>
-					</form>
-				</div>
-			}
-		</div>
-	}
-	else
-	{
-		<div class="h1 fw-bolder">No available auction at the moment</div>
-	}
+    <h3 class="sectionTxt text-center">BROWSE AUCTIONS</h3>
+    @if (Model.Auctions.Count != 0)
+    {
+        <div class="row m-5" id="auctions-container">
+            @foreach (var auc in Model.Auctions)
+            {
+                // add id="@auc.AuctionId" for signalR function
+                <div class="col-md-4 mb-5" id="@auc.AuctionId">
+                    <form method="post">
+                        <div class="rounded">
+                            <div id="estate_carousel_@auc.Estate.EstateId" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-inner position-relative carousel_img_wrapper">
+                                    @if (auc.Estate.Images.Count == 0)
+                                    {
+                                        <div class="carousel-item active">
+                                            <img src="https://i.ibb.co/pnxpB5w/digital-marketing-agency-ntwrk-g39p1k-Djv-SY-unsplash.jpg" class="d-block w-100" style="filter: blur(0) !important;" />
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        bool isFirst = true;
+                                        foreach (var img in auc.Estate.Images)
+                                        {
+                                            <div class="carousel-item @(isFirst ? "active" : "")">
+                                                <img src="@Url.Content(img.Image.Path)" width="90" height="90" class="d-block w-100" style="filter: blur(0) !important;" />
+                                            </div>
+                                            isFirst = false;
+                                        }
+
+                                    }
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#estate_carousel_@auc.Estate.EstateId" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon"></span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#estate_carousel_@auc.Estate.EstateId" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon"></span>
+                                </button>
+                            </div>
+                            <div class="company-and-estate-data mt-2 px-4">
+                                <h5 class="text-uppercase" style="font-weight: bold;">Auction #@auc.AuctionId</h5>
+                                @* <div class="d-flex align-items-center my-2">
+                                    @foreach (var cate in auc.Estate.EstateCategory)
+                                    {
+                                        <div class="cate">
+                                            <span>@cate.CategoryDetail.CategoryName</span>
+                                        </div>
+                                    }
+                                </div> *@
+                                <div class="img_info d-flex flex-row align-items-center justify-content-between mt-2" style="padding-right: 1rem;">
+                                    <div>
+                                        @{
+                                            var auc_status_style = "";
+                                            bool isAuctioning = false;
+                                            switch (@auc.Status.ToString())
+                                            {
+                                                case "NOT_STARTED":
+                                                case "PENDING_PAYMENT":
+                                                case "CANCELLED":
+                                                case "FAILED_TO_PAY":
+                                                    auc_status_style = "auc_status_red";
+                                                    break;
+                                                case "ONGOING":
+                                                    auc_status_style = "auc_status_green";
+                                                    isAuctioning = true;
+                                                    break;
+                                                case "SUCCESS":
+                                                    auc_status_style = "auc_status_green";
+                                                    break;
+                                                default:
+                                                    auc_status_style = "auc_status_red";
+                                                    break;
+                                            }
+                                        }
+                                        @if (isAuctioning)
+                                        {
+                                            int remainDays = (auc.EndDate - DateTime.Now).Days;
+                                            <span><i class="fa-solid fa-clock"></i> @remainDays days left</span>
+                                        }
+                                        else
+                                        {
+
+                                            <span class="fw-bold @auc_status_style">@auc.Status.ToString()</span>
+
+                                        }
+                                    </div>
+                                    <div>
+                                        <span><i class="fa-solid fa-user"></i> ??/@auc.MaxParticipant</span>
+                                    </div>
+                                    <div>
+                                        <img src="https://i.ibb.co/W2JWQs2/area-1.png"><span>@auc.Estate.Area m²</span>
+                                    </div>
+                                </div>
+                                <div class="currentBid mt-2">
+                                    <span>Current Bid:  </span><span style="font-weight: bold;">$9000</span>
+                                </div>
+                                <div class="detailBtn">
+                                    <a asp-page="./CustomerPages/DetailAuction" asp-route-id="@auc.AuctionId">See detail</a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="h1 fw-bolder">No available auction at the moment</div>
+    }
 </div>
 @section Scripts{
-	<script>
-		const connection = new signalR.HubConnectionBuilder()
-			.withAutomaticReconnect()
-			.withUrl("/auctionrealtime")
-			.build();
-		connection.on("CreatedObject", function (auction, estate, estateCategories, dayremain, area, highestbid) {
-			console.log("called createObject");
-			console.log(auction);
-			console.log(estate);
-			console.log(estateCategories);
-			console.log(dayremain);
-			console.log(area);
-			console.log(highestbid);
-			var auctionId = auction.auctionId;
-			var newDiv =
-				`<div class="col-md-4" id="${auctionId}">
-		<form method="post">
-		<div class="rounded">
-		<div class="rounded-top estate_img"></div>
-		<div class="company-and-estate-data mt-4 px-4">
-		<h5 class="text-uppercase" style="font-weight: bold;">${estate.name}</h5>
-		`
-			var categoriesDiv = $(`<div class="d-flex align-items-center my-2">`)
-			estateCategories.forEach((categories) => {
-				categoriesDiv.append(`
-		<div class="cate">
-		<span>${categories.categoryName}</span>
-		</div>
-						`);
-			});
-			newDiv += categoriesDiv.prop("outerHTML");
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withAutomaticReconnect()
+            .withUrl("/auctionrealtime")
+            .build();
+        connection.on("CreatedObject", function (auction, estate, estateCategories, dayremain, area, highestbid) {
+            console.log("called createObject");
+            console.log(auction);
+            console.log(estate);
+            console.log(estateCategories);
+            console.log(dayremain);
+            console.log(area);
+            console.log(highestbid);
+            var auctionId = auction.auctionId;
+            var newDiv =
+                `<div class="col-md-4" id="${auctionId}">
+                                <form method="post">
+                                <div class="rounded">
+                                <div class="rounded-top estate_img"></div>
+                                <div class="company-and-estate-data mt-4 px-4">
+                                <h5 class="text-uppercase" style="font-weight: bold;">${estate.name}</h5>
+                                `
+            var categoriesDiv = $(`<div class="d-flex align-items-center my-2">`)
+            estateCategories.forEach((categories) => {
+                categoriesDiv.append(`
+                                <div class="cate">
+                                <span>${categories.categoryName}</span>
+                                </div>
+                                                `);
+            });
+            newDiv += categoriesDiv.prop("outerHTML");
 
-			var detail = $(`<div class="img_info d-flex flex-row align-items-center justify-content-between" style = "padding-right: 1rem;" >`)
-			detail.append(`
-		<div>
-		<img src="https://i.ibb.co/64H3WR3/clock.png"><span>${dayremain} days left</span>
-		</div>
-					`);
-			detail.append(`
-		<div>
-		<img src="https://i.ibb.co/4jNgVvY/user.png"><span>${auction.maxParticipant}</span>
-		</div>
-		`);
-			detail.append(`
-		<div>
-		<img src="https://i.ibb.co/W2JWQs2/area-1.png"><span>${area} m²</span>
-		</div>
-		`);
+            var detail = $(`<div class="img_info d-flex flex-row align-items-center justify-content-between" style = "padding-right: 1rem;" >`)
+            detail.append(`
+                                <div>
+                                <img src="https://i.ibb.co/64H3WR3/clock.png"><span>${dayremain} days left</span>
+                                </div>
+                                            `);
+            detail.append(`
+                                <div>
+                                <img src="https://i.ibb.co/4jNgVvY/user.png"><span>${auction.maxParticipant}</span>
+                                </div>
+                                `);
+            detail.append(`
+                                <div>
+                                <img src="https://i.ibb.co/W2JWQs2/area-1.png"><span>${area} m²</span>
+                                </div>
+                                `);
 
-			newDiv += detail.prop("outerHTML");
-			var currentBidDiv = $(`<div class="currentBid">`)
-			currentBidDiv.append(`
-		<span>Current Bid: </span><span style="font-weight: bold;">$ ${highestbid.amount}</span >
-		`);
+            newDiv += detail.prop("outerHTML");
+            var currentBidDiv = $(`<div class="currentBid">`)
+            currentBidDiv.append(`
+                                <span>Current Bid: </span><span style="font-weight: bold;">$ ${highestbid.amount}</span >
+                                `);
 
-			newDiv += currentBidDiv.prop("outerHTML");
-			var detailBtn = $(`<div class="detailBtn">`);
-			detailBtn.append(`<a href="/CustomerPages/DetailAuction?id=${auctionId}">See detail</a>`);
-			newDiv += detailBtn.prop("outerHTML");
-			newDiv +=
-				`</div>
-		</div>
-		</form>
-		</div>`;
-			console.log(newDiv);
-			$("#auctions-container").append(newDiv);
-		});
-
-
+            newDiv += currentBidDiv.prop("outerHTML");
+            var detailBtn = $(`<div class="detailBtn">`);
+            detailBtn.append(`<a href="/CustomerPages/DetailAuction?id=${auctionId}">See detail</a>`);
+            newDiv += detailBtn.prop("outerHTML");
+            newDiv +=
+                `</div>
+                                </div>
+                                </form>
+                                </div>`;
+            console.log(newDiv);
+            $("#auctions-container").append(newDiv);
+        });
 
 
 
 
 
-		connection.on("UpdatedObject", function (auction, estate) {
-			console.log(auction);
-			console.log(estate);
-		});
-		connection.start().then((result) => {
-			console.log(result)
-		}).catch((error) => {
-			console.error(error);
-		}
-		);
-	</script>
+
+
+        connection.on("UpdatedObject", function (auction, estate) {
+            console.log(auction);
+            console.log(estate);
+        });
+        connection.start().then((result) => {
+            console.log(result)
+        }).catch((error) => {
+            console.error(error);
+        }
+        );
+    </script>
 }
 

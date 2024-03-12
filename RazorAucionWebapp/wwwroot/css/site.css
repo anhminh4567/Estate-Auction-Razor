@@ -20,6 +20,14 @@ html {
 body {
 }
 
+.estate_logo{
+    img{
+           scale: 1.5;
+           margin-top: -1rem;
+           margin-right: .5rem;
+       }
+}
+
 .container-fluid {
     padding: 0;
 }

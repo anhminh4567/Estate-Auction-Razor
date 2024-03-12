@@ -3,9 +3,7 @@
 
 .breadcrumb {
     margin: 2.5rem 0 1.5rem;
-    a
-
-{
+    a{
     pointer-events: none;
     text-decoration: none;
     color: black;
@@ -23,7 +21,7 @@
 
 .detail_wrapper{
     height: 29rem;
-    background: rgba(0, 0, 0, 0.035);
+    background: rgba(0, 0, 0, 0.1);
     padding: 0 .5rem 0 2rem;
 }
 
@@ -152,7 +150,47 @@
 }
 }
 
-.back_btn{
+
+/* auction table*/
+
+.auctions_table{
+    width: 100%;
+    text-align: center;
+    tr:first-child{
+        border-radius: 3rem;
+        margin-bottom: .3rem;
+        th{
+            font-weight: normal;
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            padding: .3rem .2rem;
+
+        }
+        th:first-child{
+            border-radius: .4rem 0 0 .4rem;
+        }
+        th:last-child{
+            border-radius: 0 .4rem .4rem 0;
+            
+        }
+    }
+    tr:not(:first-child){
+        border-bottom: .01rem solid rgba(0, 0, 0, 0.2);
+    }
+    td{
+        padding: 1rem .2rem;
+    }
+}
+
+.detailBtn {
+    a{
+         display: inline-block;
+         text-decoration: none;
+         text-align: center;
+     }
+}
+
+.back_btn {
     margin-top: 2rem;
     a{
         text-decoration: none;

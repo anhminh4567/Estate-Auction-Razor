@@ -18,7 +18,7 @@
 
 <div class="row detail_wrapper">
 	<div class="col-md-6 estate_info_wrapper">
-		<h1 class="text-uppercase">@Model.Estate.Name</h1>
+		<h1 class="text-uppercase fw-bold">@Model.Estate.Name</h1>
 		@if (Model.Estate.EstateCategory is not null && Model.Estate.EstateCategory.Count > 0)
 		{
 			foreach (var categoryDetail in Model.Estate.EstateCategory)
@@ -85,76 +85,37 @@
 
 	@if (Model.Estate.Auctions is not null && Model.Estate.Auctions.Count > 0)
 	{
-		<div class="row" id="auctions-container">
-			@foreach (var auc in Model.Estate.Auctions)
-			{
-			// add id="@auc.AuctionId" for signalR function
-				<div class="col-md-4" id="@auc.AuctionId">
-					<form method="post">
-						<div class="rounded">
-							<div class="rounded-top estate_img"></div>
-							<div class="company-and-estate-data mt-4 px-4">
-								<h5 class="text-uppercase" style="font-weight: bold;">Auction #@auc.AuctionId</h5>
-								<div class="d-flex align-items-center my-2">
-									@foreach (var cate in auc.Estate.EstateCategory)
-									{
-										<div class="cate">
-											<span>@cate.CategoryDetail.CategoryName</span>
-										</div>
-									}
-								</div>
-								<div class="img_info d-flex flex-row align-items-center justify-content-between" style="padding-right: 1rem;">
-									NOT_STARTED, ONGOING, PENDING_PAYMENT, SUCCESS, CANCELLED,FAILED_TO_PAY
-									<div>
-										@if (auc.Status.ToString() == "NOT_STARTED")
-										{
-											<span class="text-danger">NOT STARTED</span>
-										}
-										else if (auc.Status.ToString() == "ONGOING")
-										{
-											int remainDay = (auc.EndDate - DateTime.Today).Days;
-											<span><i class="fa-regular fa-user"></i> @remainDay days left</span>
-										}
-										else
-										{
-											<span class="text-danger">NOT AVAILABLE</span>
-										}
-
-									</div>
-									<div>
-									</div>
-									<div>
-										<img src="https://i.ibb.co/W2JWQs2/area-1.png"><span>@auc.Estate.Area m²</span>
-									</div>
-								</div>
-								<div class="currentBid">
-									<span>Current Bid:  </span><span style="font-weight: bold;">$9000</span>
-								</div>
-								@*<div class="detailBtn">
-									<a asp-page="../CustomerPages/DetailAuction" asp-route-id="@auc.AuctionId">See detail</a>
-								</div>*@
-							</div>
-						</div>
-					</form>
-					<div class="detailBtn">
-						<a href="/CustomerPages/DetailAuction?id=@auc.AuctionId">See detail</a>
-					</div>
-				</div>
-			}
+		<div class="auctions_wrapper">
+			<table class="auctions_table">
+				<tr>
+					<th>#</th>
+					<th>Register Date</th>
+					<th>Duration</th>
+					<th>Wanted Price</th>
+					<th>Status</th>
+					<th>Jump price</th>
+					<th>Current Bid</th>
+					<th></th>
+				</tr>
+				@foreach (var auc in Model.Estate.Auctions)
+				{
+					<tr>
+						<td>@auc.AuctionId</td>
+						<td>@auc.RegistrationDate.ToString("dd/MM/yyy")</td>
+						<td>@auc.StartDate.ToString("dd/MM/yyy") - @auc.EndDate.Date.ToString("dd/MM/yyy")</td>
+						<td>@auc.WantedPrice</td>
+						<td>@auc.Status</td>
+						<td>@auc.IncrementPrice</td>
+						<td>$ 999</td>
+						<td class="detailBtn">
+							<a href="/CompanyPages/AuctionMng/Detail?id=@auc.AuctionId">
+								Detail
+							</a>
+						</td>
+					</tr>
+				}
+			</table>
 		</div>
-
-		@*  foreach (var auction in Model.Estate.Auctions)
-	{
-	<div class="border border-1 p-3">
-	<p>@auction.AuctionId</p>
-	<p>@auction.RegistrationDate</p>
-	<p>@auction.StartDate</p>
-	<p>@auction.EndDate</p>
-	<p class="text-danger">@auction.Status</p>
-	<p>@auction.WantedPrice</p>
-	<p>@auction.IncrementPrice</p>
-	</div>
-	} *@
 	}
 	else
 	{
