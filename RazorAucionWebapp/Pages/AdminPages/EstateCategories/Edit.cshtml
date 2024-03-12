@@ -4,40 +4,88 @@
     ViewData["Title"] = "Update";
 }
 
-<div class="row">
-    <div>
-        @if(TempData["UpdateFail"] is not null)
-        {
-            <div class="alert alert-danger">
-                @TempData["UpdateFail"]
-            </div>
+<style>
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .form-container {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 50%;
+        max-width: 800px;
+    }
+
+        .form-container h1 {
+            margin-bottom: 20px;
+            text-align: center;
         }
-        @if (TempData["DelFail"] is not null)
-        {
-            <div class="alert alert-danger">
-                @TempData["DelFail"]
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    input[type="date"] {
+        width: 100%;
+    }
+
+    input[type="submit"] {
+        width: 100%;
+    }
+
+    .btn-back {
+        margin-top: 20px;
+    }
+
+    .customer-select:hover {
+        color: black;
+        background-color: dimgrey;
+    }
+</style>
+<div class="container">
+    <div class="form-container">
+        <div class="row">
+            <div>
+                @if (TempData["UpdateFail"] is not null)
+                {
+                    <div class="alert alert-danger">
+                        @TempData["UpdateFail"]
+                    </div>
+                }
+                @if (TempData["DelFail"] is not null)
+                {
+                    <div class="alert alert-danger">
+                        @TempData["DelFail"]
+                    </div>
+                }
             </div>
-        }
-    </div>
-    <div class="col-md-4">
-        <a asp-page="./Index">Go back to Categories</a>
-        <form method="post" id="edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input asp-for="EstateCategoryDetail.CategoryId" type="hidden"/>
-            <div class="form-group">
-                <label asp-for="EstateCategoryDetail.CategoryName" class="control-label">Name</label>
-                <input asp-for="EstateCategoryDetail.CategoryName" class="form-control" />
-                <span asp-validation-for="EstateCategoryDetail.CategoryName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EstateCategoryDetail.Description" class="control-label"></label>
-                <input asp-for="EstateCategoryDetail.Description" class="form-control" />
-                <span asp-validation-for="EstateCategoryDetail.Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <a class="del" data-bs-toggle="modal" data-bs-target="#updateModal">Update</a>
-            </div>
-        </form>
+                <h3 style="width: 100%">Update Categories</h3>
+                <form method="post" id="edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input asp-for="EstateCategoryDetail.CategoryId" type="hidden" />
+                    <div class="form-group">
+                        <label asp-for="EstateCategoryDetail.CategoryName" class="control-label">Name</label>
+                        <input asp-for="EstateCategoryDetail.CategoryName" class="form-control" />
+                        <span asp-validation-for="EstateCategoryDetail.CategoryName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="EstateCategoryDetail.Description" class="control-label">Description</label>
+                        <textarea asp-for="EstateCategoryDetail.Description" class="form-control" rows="4"></textarea>
+                        <span asp-validation-for="EstateCategoryDetail.Description" class="text-danger"></span>
+                    </div>
+
+                <div class="form-group">
+                        <a class="del btn btn-primary" style="" data-bs-toggle="modal" data-bs-target="#updateModal">Update</a>
+                        <a class="btn btn-secondary" asp-page="./Index">Go back to Categories</a>
+                    </div>
+                </form>
+        </div>
+
     </div>
 </div>
 <div class="modal fade" id="updateModal" tabindex="-1">
@@ -52,8 +100,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                 <input type="submit" form="edit" class="btn btn-success" value="Confirm" />
+                <button class="btn btn-danger" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                 <input class="btn btn-primary" type="submit" form="edit" class="btn btn-success" value="Confirm" />
             </div>
         </div>
     </div>
