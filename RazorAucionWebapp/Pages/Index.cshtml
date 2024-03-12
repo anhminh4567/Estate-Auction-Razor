@@ -57,7 +57,7 @@
                                         foreach (var img in auc.Estate.Images)
                                         {
                                             <div class="carousel-item @(isFirst ? "active" : "")">
-                                                <img src="@Url.Content(img.Image.Path)" width="90" height="90" class="d-block w-100" style="filter: blur(0) !important;" />
+                                                <img src="@Url.Content("/PublicImages/storage/" + img.Image.Path)" width="90" height="90" class="d-block w-100" style="filter: blur(0) !important;" />
                                             </div>
                                             isFirst = false;
                                         }

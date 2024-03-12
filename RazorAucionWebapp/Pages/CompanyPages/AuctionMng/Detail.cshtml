@@ -61,6 +61,9 @@
                                     switch (@Model.Auction.Status.ToString())
                                     {
                                         case "NOT_STARTED":
+                                            auc_status_style = "auc_status_red";
+                                            isAuctioning = true;
+                                            break;
                                         case "PENDING_PAYMENT":
                                         case "CANCELLED":
                                         case "FAILED_TO_PAY":
@@ -96,16 +99,17 @@
                                     </span>
                                 </p>
                                 @* <p>wanted price: @Model.Auction.WantedPrice</p> *@
-                                <a class="d-inline btn btn-primary p-2" asp-page="./BidAuction" asp-route-auctionId="@Model.Auction.AuctionId">BID NOW</a>
+                                <a class="d-inline btn btn-primary p-2 disabled" asp-page="./BidAuction" asp-route-auctionId="@Model.Auction.AuctionId">BID NOW</a>
                                 @{
                                     if (HttpContext.User.Identity.IsAuthenticated)
                                     {
-                                        <a class="d-inline btn btn-secondary p-2" asp-page="./JoinAuction" asp-route-id="@Model.Auction.AuctionId">Join auction !</a>
+                                        <a class="d-inline btn btn-secondary p-2 disabled" asp-page="./JoinAuction" asp-route-id="@Model.Auction.AuctionId">Join auction !</a>
                                     }
                                     else
                                     {
-                                        <a class="d-inline btn btn-secondary p-2" asp-page="/Registration/Login">Login to join!</a>
+                                        <a class="d-inline btn btn-secondary p-2 disabled" asp-page="/Registration/Login">Login to join!</a>
                                     }
+                                    <p class="text-danger m-3">Company cannot join or bid</p>
                                 }
                             </div>
                         }
@@ -184,7 +188,7 @@
                                         {
                                             foreach (var categoryDetail in Model.Auction.Estate.EstateCategory)
                                             {
-                                                <span>@categoryDetail.CategoryDetail.CategoryName</span>
+                                                <span class="text-primary">@categoryDetail.CategoryDetail.CategoryName</span>
                                                 @if (categoryDetail != Model.Auction.Estate.EstateCategory.Last())
                                                 {
                                                     <span>, </span>

@@ -55,7 +55,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
                 //ModelState.AddModelError(string.Empty, ex.Message);
                 return NotFound();
             }
-            var getAuctionDetail = await _auctionService.GetInclude(id.Value, "Estate,Bids,AuctionReceipt.Buyer,JoinedAccounts.Account");
+            var getAuctionDetail = await _auctionService.GetInclude(id.Value, "Estate.EstateCategory.CategoryDetail,Bids,AuctionReceipt.Buyer,JoinedAccounts.Account");
             if (getAuctionDetail is null) 
             {
                 return NotFound();

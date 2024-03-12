@@ -69,7 +69,7 @@ namespace RazorAucionWebapp.Pages.Registration
 				FullName = Name,
 				Dob = Dob,
 				Telephone = Tel,
-				Status = Repository.Database.Model.Enum.AccountStatus.PENDING,
+				Status = Repository.Database.Model.Enum.AccountStatus.ACTIVED,
 				Role = Repository.Database.Model.Enum.Role.CUSTOMER,
 				CMND = CMND,
 				Balance = 0,

@@ -49,6 +49,9 @@
                                     switch (@Model.Auction.Status.ToString())
                                     {
                                         case "NOT_STARTED":
+                                            auc_status_style = "auc_status_red";
+                                            isAuctioning = true;
+                                            break;
                                         case "PENDING_PAYMENT":
                                         case "CANCELLED":
                                         case "FAILED_TO_PAY":

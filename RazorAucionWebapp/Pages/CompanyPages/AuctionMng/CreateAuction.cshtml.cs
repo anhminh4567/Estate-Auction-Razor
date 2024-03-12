@@ -137,7 +137,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
         }
         private static DateTime getDate(int month = 0)
         {
-            return DateTime.Now.AddMonths(month).AddMilliseconds(-DateTime.Now.Millisecond);
+            return DateTime.Now.AddMinutes(month).AddMilliseconds(-DateTime.Now.Millisecond);
         }
     }
 }

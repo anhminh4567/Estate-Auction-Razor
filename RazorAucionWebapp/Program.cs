@@ -133,9 +133,9 @@ app.Use(async (context, next) =>
 {
     var path = context.Request.Path;
     if (context.Request.Path.StartsWithSegments("/auctionrealtime") ||
-    context.Request.Path.StartsWithSegments("/accountrealtime") ||
-    context.Request.Path.StartsWithSegments("/bidrealtime") ||
-	context.Request.Path.StartsWithSegments("/PublicImages")
+        context.Request.Path.StartsWithSegments("/accountrealtime") ||
+        context.Request.Path.StartsWithSegments("/bidrealtime") ||
+	    context.Request.Path.StartsWithSegments("/PublicImages")
 	)
     {
 
