@@ -64,7 +64,14 @@ namespace RazorAucionWebapp.Pages.CustomerPages
             }
             try
             {
-                var bidderId = Context.User.Claims.FirstOrDefault(c => c.Type.Equals("Id"))?.Value;
+                await PopulateData(AuctionId);
+                
+                var tryGetId = int.TryParse(HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("Id"))?.Value, out var bidderId);
+                var getJoinedAccount = JoinedAccounts?.FirstOrDefault(a => a.AccountId == bidderId);
+                if (tryGetId == true && getJoinedAccount != null)
+                {
+                    isJoinedAccount = true;
+                }
                 var result = await _bidServices.PlaceBid(bidderId, AuctionId, Amount);
                 if (result.IsSuccess)
                 {
