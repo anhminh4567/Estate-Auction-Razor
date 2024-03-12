@@ -36,6 +36,8 @@ namespace RazorAucionWebapp.Pages.CustomerPages
         public decimal Amount { get; set; }
         [BindProperty]
         public bool isJoinedAccount { get; set; } = false;
+        [BindProperty]
+        public int AuctionId { get; set; }
 
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -62,7 +64,18 @@ namespace RazorAucionWebapp.Pages.CustomerPages
             }
             try
             {
-                return Page();
+                var bidderId = Context.User.Claims.FirstOrDefault(c => c.Type.Equals("Id"))?.Value;
+                var result = await _bidServices.PlaceBid(bidderId, AuctionId, Amount);
+                if (result.IsSuccess)
+                {
+                    TempData["SuccessMessage"] = $"your bid is registered at {result.returnBid.Time} with amount {result.returnBid.Amount}";
+                    return Page();
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, result.message);
+                    return Page();
+                }
             }
             catch (Exception ex)
             {
