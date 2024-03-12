@@ -31,16 +31,46 @@ namespace RazorAucionWebapp.Pages.CustomerPages
         public List<Bid> AuctionBids { get; set; }
         public List<Account>? JoinedAccounts { get; set; }
 		public List<string> Images { get; set; } = new List<string>();
+        [BindProperty]
+        [Required]
+        public decimal Amount { get; set; }
+        [BindProperty]
+        public bool isJoinedAccount { get; set; } = false;
 
-		public async Task<IActionResult> OnGetAsync(int? id)
+
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id is null)
                 return BadRequest();
             await PopulateData(id.Value);
             await _auctionHubService.CreateAuctionSuccess(auction: Auction);
 			await GetImages();
-			return Page();
+            var tryGetId = int.TryParse(HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("Id"))?.Value, out var bidderId);
+            var getJoinedAccount = JoinedAccounts?.FirstOrDefault(a => a.AccountId == bidderId);
+            if (tryGetId == true && getJoinedAccount != null)
+            {
+                isJoinedAccount = true;
+            }
+            return Page();
         }
+
+        public async Task<IActionResult> OnPostAsync()
+		{
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+            try
+            {
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+
         private async Task PopulateData(int auctionId)
         {
             var auction = await _auctionServices.GetInclude(auctionId, "Bids.Bidder,JoinedAccounts.Account,Estate.Images.Image,Estate.EstateCategory.CategoryDetail");

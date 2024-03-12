@@ -44,6 +44,7 @@
                             <div class="d-flex align-content-center flex-wrap">
                                 @{
                                     var auc_status_style = "";
+
                                     bool isAuctioning = false;
                                     switch (@Model.Auction.Status.ToString())
                                     {
@@ -66,28 +67,81 @@
                                     }
                                 }
                                 <p class="fw-bold @auc_status_style">@Model.Auction.Status.ToString()</p>
-                                @* <p><i class="fa-solid fa-user"></i> ??/@Model.Auction.MaxParticipant</p> *@
                             </div>
                         </div>
+                        <hr />
 
                         @if (isAuctioning)
                         {
                             <div>
-                                <p class="jump_price position-relative">
-                                    <i class="fa-solid fa-square-plus"></i>
-                                    <span>
-                                        $ @Model.Auction.IncrementPrice
-                                    </span>
-                                    <span class="jumpprice_hover">
-                                        <i class="fa-regular fa-circle-question"></i>
-                                    </span>
-                                </p>
-                                @* <p>wanted price: @Model.Auction.WantedPrice</p> *@
-                                <a class="d-inline btn btn-primary p-2" asp-page="./BidAuction" asp-route-auctionId="@Model.Auction.AuctionId">BID NOW</a>
-                                @{
+                                <div class="remaining_time">
+                                    <div class="time_index">
+                                        <span id="remaining_date">
+                                            @Model.Auction.EndDate.Date
+                                        </span>
+                                        <span class="position-absolute time_txt">Days</span>
+                                    </div>
+                                    <div class="time_index">
+                                        <span id="remaining_hour">
+                                            @Model.Auction.EndDate.Hour
+                                        </span>
+                                        <span class="position-absolute time_txt">Hours</span>
+                                    </div>
+                                    <div class="time_index">
+                                        <span id="remaining_minute">
+                                            @Model.Auction.EndDate.Minute
+                                        </span>
+                                        <span class="position-absolute time_txt">Minutes</span>
+                                    </div>
+                                    <div class="time_index">
+                                        <span id="remaining_second">
+                                            @Model.Auction.EndDate.Second
+                                        </span>
+                                        <span class="position-absolute time_txt">Seconds</span>
+                                    </div>
+
+                                </div>
+                                @if (Model.isJoinedAccount == true)
+                                {
+                                    decimal bidAmount = 0;
+                                    decimal currentBid = 0;
+                                    if (Model.Auction.Bids is not null && Model.Auction.Bids.Count > 0)
+                                    {
+                                        currentBid = Model.Auction.Bids.Last().Amount;
+                                        bidAmount = Model.Auction.Bids.Last().Amount + Model.Auction.IncrementPrice;
+                                    }
+                                    else
+                                    {
+                                        bidAmount += Model.Auction.IncrementPrice;
+                                    }
+                                    <div class="bid_form_wrapper">
+                                        <form method="post">
+                                            <div class="form-group">
+                                                <input asp-for="Amount" class="form-control" readonly value=@bidAmount/>
+                                                <span asp-validation-for="Amount" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="submit" value="BID NOW" class="bid_btn" />
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>
+                                            Current Bid: <span class="fw-bold">$@currentBid</span>
+                                        </span>
+                                        <span>
+                                            Jump price: <span class="fw-bold">
+                                                $@Model.Auction.IncrementPrice</span>
+                                        </span>
+
+                                    </div>
+                                    <hr>
+                                }
+                                else
+                                {
                                     if (HttpContext.User.Identity.IsAuthenticated)
                                     {
-                                        <a class="d-inline btn btn-secondary p-2" asp-page="./JoinAuction" asp-route-id="@Model.Auction.AuctionId">Join auction !</a>
+                                        <a class="d-inline btn btn-secondary p-2" asp-page="./JoinAuction" asp-route-id="@Model.Auction.AuctionId">Join this auction</a>
                                     }
                                     else
                                     {
@@ -225,7 +279,7 @@
                                                 <span class="">$ @bid.Amount</span>
                                                 @*<p class="d-inline p-3 m-3 text-primary">amount: @bid.Time</p>*@
                                             </div>
-                                            
+
                                         </div>
                                     }
                                     <p class="fw-bold"><span class="text-danger">@Model.Auction.Bids.Last().Bidder.FullName</span> is the highest bidder!</p>
@@ -290,6 +344,7 @@
         </div>
     </div>
 </div>
+<div id="remainingTime"></div>
 <script>
     $('.sub_img').click(function () {
         $('.main_img').attr('src', $(this).attr('src'))
@@ -303,6 +358,33 @@
         $(".det_btns").show();
         console.log(targetDiv + '');
     });
+</script>
+<script>
+    // Function to update remaining time
+    function updateRemainingTime() {
+        var now = new Date();
+        var endDateTime = new Date('@Model.Auction.EndDate');
+
+        var difference = endDateTime - now;
+        var remainingSeconds = Math.floor(difference / 1000);
+        var days = Math.floor(remainingSeconds / (24 * 3600));
+        remainingSeconds -= days * 24 * 3600;
+        var hours = Math.floor(remainingSeconds / 3600);
+        remainingSeconds -= hours * 3600;
+        var minutes = Math.floor(remainingSeconds / 60);
+        remainingSeconds -= minutes * 60;
+
+        $("#remaining_date").text(days);
+        $("#remaining_hour").text(hours < 10 ? '0' + hours : hours);
+        $("#remaining_minute").text(minutes < 10 ? '0' + minutes : minutes);
+        $("#remaining_second").text(remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds);
+    }
+
+    // Call the function initially
+    updateRemainingTime();
+
+    // Update the time every second
+    setInterval(updateRemainingTime, 1000);
 </script>
 
 @* <div>

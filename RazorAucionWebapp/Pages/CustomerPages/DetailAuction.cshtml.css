@@ -155,14 +155,61 @@
       }
 }
 
-.duration_hms {
-    display: inline-block;
-    background: rgba(0, 0, 0, 0.7);
-    width: 2.2rem;
-    text-align: center;
-    padding: 0 .2rem;
-    border-radius: .2rem;
-    font-weight: normal;
+.remaining_time{
+    font-size: .8rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin: 2rem 0 3rem;
+    .time_index{
+        display: inline-block;
+        background: rgba(11, 96, 176, 0.9);
+        width: 4rem;
+        height: 4rem;
+        border-radius: .3rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.5rem;
+        color: white;
+        position: relative;
+    }
+    .time_txt{
+        top: 4rem;
+        left: 0;
+        font-size: .8rem;
+        color: rgba(0, 0, 0, 0.5);
+        display: inline-block;
+        width: 4rem;
+        text-align: center;
+    }
+}
+
+.bid_form_wrapper{
+    margin: 4rem 0 4.6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    input[type=text]{
+        background: rgba(0, 0, 0, 0.1);
+        font-weight: bold;
+        font-size: 1.5rem;
+        border: .15rem solid rgba(0, 0, 0, 0.3);
+        text-align: right;
+        width: 15rem;
+        margin-bottom: .8rem;
+
+    }
+    input[type=submit]{
+        width: 100%;
+        border: none;
+        background: rgba(11, 96, 176, 0.9);
+        color: white;
+        font-size: 2rem;
+        border-radius: .3rem;
+        font-weight: bold;
+    }
 }
 
 
