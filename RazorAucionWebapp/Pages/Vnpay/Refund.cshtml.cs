@@ -28,13 +28,13 @@ namespace RazorAucionWebapp.Pages.Vnpay
 
         private Transaction _transaction { get; set; }
         private Account _account { get; set; }
-		public async Task<IActionResult> OnGet(int? transactionId)
+		public async Task<IActionResult> OnGet(int? transactionId, int? accountId)
         {
-            if (transactionId is null)
+            if (transactionId is null || accountId is null || accountId == 0)
                 return BadRequest();
             try
             {
-                await PopulateData(transactionId.Value);
+                await PopulateData(transactionId.Value,accountId.Value);
                 //var queryResult = _vnpayQuery.btnQuery_Click(HttpContext, new Repository.Database.Model.Transaction() { vnp_TxnRef = "638441328050377825", vnp_TransactionDate = 20240221172044 });
                 //query ko can, do no chi can 3 tham so chinh la amount, txnref, paydate, deu dc luu trong db, just testing
                 //var refundResult = _vnpayRefund.btnRefund_Click(context: HttpContext, 
@@ -46,8 +46,12 @@ namespace RazorAucionWebapp.Pages.Vnpay
                     RefundValidTimeMinute: _bindAppsettings.RefundValidTime
                     );
                 if (refundResult.isSuccess == false)
-                    throw new Exception(refundResult.message);
-                TempData["RefundSuccess"] = "Successfully refunded";
+                {
+                    ModelState.AddModelError(string.Empty, refundResult.message);
+                    return Page();
+					//throw new Exception(refundResult.message);
+				}
+				TempData["RefundSuccess"] = "Successfully refunded";
                 return Page();
 			}
 			catch (Exception ex) 
@@ -56,12 +60,12 @@ namespace RazorAucionWebapp.Pages.Vnpay
             }
             
         }
-        private async Task PopulateData(int transactionId)
+        private async Task PopulateData(int transactionId, int accountId)
         {
-            var tryGetUserId = int.TryParse(HttpContext.User.Claims?.FirstOrDefault(c => c.Type.Equals("Id"))?.Value,out var userId);
-            if(tryGetUserId is false)
-                throw new UnauthorizedAccessException("not authorized");
-            _account = await _accountServices.GetById(userId);
+            //var tryGetUserId = int.TryParse(HttpContext.User.Claims?.FirstOrDefault(c => c.Type.Equals("Id"))?.Value,out var userId);
+            //if(tryGetUserId is false)
+            //    throw new UnauthorizedAccessException("not authorized");
+            _account = await _accountServices.GetById(accountId);
 
 			var tryGetTransaction = await _transactionServices.GetById(transactionId);
             if (tryGetTransaction is null)

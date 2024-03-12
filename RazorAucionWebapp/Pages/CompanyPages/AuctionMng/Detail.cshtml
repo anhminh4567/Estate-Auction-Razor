@@ -1,4 +1,5 @@
 ﻿@page
+@using Repository.Database.Model.Enum;
 @model RazorAucionWebapp.Pages.CompanyPages.AuctionMng.DetailModel
 
 @{
@@ -303,7 +304,7 @@
     </div>
 </div>
 
-<div class="AuctionReceipt">
+<div class="AuctionReceipt container">
     <ul>
         @{
             if (Model.Auction.AuctionReceipt is not null)
@@ -323,9 +324,28 @@
     </ul>
 </div>
 
-<div>
-    <a asp-page="./Update" asp-route-id="@Model.Auction?.AuctionId">Update</a> |
-    <a asp-page="./Index">Back to List</a>
+<div class="container">
+    <div>
+    @{
+        var tryGetRoleClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Role));
+        if (tryGetRoleClaim is null)
+        {
+            <a class=" btn btn-secondary" asp-page="./Index">Back to List</a>
+        }
+        else
+        {
+            if (tryGetRoleClaim.Value.Equals(Role.CUSTOMER) is false)
+            {
+                <a class=" btn btn-danger" asp-page="./Delete" asp-route-id="@Model.Auction?.AuctionId">Cancel</a>
+                <a class=" btn btn-secondary" asp-page="./Index">Back to List</a>
+            }
+            else
+            {
+                <a class=" btn btn-secondary" asp-page="./Index">Back to List</a>
+            }
+        }
+    }
+    </div>
 </div>
 <script>
     $('.sub_img').click(function () {

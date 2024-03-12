@@ -23,13 +23,13 @@ namespace RazorAucionWebapp.Pages.Vnpay
 		public VnpayReturnResult? VnpayResult { get; set; }
 		private int _userId { get; set; }
 		private Transaction _currentTransaction { get; set; }
-		public async Task<IActionResult> OnGet(int? transactionId)
+		public async Task<IActionResult> OnGet(int? myTransactionId)
 		{
-			if (transactionId == null)
+			if (myTransactionId == null)
 				return BadRequest();
 			try
 			{
-				await PopulateData(transactionId.Value);
+				await PopulateData(myTransactionId.Value);
 				var returnResult = await _vnpayAvailableServices.OnPayResult(HttpContext, _currentTransaction);
 				if (returnResult is null || returnResult.Success == false)
 				{

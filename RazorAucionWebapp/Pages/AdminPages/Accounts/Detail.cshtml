@@ -1,121 +1,158 @@
 ﻿@page
+@using Repository.Database.Model.Enum;
 @model RazorAucionWebapp.Pages.AdminPages.Accounts.DetailModel
 
 @{
-    ViewData["Title"] = "Detail";
+	ViewData["Title"] = "Detail";
 }
 
 <style>
-    .container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 20px;
-    }
+	.container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin-top: 20px;
+	}
 
-    .detail-container {
-        background-color: #f8f9fa;
-        border: 1px solid #dee2e6;
-        border-radius: 8px;
-        padding: 20px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        width: 80%;
-        max-width: 600px;
-    }
+	.detail-container {
+		background-color: #f8f9fa;
+		border: 1px solid #dee2e6;
+		border-radius: 8px;
+		padding: 20px;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		width: 80%;
+		max-width: 600px;
+	}
 
-    .detail-container h1 {
-            margin-bottom: 20px;
-            text-align: center;
-            margin-top: 20px;
-        }
+		.detail-container h1 {
+			margin-bottom: 20px;
+			text-align: center;
+			margin-top: 20px;
+		}
 
-    .detail-container dl.row dt {
-            font-weight: bold;
-        }
+		.detail-container dl.row dt {
+			font-weight: bold;
+		}
 
-/*     .detail-container dl.row dd {
-            margin-left: 0;
-        } */
+		/*     .detail-container dl.row dd {
+				margin-left: 0;
+			} */
 
-    .detail-container a {
-            display: block;
-            text-align: center;
-            margin-top: 10px;
-            text-decoration: none;
-            color: #007bff;
-        }
+		.detail-container a {
+			display: block;
+			text-align: center;
+			margin-top: 10px;
+			text-decoration: none;
+			color: #007bff;
+		}
 
-    .detail-container a:hover {
-                text-decoration: underline;
-            }
+			.detail-container a:hover {
+				text-decoration: underline;
+			}
 </style>
 
 <div class="container">
-    <div class="detail-container">
-        <h1>Detail</h1>
-        <div>
-            <h4>Account</h4>
-            <hr />
-            <dl class="row">
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Account.Email)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.Account.Email)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Account.Password)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.Account.Password)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Account.FullName)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.Account.FullName)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Account.Dob)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.Account.Dob)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Account.Telephone)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.Account.Telephone)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Account.Status)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.Account.Status)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Account.Role)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.Account.Role)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Account.CMND)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.Account.CMND)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Account.Balance)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.Account.Balance)
-                </dd>
-            </dl>
-        </div>
+	<div class="detail-container">
+		<h1>Detail</h1>
+		<div>
+			<h4>Account</h4>
+			<hr />
+			<div class="text-danger" asp-validation-summary="ModelOnly">
+			</div>
+			<dl class="row">
+				<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => model.Account.Email)
+				</dt>
+				<dd class="col-sm-10">
+					@Html.DisplayFor(model => model.Account.Email)
+				</dd>
+				<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => model.Account.Password)
+				</dt>
+				<dd class="col-sm-10">
+					@Html.DisplayFor(model => model.Account.Password)
+				</dd>
+				<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => model.Account.FullName)
+				</dt>
+				<dd class="col-sm-10">
+					@Html.DisplayFor(model => model.Account.FullName)
+				</dd>
+				<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => model.Account.Dob)
+				</dt>
+				<dd class="col-sm-10">
+					@Html.DisplayFor(model => model.Account.Dob)
+				</dd>
+				<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => model.Account.Telephone)
+				</dt>
+				<dd class="col-sm-10">
+					@Html.DisplayFor(model => model.Account.Telephone)
+				</dd>
+				<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => model.Account.Status)
+				</dt>
+				<dd class="col-sm-10">
+					@Html.DisplayFor(model => model.Account.Status)
+				</dd>
+				<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => model.Account.Role)
+				</dt>
+				<dd class="col-sm-10">
+					@Html.DisplayFor(model => model.Account.Role)
+				</dd>
+				<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => model.Account.CMND)
+				</dt>
+				<dd class="col-sm-10">
+					@Html.DisplayFor(model => model.Account.CMND)
+				</dd>
+				<dt class="col-sm-2">
+					@Html.DisplayNameFor(model => model.Account.Balance)
+				</dt>
+				<dd class="col-sm-10">
+					@Html.DisplayFor(model => model.Account.Balance)
+				</dd>
+			</dl>
+		</div>
+		<div>
+			@{
+				if (Model.Account.Status.Equals(AccountStatus.PENDING))
+				{
+					<form method="post" asp-page-handler="Active">
+						<input asp-for="AccountId" type="hidden" value="@Model.Account.AccountId" />
+						<button type="submit" class="btn btn-success">Active</button>
+					</form>
+				}
+				else if (Model.Account.Status.Equals(AccountStatus.DEACTIVED))
+				{
+					<form method="post" asp-page-handler="Active">
+						<input asp-for="AccountId" type="hidden" value="@Model.Account.AccountId" />
+						<button type="submit" class="btn btn-primary">Reactive</button>
+					</form>
+				}
+				else
+				{
+					<form method="post" asp-page-handler="Ban">
+						<input asp-for="AccountId" type="hidden" value="@Model.Account.AccountId" />
+						<button type="submit" class="btn btn-danger">Ban user</button>
+					</form>
+				}
+			}
 
-        <div>
-            <a asp-page="./Index">Back to List</a>
-        </div>
-    </div>
+		</div>
+		<div>
+			@{
+				if (Model.Account.Role.Equals(Role.COMPANY))
+				{
+					<a class="btn btn-secondary" asp-page="/AdminPages/Companies/Index"><span class="text-white">Back to List</span></a>
+				}
+				else
+				{
+					<a class="btn btn-secondary" asp-page="./Index"><span class="text-white">Back to List</span></a>
+				}
+			}
+		</div>
+	</div>
 </div>

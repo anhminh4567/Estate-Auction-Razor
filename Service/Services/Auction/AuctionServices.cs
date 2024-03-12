@@ -254,77 +254,50 @@ namespace Service.Services.Auction
 					//status.Equals(AuctionStatus.CANCELLED)
 					)
 				{
-					await _unitOfWork.BeginTransaction();
-					switch (status)
-					{
-						//case AuctionStatus.PENDING_PAYMENT:
-						//	var getReceipt = (await _unitOfWork.Repositories.auctionReceiptRepository.GetByCondition(a => a.AuctionId == auction.AuctionId)).FirstOrDefault();
-						//	// this will never null
-						//	// since the user has already won
-						//	if (getReceipt is null)
-						//	{
-						//		await _unitOfWork.RollBackAsync();
-						//		throw new Exception("with status " + status + " the receipt can never be null, something really wrong");
-						//	}
-						//	var amountUserHavePaid = getReceipt.Amount - getReceipt.RemainAmount;
-						//	var userAccount = await _unitOfWork.Repositories.accountRepository.GetAsync(getReceipt.BuyerId.Value);
-						//	///  lay lai tien entrence fee do day bi ep cancel
-						//	var getCompany = await _unitOfWork.Repositories.accountRepository.GetAsync(estate.CompanyId);
-						//	var takenEntrenceFee = auction.EntranceFee;
-						//	getCompany.Balance -= takenEntrenceFee;
+					throw new Exception("auction has finished, cannot cancel");
+					//await _unitOfWork.BeginTransaction();
+					//switch (status)
+					//{
 
+					//	case AuctionStatus.SUCCESS:
+					//		var getReceipt_2 = (await _unitOfWork.Repositories.auctionReceiptRepository.GetByCondition(a => a.AuctionId == auction.AuctionId)).FirstOrDefault();
+					//		if (getReceipt_2 is null)
+					//		{
+					//			await _unitOfWork.RollBackAsync();
+					//			throw new Exception("with status " + status + " the receipt can never be null, something really wrong");
+					//		}
+					//		int companyID = (await _unitOfWork.Repositories.estateRepository.GetAsync(auction.EstateId)).CompanyId;
 
-						//	userAccount.Balance += amountUserHavePaid;
-						//	var update1 = await _unitOfWork.Repositories.accountRepository.UpdateAsync(userAccount);
-						//	var update4 = await _unitOfWork.Repositories.accountRepository.UpdateAsync(getCompany);
-						//	var update2 = await _unitOfWork.Repositories.auctionReceiptRepository.DeleteAsync(getReceipt);
-						//	auction.Status = AuctionStatus.CANCELLED;
-						//	var update3 = await _unitOfWork.Repositories.auctionRepository.UpdateAsync(auction);
-						//	if (update1 is false || update2 is false || update3 is false || update4 is false)
-						//	{
-						//		await _unitOfWork.RollBackAsync();
-						//		throw new Exception("Error in update admin cancel auction");
-						//	}
-						//	break;
-						case AuctionStatus.SUCCESS:
-							var getReceipt_2 = (await _unitOfWork.Repositories.auctionReceiptRepository.GetByCondition(a => a.AuctionId == auction.AuctionId)).FirstOrDefault();
-							if (getReceipt_2 is null)
-							{
-								await _unitOfWork.RollBackAsync();
-								throw new Exception("with status " + status + " the receipt can never be null, something really wrong");
-							}
-							int companyID = (await _unitOfWork.Repositories.estateRepository.GetAsync(auction.EstateId)).CompanyId;
+					//		var amountUserHavePaid_2 = getReceipt_2.Amount;
+					//		var amountCompanyHaveTaken_2 = getReceipt_2.Amount - getReceipt_2.Commission;
 
-							var amountUserHavePaid_2 = getReceipt_2.Amount;
-							var amountCompanyHaveTaken_2 = getReceipt_2.Amount - getReceipt_2.Commission;
+					//		var userAccount_2 = await _unitOfWork.Repositories.accountRepository.GetAsync(getReceipt_2.BuyerId.Value);
+					//		var companyAccount_2 = await _unitOfWork.Repositories.accountRepository.GetAsync(companyID);
 
-							var userAccount_2 = await _unitOfWork.Repositories.accountRepository.GetAsync(getReceipt_2.BuyerId.Value);
-							var companyAccount_2 = await _unitOfWork.Repositories.accountRepository.GetAsync(companyID);
-
-							userAccount_2.Balance += amountUserHavePaid_2;
-							companyAccount_2.Balance -= amountCompanyHaveTaken_2;
-							///
-							/// NOTE , neeu balance xuong 0  thi company do co van de, admin tu lam viec lai
-							///
-							var update1_2 = await _unitOfWork.Repositories.accountRepository.UpdateAsync(userAccount_2);
-							var update2_2 = await _unitOfWork.Repositories.auctionReceiptRepository.DeleteAsync(getReceipt_2);
-							auction.Status = AuctionStatus.CANCELLED;
-							var update3_2 = await _unitOfWork.Repositories.auctionRepository.UpdateAsync(auction);
-							var update4_2 = await _unitOfWork.Repositories.accountRepository.UpdateAsync(companyAccount_2);
-							if (update1_2 is false || update2_2 is false || update3_2 is false || update4_2 is false)
-							{
-								await _unitOfWork.RollBackAsync();
-								throw new Exception("Error in update admin cancel auction");
-							}
-							break;
-						default:
-							await _unitOfWork.RollBackAsync();
-							throw new Exception("No need to cancel, it has already been cancelled");
-					}
-					await _unitOfWork.SaveChangesAsync();
-					await _unitOfWork.CommitAsync();
-					//SIGNALR
-					await _auctionHubService.UpdateAuctionSuccess(auction);
+					//		userAccount_2.Balance += amountUserHavePaid_2;
+					//		companyAccount_2.Balance -= amountCompanyHaveTaken_2;
+					//		///
+					//		/// NOTE , neeu balance xuong 0  thi company do co van de, admin tu lam viec lai
+					//		///
+					//		var update1_2 = await _unitOfWork.Repositories.accountRepository.UpdateAsync(userAccount_2);
+					//		var update2_2 = await _unitOfWork.Repositories.auctionReceiptRepository.DeleteAsync(getReceipt_2);
+					//		auction.Status = AuctionStatus.CANCELLED;
+					//		var update3_2 = await _unitOfWork.Repositories.auctionRepository.UpdateAsync(auction);
+					//		var update4_2 = await _unitOfWork.Repositories.accountRepository.UpdateAsync(companyAccount_2);
+					//		if (update1_2 is false || update2_2 is false || update3_2 is false || update4_2 is false)
+					//		{
+					//			await _unitOfWork.RollBackAsync();
+					//			throw new Exception("Error in update admin cancel auction");
+					//		}
+					//		break;
+					//	default:
+					//		await _unitOfWork.RollBackAsync();
+					//		throw new Exception("No need to cancel, it has already been cancelled");
+					//}
+					//await _unitOfWork.SaveChangesAsync();
+					//await _unitOfWork.CommitAsync();
+					////SIGNALR
+					//await _auctionHubService.UpdateAuctionSuccess(auction);
 				}
 				else
 				{

@@ -40,12 +40,11 @@ namespace RazorAucionWebapp.Pages.AdminPages.Accounts.Transactions
 			}
 			try
 			{
-					
 				return Page();
 			}
 			catch (Exception ex)
 			{
-				return BadRequest();
+				return BadRequest(ex.Message);
 			}
 		}
 
@@ -85,7 +84,7 @@ namespace RazorAucionWebapp.Pages.AdminPages.Accounts.Transactions
 			}
 			catch (Exception ex)
 			{
-				return BadRequest();
+				return BadRequest(ex.Message);
 			}
 		}
 		private Task PopulateData(int accountId)

@@ -7,57 +7,74 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Repository.Database;
 using Repository.Database.Model;
+using Repository.Database.Model.AppAccount;
+using Service.Services;
 
 namespace RazorAucionWebapp.Pages.AdminPages.Accounts.Transactions
 {
     public class RefundModel : PageModel
     {
-        private readonly Repository.Database.AuctionRealEstateDbContext _context;
-
-        public RefundModel(Repository.Database.AuctionRealEstateDbContext context)
+        private readonly TransactionServices _transactionServices;
+        private readonly VnpayAvailableServices _vnpayAvailableServices;
+        public RefundModel(TransactionServices transactionServices, VnpayAvailableServices vnpayAvailableServices)
         {
-            _context = context;
+            _transactionServices = transactionServices;
+            _vnpayAvailableServices = vnpayAvailableServices;
         }
 
         [BindProperty]
-      public Transaction Transaction { get; set; } = default!;
-
+        public Transaction Transaction { get; set; } = default!;
+        private Account User { get; set; }
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Transactions == null)
+            if (id == null)
             {
                 return NotFound();
             }
-
-            var transaction = await _context.Transactions.FirstOrDefaultAsync(m => m.TransactionId == id);
-
-            if (transaction == null)
+            try
             {
-                return NotFound();
+                await PopulateData(id.Value);
+                return Page();
             }
-            else 
+            catch (Exception ex) 
             {
-                Transaction = transaction;
+                return BadRequest(ex.Message);
             }
-            return Page();
+
+           
         }
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (id == null || _context.Transactions == null)
+            if (id == null)
             {
                 return NotFound();
             }
-            var transaction = await _context.Transactions.FindAsync(id);
-
-            if (transaction != null)
+            try
             {
-                Transaction = transaction;
-                _context.Transactions.Remove(Transaction);
-                await _context.SaveChangesAsync();
+                await PopulateData(id.Value);
+                var result =await  _vnpayAvailableServices.AdminRefundVnpay(HttpContext, Transaction, User);
+                if (result.IsSuccess)
+                {
+                    return RedirectToPage("./Index");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, result.message);
+                    return Page();
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
 
-            return RedirectToPage("./Index");
+            
+        }
+        public async Task PopulateData(int transactionId)
+        {
+            Transaction = await _transactionServices.GetInclude(transactionId, "Account") ?? throw new Exception("cannot found transactin with this id");
+            User = Transaction.Account ?? throw new Exception("cannot found owner of this transaction, something is really wrong");
         }
     }
 }

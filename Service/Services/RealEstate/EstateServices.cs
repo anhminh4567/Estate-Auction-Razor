@@ -3,6 +3,7 @@ using Repository.Database.Model.Enum;
 using Repository.Database.Model.RealEstate;
 using Repository.Interfaces.DbTransaction;
 using Repository.Interfaces.RealEstate;
+using Service.Services.Auction;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,19 +18,22 @@ namespace Service.Services.RealEstate
 	public class EstateServices
 	{
 		private readonly IUnitOfWork _unitOfWork;
+        private readonly AuctionServices _auctionServices;
 
-        public EstateServices(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
+		public EstateServices(IUnitOfWork unitOfWork, AuctionServices auctionServices)
+		{
+			_unitOfWork = unitOfWork;
+			_auctionServices = auctionServices;
+		}
 
-        //private readonly IEstateRepository _estateRepository;
 
-        //public EstateServices(IEstateRepository estateRepository)
-        //{
-        //	_estateRepository = estateRepository;
-        //}
-        public async Task<Estate?> GetById(int id, string includeProperties = null) 
+		//private readonly IEstateRepository _estateRepository;
+
+		//public EstateServices(IEstateRepository estateRepository)
+		//{
+		//	_estateRepository = estateRepository;
+		//}
+		public async Task<Estate?> GetById(int id, string includeProperties = null) 
 		{
             if(includeProperties == null)
 			    return await _unitOfWork.Repositories.estateRepository.GetAsync(id);
@@ -186,10 +190,10 @@ namespace Service.Services.RealEstate
 		}
 		public async Task<(bool IsSuccess, string? message)> AdminBannedEstate(Estate estate) 
 		{
-			estate.Status = Repository.Database.Model.Enum.EstateStatus.BANNED;
             try
             {
                 var getAuctions = await _unitOfWork.Repositories.auctionRepository.GetByEstateId(estate.EstateId);
+                // lay auction cua estate cos status la ( NOT_STARTED , ONGOING, PENDING_PAYMENT )
                 var getCurrentValidAuction = getAuctions.Where(
                     a => a.Status != AuctionStatus.SUCCESS &&
                     a.Status != AuctionStatus.FAILED_TO_PAY &&
@@ -199,19 +203,16 @@ namespace Service.Services.RealEstate
                 
                 if(getCurrentValidAuction is not null)
                 {
-                    if(getCurrentValidAuction.Status == AuctionStatus.PENDING_PAYMENT) 
+                    // truoc khi bann, phai cancel auction do, neu ko duoc thi ko dc bann 
+					var result = await _auctionServices.AdminForceCancelAuction(getCurrentValidAuction);
+                    if(result.IsSuccess == false ) 
                     {
-                        //receipt cannot be null at this time
-                        var getReceipt = (await _unitOfWork.Repositories.auctionReceiptRepository.GetByCondition(a => a.AuctionId == getCurrentValidAuction.AuctionId)).First();
-                        var getUserAccount = await _unitOfWork.Repositories.accountRepository.GetAsync(getReceipt.BuyerId.Value);
-                        getUserAccount.Balance += (getReceipt.Amount - getReceipt.RemainAmount);// add back user balance
-                        await _unitOfWork.Repositories.accountRepository.UpdateAsync(getUserAccount);
-                        await _unitOfWork.Repositories.auctionReceiptRepository.DeleteAsync(getReceipt);// ko can xoa payment. do rule cascade delete
+                        throw new Exception("cannot cancel auction, so estate cannot be banned also");
                     }
-                    getCurrentValidAuction.Status = AuctionStatus.CANCELLED;
-                    await _unitOfWork.Repositories.auctionRepository.UpdateAsync(getCurrentValidAuction);
                 }
-                await _unitOfWork.Repositories.estateRepository.UpdateAsync(estate);
+                // bat dau bann
+				estate.Status = EstateStatus.BANNED;
+				await _unitOfWork.Repositories.estateRepository.UpdateAsync(estate);
                 await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.CommitAsync();
                 return (true, "Success");

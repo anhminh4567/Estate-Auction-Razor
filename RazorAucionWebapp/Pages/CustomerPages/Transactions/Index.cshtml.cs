@@ -25,7 +25,7 @@ namespace RazorAucionWebapp.Pages.CustomerPages.Transactions
 
 		public List<Transaction> Transactions { get;set; } = default!;
 		public int RefundValidTime { get; private set; }
-		private int _userId { get; set; }
+		public int _userId { get; set; }
         public async Task<IActionResult> OnGetAsync()
         {
 			try

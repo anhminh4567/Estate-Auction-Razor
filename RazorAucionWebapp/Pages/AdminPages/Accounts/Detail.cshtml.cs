@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using Repository.Database;
 using Repository.Database.Model.AppAccount;
 using Service.Services.AppAccount;
@@ -20,8 +21,9 @@ namespace RazorAucionWebapp.Pages.AdminPages.Accounts
             _accountServices = accountServices;
         }
 
-        public Account Account { get; set; } = default!; 
-
+        public Account Account { get; set; } = default!;
+        [BindProperty]
+        public int AccountId { get; set; }
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null )
@@ -31,12 +33,64 @@ namespace RazorAucionWebapp.Pages.AdminPages.Accounts
             try
             {
                 await PopulateData(id.Value);
-            }catch (Exception ex) 
+                return Page();
+            }
+            catch (Exception ex) 
             {
                 return BadRequest(ex.Message);
             }
 
-            return Page();
+            
+        }
+        public async Task<IActionResult> OnPostBanAsync()
+        {
+            if(AccountId == 0) 
+            {
+                return NotFound();
+            }
+            try
+            {
+                await PopulateData(AccountId);
+                var result = await _accountServices.AdminBanUser(Account);
+                if(result.IsSuccess ) 
+                {
+                    return RedirectToPage("./Index");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, result.message);
+                    return Page();
+                }
+            }
+            catch (Exception ex) 
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        public async Task<IActionResult> OnPostActiveAsync()
+        {
+            if (AccountId == 0)
+            {
+                return NotFound();
+            }
+            try
+            {
+                await PopulateData(AccountId);
+                var result = await _accountServices.AdminActiveUser(Account);
+                if (result.IsSuccess)
+                {
+                    return RedirectToPage("./Index");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, result.message);
+                    return Page();
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         private async Task PopulateData(int accountId)
         {

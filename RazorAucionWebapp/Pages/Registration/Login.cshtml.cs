@@ -61,6 +61,11 @@ namespace RazorAucionWebapp.Pages.Registration
                     ModelState.AddModelError(string.Empty, "user not found in database, try again");
                     return Page();
                 }
+                if(getAccount.Status.Equals(AccountStatus.DEACTIVED)) 
+                {
+                    ModelState.AddModelError(string.Empty, "user account is DEACTIVED, contact admin to unlock");
+                    return Page();
+                }
                 await SetUserIdentity(getAccount);
                 TempData["SuccessLogin"] = "Login Success for user " + getAccount.Email;
                 //if (getAccount.Role.Equals(Role.ADMIN))

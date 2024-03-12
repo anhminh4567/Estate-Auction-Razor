@@ -135,5 +135,25 @@ namespace Service.Services.AppAccount
                 return false;
             }
 		}
-	}
+		public async Task<(bool IsSuccess, string? message)> AdminBanUser(Account account)
+		{
+			if (account == null)
+				return (false, "cannot found account");
+			account.Status = AccountStatus.DEACTIVED;
+			var updateResult = await _unitOfWork.Repositories.accountRepository.UpdateAsync(account);
+			if (updateResult)
+				return (true, "Success");
+			return (false, "fail to update");
+		}
+        public async Task<(bool IsSuccess, string? message)> AdminActiveUser(Account account)
+        {
+            if (account == null)
+                return (false, "cannot found account");
+            account.Status = AccountStatus.ACTIVED;
+            var updateResult = await _unitOfWork.Repositories.accountRepository.UpdateAsync(account);
+            if (updateResult)
+                return (true, "Success");
+            return (false, "fail to update");
+        }
+    }
 }

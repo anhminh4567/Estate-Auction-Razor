@@ -38,7 +38,7 @@ namespace RazorAucionWebapp.Pages.AdminPages.Accounts.Transactions
                 return Page();
             }catch(Exception ex) 
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
 
         }

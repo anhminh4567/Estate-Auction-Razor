@@ -71,7 +71,7 @@
 						}
 						else
 						{
-							<a class="btn btn-danger" asp-page="../../Vnpay/Refund" asp-route-transactionId="@item.TransactionId">Refund</a>
+							<a class="btn btn-danger" asp-page="../../Vnpay/Refund" asp-route-transactionId="@item.TransactionId" asp-route-accountId="@Model._userId">Refund</a>
 						}
 					}
 

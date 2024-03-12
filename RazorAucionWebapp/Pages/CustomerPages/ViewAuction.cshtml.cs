@@ -28,13 +28,28 @@ namespace RazorAucionWebapp.Pages.CustomerPages
 
         public async Task<IActionResult> OnGetAsync()
         {
-            await PopulateData();
-            return Page();
+            try
+            {
+                await PopulateData();
+                return Page();
+            }
+            catch (Exception ex) 
+            {
+                return BadRequest(ex.Message);
+            }
+            
         }
         public async Task<IActionResult> OnPostAsync()
         {
-            await PopulateData();
-            return Page();
+            try
+            {
+                await PopulateData();
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         private int UserId { get; set; }
 

@@ -74,9 +74,9 @@
                     <td>@Html.DisplayFor(modelItem => item.EstablishDate)</td>
                     <td>@Html.DisplayFor(modelItem => item.DateStartOnPlatform)</td>
                     <td>
-                        <a class="btn btn-sm btn-primary" asp-page="./Edit" asp-route-id="@item.AccountId">Edit</a>
-                        <a class="btn btn-sm btn-info" asp-page="./Details" asp-route-id="@item.AccountId">Details</a>
-                        <a class="btn btn-sm btn-danger" asp-page="./Delete" asp-route-id="@item.AccountId">Delete</a>
+@*                        <a class="btn btn-sm btn-primary" asp-page="./Edit" asp-route-id="@item.AccountId">Edit</a>*@
+                        <a class="btn btn-sm btn-info" asp-page="/AdminPages/Accounts/Detail" asp-route-id="@item.AccountId">Details</a>
+@*                        <a class="btn btn-sm btn-danger" asp-page="./Delete" asp-route-id="@item.AccountId">Delete</a>*@
                     </td>
                 </tr>
             }
