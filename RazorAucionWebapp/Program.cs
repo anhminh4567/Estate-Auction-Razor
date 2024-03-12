@@ -131,34 +131,46 @@ app.Use(async (context, next) =>
 app.UseAuthentication();
 app.Use(async (context, next) =>
 {
-    var getIdentity = context.User.Identity;
-    if (getIdentity is not null)
+    var path = context.Request.Path;
+    if (context.Request.Path.StartsWithSegments("/auctionrealtime") ||
+    context.Request.Path.StartsWithSegments("/accountrealtime") ||
+    context.Request.Path.StartsWithSegments("/bidrealtime") ||
+	context.Request.Path.StartsWithSegments("/PublicImages")
+	)
     {
-        if (getIdentity.IsAuthenticated)
-        {
-            var getRole = context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Role)).Value;
-            // admin pass this
-            if (getRole != Role.ADMIN.ToString())
-            {
-                var getActiveClaim = context.User.Claims.FirstOrDefault(c => c.Type.Equals("Status")).Value;
-                var getUserId = context.User.Claims.FirstOrDefault(c => c.Type.Equals("Id")).Value;
-                var scope = context.RequestServices.GetRequiredService<IUnitOfWork>();
 
-                var getUser = await scope.Repositories.accountRepository.GetAsync(int.Parse(getUserId));
-                if (getUser.Status.Equals(AccountStatus.DEACTIVED) && getUser.Status.ToString() != getActiveClaim)
-                {
-                    await context.SignOutAsync("cookie");
-                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                    context.Items.Add("UnauthorizedMessage", "user has been banned, please contact admin to active your account");
-                    return;
-                }
-            }
-        }
-        else
-        {
-            // do nothing, continue run next middleware
-        }
     }
+    else
+    {
+		var getIdentity = context.User.Identity;
+		if (getIdentity is not null)
+		{
+			if (getIdentity.IsAuthenticated)
+			{
+				var getRole = context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Role)).Value;
+				// admin pass this
+				if (getRole != Role.ADMIN.ToString())
+				{
+					var getActiveClaim = context.User.Claims.FirstOrDefault(c => c.Type.Equals("Status")).Value;
+					var getUserId = context.User.Claims.FirstOrDefault(c => c.Type.Equals("Id")).Value;
+					var scope = context.RequestServices.GetRequiredService<IUnitOfWork>();
+
+					var getUser = await scope.Repositories.accountRepository.GetAsync(int.Parse(getUserId));
+					if (getUser.Status.Equals(AccountStatus.DEACTIVED) && getUser.Status.ToString() != getActiveClaim)
+					{
+						await context.SignOutAsync("cookie");
+						context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+						context.Items.Add("UnauthorizedMessage", "user has been banned, please contact admin to active your account");
+						return;
+					}
+				}
+			}
+			else
+			{
+				// do nothing, continue run next middleware
+			}
+		}
+	}
     await next(context);
 });
 app.UseAuthorization();
