@@ -244,7 +244,7 @@
                     <div id="auction_participants" style="display: none;">
                         <div class="d-flex justify-content-between">
                             <h3 class="fw-bold text-uppercase mb-3">Participants</h3>
-                            <p class="fw-bold joined_user"><i class="fa-solid fa-user"></i> ??/@Model.Auction.MaxParticipant</p>
+                            <p class="fw-bold joined_user"><i class="fa-solid fa-user"></i> @Model.Auction.JoinedAccounts?.Count/@Model.Auction.MaxParticipant</p>
                         </div>
 
                         @{
