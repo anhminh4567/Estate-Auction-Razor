@@ -31,7 +31,7 @@ namespace RazorAucionWebapp.BackgroundServices
             {
                 await CheckIfAuctionStartOrEnd();
                 Console.WriteLine("checking auction is running");
-                await Task.Delay(30000, stoppingToken); // Wait for 30 seconds
+                await Task.Delay(10000, stoppingToken); // Wait for 30 seconds
             }
         }
         private async Task CheckIfAuctionStartOrEnd() 

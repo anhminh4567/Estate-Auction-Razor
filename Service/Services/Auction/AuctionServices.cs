@@ -119,14 +119,22 @@ namespace Service.Services.Auction
 			var getEstate = await _unitOfWork.Repositories.estateRepository.GetAsync(auction.EstateId);
 			if (getEstate is not null)
 			{
+				if(getEstate.Status.Equals(EstateStatus.REMOVED) ||
+					getEstate.Status.Equals(EstateStatus.BANNED) ||
+					getEstate.Status.Equals(EstateStatus.FINISHED)
+				{
+					return (false,"Cannot create auction, estate is "+ getEstate.Status.ToString(),null);
+				}
 				var tryGetEstateAuctionStatus = await _unitOfWork.Repositories.auctionRepository.GetByEstateId(getEstate.EstateId);
 				//check status cua tung auction, neu co cai nao != CANCELLD && != FAILED_TO_PAY ( tuc la vd: SUCCESS, ONGOING, NOT_STARTEED_PENDING )... ==> ko hop li de tao moi
 				foreach (var auc in tryGetEstateAuctionStatus)
 				{
 					if (auc.Status != Repository.Database.Model.Enum.AuctionStatus.CANCELLED &&
 						auc.Status != Repository.Database.Model.Enum.AuctionStatus.FAILED_TO_PAY) // nghia la auction cho mieng dat nay chua bi huy, neu v thi ko duoc tao auction moi cho no
-						return (false, "error in creeate auction, this is because the estate you select has already been in auction", null);
-				}
+					{
+                        return (false, "error in creeate auction, this is because the estate you select has already been in auction", null);
+                    }
+                }
 			}
 			var createResult = await _unitOfWork.Repositories.auctionRepository.CreateAsync(auction);
 			if (createResult is not null)
@@ -154,11 +162,8 @@ namespace Service.Services.Auction
 				//	throw new Exception("over time to cancel");
 				//}
 				if (status.Equals(AuctionStatus.SUCCESS) ||
-					//status.Equals(AuctionStatus.PENDING_PAYMENT) || 
 					status.Equals(AuctionStatus.CANCELLED) ||
-					status.Equals(AuctionStatus.FAILED_TO_PAY)
-					) 
-
+					status.Equals(AuctionStatus.FAILED_TO_PAY)) 
 				{
 					throw new Exception("the status is not valid to cancel or you have already cancelled, status now is: " + status.ToString());
 				}
@@ -208,8 +213,8 @@ namespace Service.Services.Auction
 					foreach (var joinedOne in joinedAccounts)
 					{
 						// neu nguoi do da quit hoac bi banned thi ko hoan tien, quit thi hoan tien luc quit roi 
-						if (joinedOne.Status.Equals(JoinedAuctionStatus.QUIT) is true 
-							|| joinedOne.Status.Equals(JoinedAuctionStatus.BANNED) is true)
+						if (joinedOne.Status.Equals(JoinedAuctionStatus.QUIT) is true ||
+							joinedOne.Status.Equals(JoinedAuctionStatus.BANNED) is true)
 						{
 							continue;
 						}

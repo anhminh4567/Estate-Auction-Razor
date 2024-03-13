@@ -228,7 +228,13 @@ namespace Service.Services.AppAccount
                         {
 							getUser.Balance += getAuction.EntranceFee;
 							await _unitOfWork.Repositories.accountRepository.UpdateAsync(getUser);// _accountServices.Update(getUser);
-						}
+                        }
+                        else // Neeu AUCTION dang dien ra ( ONGOING ) ==> Ko hoan tien, tien vo tai khoan company
+                        {
+                            var getEstate = await _unitOfWork.Repositories.estateRepository.GetAsync(getAuction.EstateId);
+                            var getCompany = await _unitOfWork.Repositories.accountRepository.GetAsync(getEstate.CompanyId);
+                            getCompany.Balance += getAuction.EntranceFee;
+                        }
                         
                         // REMOVE ALL BID OF THE USER IF EXIST
                         if (getBids is not null && getBids.Count > 0)
