@@ -70,7 +70,7 @@ namespace RazorAucionWebapp.Pages.CustomerPages
                         CreatedDate = DateTime.Now.Date
                     };
                     await _notificationServices.CreateNotification(notification);
-                    await SendMessage(company.Email, notification);
+                    await _notificationHubService.SendNewNotification(company.Email);
                     return RedirectToPage("../Index");
                 }
                 else
@@ -195,10 +195,6 @@ namespace RazorAucionWebapp.Pages.CustomerPages
                 throw new Exception("cannot find auction with this id");
             Auction = tryGetJoinedAuction;
             JoinedAuction = await _joinedAuctionServices.GetByAccountId_AuctionId(_userId, auctionId);
-        }
-        public async Task SendMessage(string email,Notification notification)
-        {
-            await _notificationHubService.SendNewNotification(email, notification);
         }
     }
 }

@@ -94,7 +94,7 @@
                                         });
                                     </script>
                                     <a asp-page="/MailBox" class="user_mail">
-                                        <div class="notified_trigger" style="display: none;">
+                                        <div class="notified_trigger @(TempData["NewMail"] == null ? "d-none" : "")">
                                             <div class="notified justify-content-center align-content-center"></div>
                                         </div>
                                         <img src=@Url.Content("~/PublicImages/general/mailbox.svg") width="40" height="40" />

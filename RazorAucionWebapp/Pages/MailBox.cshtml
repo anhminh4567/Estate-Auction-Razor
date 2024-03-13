@@ -14,14 +14,14 @@
                     <tr noti-id="@notification.NotificationId" class="@(notification.IsChecked ? "" : "unchecked")">
                         <td>
                             <span class="mb-0 text-muted">
-                                @if (HttpContext.User.FindFirst(ClaimTypes.Role)?.Value == "COMPANY")
+                                @*@if (HttpContext.User.FindFirst("Id")?.Value == notification.CompanyId.ToString())
                                 {
                                     @notification.Account.Email
                                 }
                                 else
                                 {
                                     @notification.Company.Email
-                                }
+                                }*@
                             </span>
                         </td>
                         <td>

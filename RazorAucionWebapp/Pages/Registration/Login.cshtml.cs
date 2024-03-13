@@ -5,6 +5,8 @@ using RazorAucionWebapp.Configure;
 using Repository.Database.Model.AppAccount;
 using Repository.Database.Model.Enum;
 using Repository.Interfaces.AppAccount;
+using Service.MyHub.HubServices;
+using Service.Services;
 using Service.Services.AppAccount;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
@@ -18,12 +20,21 @@ namespace RazorAucionWebapp.Pages.Registration
     {
         private readonly AccountServices _accountServices;
         private readonly AccountImagesServices _accountImagesServices;
+        private readonly NotificationServices _notificationServices;
+        private readonly NotificationHubService _notificationHubService;
         private readonly BindAppsettings _bindAppsettings;
 
-		public LoginModel(AccountServices accountServices, AccountImagesServices accountImagesServices, BindAppsettings bindAppsettings)
+		public LoginModel(
+            AccountServices accountServices, 
+            AccountImagesServices accountImagesServices, 
+            NotificationServices notificationServices, 
+            NotificationHubService notificationHubService,
+            BindAppsettings bindAppsettings)
 		{
 			_accountServices = accountServices;
 			_accountImagesServices = accountImagesServices;
+            _notificationServices = notificationServices;
+            _notificationHubService = notificationHubService;
 			_bindAppsettings = bindAppsettings;
 		}
 
@@ -67,6 +78,7 @@ namespace RazorAucionWebapp.Pages.Registration
                     return Page();
                 }
                 await SetUserIdentity(getAccount);
+                await CheckMail(getAccount.AccountId, getAccount.Email);
                 TempData["SuccessLogin"] = "Login Success for user " + getAccount.Email;
                 //if (getAccount.Role.Equals(Role.ADMIN))
                 //{
@@ -103,6 +115,13 @@ namespace RazorAucionWebapp.Pages.Registration
             var claimIdentity = new ClaimsIdentity(claims, "cookie", ClaimTypes.Email, ClaimTypes.Role);
             var claimPrinciple = new ClaimsPrincipal(claimIdentity);
             await HttpContext.SignInAsync("cookie", claimPrinciple);
+        }
+        private async Task CheckMail(int id, string email)
+        {
+            if (await _notificationServices.CheckUnreadMail(id))
+            {
+                TempData["NewMail"] = true;
+            }
         }
     }
 }
