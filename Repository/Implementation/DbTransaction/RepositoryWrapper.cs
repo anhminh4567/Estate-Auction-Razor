@@ -37,7 +37,9 @@ namespace Repository.Implementation.DbTransaction
 
         public IImagesRepository imagesRepository { get; private set; }
 
-        public RepositoryWrapper(IAccountRepository accountRepository, IAccountImageRepository accountImageRepository, ICompanyRepository companyRepository, IJoinedAuctionRepository joinedAuctionRepository, IAuctionRepository auctionRepository, IAuctionReceiptRepository auctionReceiptRepository, IAuctionReceiptPaymentRepository auctionReceiptPaymentRepository, IBidRepository bidRepository, IEstateRepository estateRepository, IEstateCategoryDetailRepository estateCategoryDetailRepository, IEstateCategoriesRepository estateCategoriesRepository, IEstateImagesRepository estateImagesRepository, ITransactionRepository transactionRepository, IImagesRepository imagesRepository)
+        public INotificationRepository notificationRepository { get; private set; }
+
+        public RepositoryWrapper(IAccountRepository accountRepository, IAccountImageRepository accountImageRepository, ICompanyRepository companyRepository, IJoinedAuctionRepository joinedAuctionRepository, IAuctionRepository auctionRepository, IAuctionReceiptRepository auctionReceiptRepository, IAuctionReceiptPaymentRepository auctionReceiptPaymentRepository, IBidRepository bidRepository, IEstateRepository estateRepository, IEstateCategoryDetailRepository estateCategoryDetailRepository, IEstateCategoriesRepository estateCategoriesRepository, IEstateImagesRepository estateImagesRepository, ITransactionRepository transactionRepository, IImagesRepository imagesRepository, INotificationRepository notificationRepository)
         {
             this.accountRepository = accountRepository;
             this.accountImageRepository = accountImageRepository;
@@ -53,6 +55,7 @@ namespace Repository.Implementation.DbTransaction
             this.estateImagesRepository = estateImagesRepository;
             this.transactionRepository = transactionRepository;
             this.imagesRepository = imagesRepository;
+            this.notificationRepository = notificationRepository;
         }
     }
 }

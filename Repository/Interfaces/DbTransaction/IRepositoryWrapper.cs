@@ -23,6 +23,7 @@ namespace Repository.Interfaces.DbTransaction
 
         ITransactionRepository transactionRepository { get; }
         IImagesRepository imagesRepository { get; }
+        INotificationRepository notificationRepository { get; }
 
     }
 }

@@ -51,6 +51,7 @@ builder.Services.AddMyServices();
 builder.Services.AddRazorPages();
 builder.Services.AddSingleton<ServerDefaultValue>();
 builder.Services.AddSingleton(appSettings);
+builder.Services.AddSingleton<ConnectionMapping>();
 
 builder.Services.AddHostedService<CheckAuctionTimeWorker>();
 builder.Services.AddHostedService<CheckPaymentReachDeadline>();
@@ -65,6 +66,8 @@ builder.Services.AddSignalR(config =>
 builder.Services.AddScoped<AuctionHubService>();
 builder.Services.AddScoped<AccountHubService>();
 builder.Services.AddScoped<BidHubServices>();
+builder.Services.AddScoped<NotificationHubService>();
+
 builder.Services.AddAuthentication("cookie")
     .AddCookie("cookie", options =>
     {
@@ -180,6 +183,7 @@ app.UseEndpoints(endpoint =>
     endpoint.MapHub<AuctionHub>("auctionrealtime");
     endpoint.MapHub<AccountHub>("accountrealtime");
     endpoint.MapHub<BidHub>("bidrealtime");
+    endpoint.MapHub<NotificationHub>("notificationrealtime");
 });
 
 app.Run();
