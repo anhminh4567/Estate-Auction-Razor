@@ -22,10 +22,10 @@ namespace Service.MyHub.HubServices
             _connectionMapping = connectionMapping;
         }
 
-        public async Task SendNewNotification(string userEmail, Notification notification)
+        public async Task SendNewNotification(string userEmail)
         {
             var connectionId = _connectionMapping.GetConnections(userEmail);
-            await _notificationHub.Clients.User(connectionId).SendAsync("OnNewNotification", notification);
+            await _notificationHub.Clients.User(connectionId).SendAsync("OnNewNotification");
         }
     }
 }

@@ -41,5 +41,6 @@ namespace Repository.Database.Model.AppAccount
         public DateTime EstablishDate { get; set; }
         public DateTime DateStartOnPlatform { get; set; } = DateTime.Now.Date;
 		public IList<Estate> OwnedEstate { get; set; }
+        public IList<Notification>? Notifications { get; set; }
     }
 }
