@@ -67,9 +67,6 @@
                                 <li class="nav-item">
                                     <a class="nav-link text-dark tab" asp-area="" asp-page="/AdminPages/Accounts/Index">Customer</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark tab" asp-area="" asp-page="/AdminPages/Revenue/Index">Revenue</a>
-                                </li>
                             }
                         }
                     </ul>
@@ -94,7 +91,7 @@
                                         });
                                     </script>
                                     <a asp-page="/MailBox" class="user_mail">
-                                        <div class="notified_trigger @(TempData["NewMail"] == null ? "d-none" : "")">
+                                        <div class="notified_trigger" style="display: none;">
                                             <div class="notified justify-content-center align-content-center"></div>
                                         </div>
                                         <img src=@Url.Content("~/PublicImages/general/mailbox.svg") width="40" height="40" />
@@ -111,10 +108,21 @@
                                     <div class="user_menu">
                                         <span class="fw-bold">@Context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Name))?.Value</span><br>
                                         <span style="font-size: .7rem;">@Context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Email))?.Value </span><hr />
-                                        <div class="user_choices">
-                                            <a class="container-fluid" asp-page="/CustomerPages/Profile/Detail"><span><i class="fa-solid fa-user"></i> Profile</span></a><br>
-                                            <a class="container-fluid" asp-page="/CustomerPages/Transactions/Index"><span><i class="fa-solid fa-wallet"></i> My wallet</span></a>
-                                        </div>
+                                        @{
+                                            if (Context.User.Identity.IsAuthenticated && (Context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Role)).Value == "ADMIN"))
+                                            {
+                                                <div class="user_choices">
+                                                    <a class="container-fluid" asp-page="/CustomerPages/Transactions/Index"><span><i class="fa-solid fa-wallet"></i> My wallet</span></a>
+                                                </div>
+
+                                            }
+                                            else {
+                                                <div class="user_choices">
+                                                    <a class="container-fluid" asp-page="/CustomerPages/Profile/Detail"><span><i class="fa-solid fa-user"></i> Profile</span></a><br>
+                                                    <a class="container-fluid" asp-page="/CustomerPages/Transactions/Index"><span><i class="fa-solid fa-wallet"></i> My wallet</span></a>
+                                                </div>
+                                            }
+                                        }
                                         <div class="logout_btn">
                                             <a asp-area="" asp-page="/Logout">Logout</a>
                                         </div>
