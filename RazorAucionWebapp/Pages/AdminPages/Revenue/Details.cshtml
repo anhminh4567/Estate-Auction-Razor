@@ -1,0 +1,49 @@
+﻿@page
+@model RazorAucionWebapp.Pages.AdminPages.Revenue.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>AuctionReceipt</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AuctionReceipt.Auction)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AuctionReceipt.Auction.AuctionId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AuctionReceipt.Buyer)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AuctionReceipt.Buyer.CMND)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AuctionReceipt.Amount)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AuctionReceipt.Amount)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AuctionReceipt.RemainAmount)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AuctionReceipt.RemainAmount)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AuctionReceipt.Commission)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AuctionReceipt.Commission)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.AuctionReceipt?.ReceiptId">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

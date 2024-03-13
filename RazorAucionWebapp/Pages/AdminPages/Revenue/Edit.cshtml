@@ -1,0 +1,55 @@
+﻿@page
+@model RazorAucionWebapp.Pages.AdminPages.Revenue.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>AuctionReceipt</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="AuctionReceipt.ReceiptId" />
+            <div class="form-group">
+                <label asp-for="AuctionReceipt.AuctionId" class="control-label"></label>
+                <select asp-for="AuctionReceipt.AuctionId" class="form-control" asp-items="ViewBag.AuctionId"></select>
+                <span asp-validation-for="AuctionReceipt.AuctionId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AuctionReceipt.BuyerId" class="control-label"></label>
+                <select asp-for="AuctionReceipt.BuyerId" class="form-control" asp-items="ViewBag.BuyerId"></select>
+                <span asp-validation-for="AuctionReceipt.BuyerId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AuctionReceipt.Amount" class="control-label"></label>
+                <input asp-for="AuctionReceipt.Amount" class="form-control" />
+                <span asp-validation-for="AuctionReceipt.Amount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AuctionReceipt.RemainAmount" class="control-label"></label>
+                <input asp-for="AuctionReceipt.RemainAmount" class="form-control" />
+                <span asp-validation-for="AuctionReceipt.RemainAmount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AuctionReceipt.Commission" class="control-label"></label>
+                <input asp-for="AuctionReceipt.Commission" class="form-control" />
+                <span asp-validation-for="AuctionReceipt.Commission" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
