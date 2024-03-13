@@ -45,8 +45,8 @@ namespace RazorAucionWebapp.Pages.CustomerPages
             if (id is null)
                 return BadRequest();
             await PopulateData(id.Value);
-            await _auctionHubService.CreateAuctionSuccess(auction: Auction);
-			await GetImages();
+            //await _auctionHubService.CreateAuctionSuccess(auction: Auction);
+            await GetImages();
             var tryGetId = int.TryParse(HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("Id"))?.Value, out var bidderId);
             var getJoinedAccount = JoinedAccounts?.FirstOrDefault(a => a.AccountId == bidderId);
             if (tryGetId == true && getJoinedAccount != null)
@@ -76,6 +76,7 @@ namespace RazorAucionWebapp.Pages.CustomerPages
                 if (result.IsSuccess)
                 {
                     TempData["SuccessMessage"] = $"your bid is registered at {result.returnBid.Time} with amount {result.returnBid.Amount}";
+                    await _auctionHubService.UpdateLatestBid();
                     return Page();
                 }
                 else
@@ -112,6 +113,19 @@ namespace RazorAucionWebapp.Pages.CustomerPages
 			}
 		}
 
+        public async Task<IActionResult> OnGetUpdateAuctionBid(int aucId)
+        {
+            decimal updatedBidAmount = 0;
+            var auction = await _auctionServices.GetInclude(aucId, "Bids.Bidder,JoinedAccounts.Account,Estate.Images.Image,Estate.EstateCategory.CategoryDetail");
+            if (auction == null)
+                throw new Exception("no auction found for this id");
+            else
+            {
+                updatedBidAmount = auction.Bids.Last().Amount;
+            }
+            return new JsonResult(updatedBidAmount);
+        }
 
-	}
+
+    }
 }

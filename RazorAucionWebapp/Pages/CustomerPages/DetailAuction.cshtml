@@ -77,32 +77,17 @@
                         @if (isAuctioning)
                         {
                             <div>
-                                <div class="remaining_time">
-                                    <div class="time_index">
-                                        <span id="remaining_date">
-                                            @Model.Auction.EndDate.Date
-                                        </span>
-                                        <span class="position-absolute time_txt">Days</span>
-                                    </div>
-                                    <div class="time_index">
-                                        <span id="remaining_hour">
-                                            @Model.Auction.EndDate.Hour
-                                        </span>
-                                        <span class="position-absolute time_txt">Hours</span>
-                                    </div>
-                                    <div class="time_index">
-                                        <span id="remaining_minute">
-                                            @Model.Auction.EndDate.Minute
-                                        </span>
-                                        <span class="position-absolute time_txt">Minutes</span>
-                                    </div>
-                                    <div class="time_index">
-                                        <span id="remaining_second">
-                                            @Model.Auction.EndDate.Second
-                                        </span>
-                                        <span class="position-absolute time_txt">Seconds</span>
-                                    </div>
-
+                                <p>Duration</p>
+                                <div class="auction_duration_wrapper d-flex justify-content-between">
+                                    <span>
+                                        @Model.Auction.StartDate.ToString("dd.MM.yyy")
+                                        @Model.Auction.StartDate.Hour:@Model.Auction.StartDate.Minute:@Model.Auction.StartDate.Second
+                                    </span>
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                    <span>
+                                        @Model.Auction.EndDate.ToString("dd.MM.yyy")
+                                        @Model.Auction.EndDate.Hour:@Model.Auction.EndDate.Minute:@Model.Auction.EndDate.Second
+                                    </span>
                                 </div>
                                 @if (Model.isJoinedAccount == true)
                                 {
@@ -121,7 +106,7 @@
                                         <form method="post">
                                             <div class="form-group">
                                                 <input type="hidden" asp-for="AuctionId" class="form-control" readonly value=@Model.Auction.AuctionId />
-                                                <input asp-for="Amount" class="form-control" readonly value=@bidAmount/>
+                                                <input id="bid_amount_input" asp-for="Amount" class="form-control" readonly value=@bidAmount />
                                                 <span asp-validation-for="Amount" class="text-danger"></span>
                                             </div>
                                             <div class="form-group">
@@ -135,7 +120,8 @@
                                         </span>
                                         <span>
                                             Jump price: <span class="fw-bold">
-                                                $@Model.Auction.IncrementPrice</span>
+                                                $@Model.Auction.IncrementPrice
+                                            </span>
                                         </span>
 
                                     </div>
@@ -364,31 +350,26 @@
     });
 </script>
 <script>
-    // Function to update remaining time
-    function updateRemainingTime() {
-        var now = new Date();
-        var endDateTime = new Date('@Model.Auction.EndDate');
-
-        var difference = endDateTime - now;
-        var remainingSeconds = Math.floor(difference / 1000);
-        var days = Math.floor(remainingSeconds / (24 * 3600));
-        remainingSeconds -= days * 24 * 3600;
-        var hours = Math.floor(remainingSeconds / 3600);
-        remainingSeconds -= hours * 3600;
-        var minutes = Math.floor(remainingSeconds / 60);
-        remainingSeconds -= minutes * 60;
-
-        $("#remaining_date").text(days);
-        $("#remaining_hour").text(hours < 10 ? '0' + hours : hours);
-        $("#remaining_minute").text(minutes < 10 ? '0' + minutes : minutes);
-        $("#remaining_second").text(remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds);
-    }
-
-    // Call the function initially
-    updateRemainingTime();
-
-    // Update the time every second
-    setInterval(updateRemainingTime, 1000);
+    const connection = new signalR.HubConnectionBuilder()
+            .withAutomaticReconnect()
+            .withUrl("/auctionrealtime")
+            .build();
+        connection.on("UpdateLatestBidAmount"){
+            var tr = '';
+            $.ajax({
+                url: '/CustomerPage/DetailAuction?handler=UpdateAuctionBid',
+                method: 'GET',
+                data: {
+                    aucId: @Model.Auction.AuctionId
+                }
+                success: (result) => {
+                $.each(result, (k, v) => {
+                    $("#bid_amount_input").value = v;
+                error: (error) => {
+                    console.log(error);
+                }
+            });
+        }
 </script>
 
 @* <div>

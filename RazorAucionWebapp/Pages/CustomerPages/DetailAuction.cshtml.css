@@ -29,6 +29,8 @@
     border-radius: 1rem;
 }
 
+
+
 .estate_img_wrapper{
     
 }
@@ -132,6 +134,15 @@
     color: #228B22;
 }
 
+.auction_duration_wrapper {
+    background: #0B60B0;
+    padding: .5rem 1rem;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.9);
+    align-items: center;
+    border-radius: .3rem;
+}
+
 .auction_duration{
     display: flex;
     justify-content: space-between;
@@ -196,7 +207,7 @@
         font-weight: bold;
         font-size: 1.5rem;
         border: .15rem solid rgba(0, 0, 0, 0.3);
-        text-align: right;
+        text-align: center;
         width: 15rem;
         margin-bottom: .8rem;
 

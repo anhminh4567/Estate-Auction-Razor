@@ -41,5 +41,9 @@ namespace Service.MyHub.HubServices
 			//var json = JsonConvert.SerializeObject(auction,new JsonSerializerSettings() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore});
 			await _auctionHub.Clients.Group("all").SendAsync("UpdatedObject", auction);
 		}
-	}
+        public async Task UpdateLatestBid()
+        {
+            await _auctionHub.Clients.All.SendAsync("UpdateLatestBidAmount");
+        }
+    }
 }
