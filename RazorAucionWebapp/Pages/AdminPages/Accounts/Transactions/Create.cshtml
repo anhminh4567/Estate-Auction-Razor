@@ -5,12 +5,58 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<style>
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-<h4>Transaction</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+    .form-container {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 80%;
+        max-width: 800px;
+    }
+
+        .form-container h1 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    input[type="date"] {
+        width: 100%;
+    }
+
+    input[type="submit"] {
+        width: 100%;
+    }
+
+    .btn-back {
+        margin-top: 20px;
+    }
+
+    .customer-select:hover {
+        color: black;
+        background-color: dimgrey;
+    }
+</style>
+
+<div class="container">
+    <div class="form-container">
+        <div style="text-align: center">
+            <h1>Transaction Create</h1>
+        </div>
+
+        <h4>Transaction</h4>
+        <hr />
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -20,52 +66,54 @@
             </div>
             <div class="form-group">
                 <label asp-for="DetailDescription" class="control-label"></label>
-                <input asp-for="DetailDescription" class="form-control" />
+                <textarea asp-for="DetailDescription" class="form-control"></textarea>
                 <span asp-validation-for="DetailDescription" class="text-danger"></span>
             </div>
             @*<div class="form-group">
-                <label asp-for="Transaction.AccountId" class="control-label"></label>
-                <select asp-for="Transaction.AccountId" class ="form-control" asp-items="ViewBag.AccountId"></select>
+            <label asp-for="Transaction.AccountId" class="control-label"></label>
+            <select asp-for="Transaction.AccountId" class ="form-control" asp-items="ViewBag.AccountId"></select>
             </div>
             <div class="form-group">
-                <label asp-for="Transaction.Status" class="control-label"></label>
-                <select asp-for="Transaction.Status" class="form-control"></select>
-                <span asp-validation-for="Transaction.Status" class="text-danger"></span>
+            <label asp-for="Transaction.Status" class="control-label"></label>
+            <select asp-for="Transaction.Status" class="form-control"></select>
+            <span asp-validation-for="Transaction.Status" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Transaction.vnp_TxnRef" class="control-label"></label>
-                <input asp-for="Transaction.vnp_TxnRef" class="form-control" />
-                <span asp-validation-for="Transaction.vnp_TxnRef" class="text-danger"></span>
+            <label asp-for="Transaction.vnp_TxnRef" class="control-label"></label>
+            <input asp-for="Transaction.vnp_TxnRef" class="form-control" />
+            <span asp-validation-for="Transaction.vnp_TxnRef" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Transaction.vnp_Amount" class="control-label"></label>
-                <input asp-for="Transaction.vnp_Amount" class="form-control" />
-                <span asp-validation-for="Transaction.vnp_Amount" class="text-danger"></span>
+            <label asp-for="Transaction.vnp_Amount" class="control-label"></label>
+            <input asp-for="Transaction.vnp_Amount" class="form-control" />
+            <span asp-validation-for="Transaction.vnp_Amount" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Transaction.vnp_TransactionDate" class="control-label"></label>
-                <input asp-for="Transaction.vnp_TransactionDate" class="form-control" />
-                <span asp-validation-for="Transaction.vnp_TransactionDate" class="text-danger"></span>
+            <label asp-for="Transaction.vnp_TransactionDate" class="control-label"></label>
+            <input asp-for="Transaction.vnp_TransactionDate" class="form-control" />
+            <span asp-validation-for="Transaction.vnp_TransactionDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Transaction.vnp_OrderInfo" class="control-label"></label>
-                <input asp-for="Transaction.vnp_OrderInfo" class="form-control" />
-                <span asp-validation-for="Transaction.vnp_OrderInfo" class="text-danger"></span>
+            <label asp-for="Transaction.vnp_OrderInfo" class="control-label"></label>
+            <input asp-for="Transaction.vnp_OrderInfo" class="form-control" />
+            <span asp-validation-for="Transaction.vnp_OrderInfo" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Transaction.vnp_PayDate" class="control-label"></label>
-                <input asp-for="Transaction.vnp_PayDate" class="form-control" />
-                <span asp-validation-for="Transaction.vnp_PayDate" class="text-danger"></span>
+            <label asp-for="Transaction.vnp_PayDate" class="control-label"></label>
+            <input asp-for="Transaction.vnp_PayDate" class="form-control" />
+            <span asp-validation-for="Transaction.vnp_PayDate" class="text-danger"></span>
             </div>*@
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="form-group" style="text-align: center">
+                <input type="submit" style="width: 50%" value="Create" class="btn btn-primary" />
             </div>
         </form>
-    </div>
-</div>
 
-<div>
-    <a asp-page="Index">Back to List</a>
+
+        <div>
+            <a class="btn btn-secondary" asp-page="./Index" asp-route-accountId="@Model.AccId">Back to List</a>
+        </div>
+
+    </div>
 </div>
 
 @section Scripts {

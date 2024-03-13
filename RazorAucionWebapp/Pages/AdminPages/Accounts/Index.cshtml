@@ -49,8 +49,9 @@
 </style>
 
 <div class="accounts-table-container">
-    <h1>List</h1>
-    <table class="table">
+    <div style="text-align: center">
+        <h1>Customer Management</h1>
+    </div>    <table class="table">
         <thead>
             <tr>
                 <th>@Html.DisplayNameFor(model => model.Accounts[0].Email)</th>
@@ -79,9 +80,9 @@
                     <td>@Html.DisplayFor(modelItem => item.CMND)</td>
                     <td>@Html.DisplayFor(modelItem => item.Balance)</td>
                     <td>
-@*                         <a class="btn btn-sm btn-primary" asp-page="./Edit" asp-route-id="@item.AccountId">Edit</a>*@      
-                        <a class="btn btn-sm btn-info" asp-page="/AdminPages/Accounts/Detail" asp-route-id="@item.AccountId">Details</a>
-                        <a class="btn btn-sm btn-info" asp-page="/AdminPages/Accounts/Transactions/Index" asp-route-AccountId="@item.AccountId">Transactions</a>
+@*                         <a class="btn btn-sm btn-primary" asp-page="./Edit" asp-route-id="@item.AccountId">Edit</a>*@
+                        <a class="btn btn-sm btn-info" style="color: white" asp-page="/AdminPages/Accounts/Detail" asp-route-id="@item.AccountId">Details</a>
+                        <a class="btn btn-sm btn-info" style="color: white" asp-page="/AdminPages/Accounts/Transactions/Index" asp-route-AccountId="@item.AccountId">Transactions</a>
                       @*<a class="btn btn-sm btn-danger" asp-page="./Delete" asp-route-id="@item.AccountId">Delete</a>
  *@                    </td>
                 </tr>

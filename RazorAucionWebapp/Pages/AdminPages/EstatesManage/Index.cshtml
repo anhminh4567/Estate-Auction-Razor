@@ -53,7 +53,9 @@
 </style>
 
 <div class="estate-table-container">
-    <h1>Estate Management</h1>
+    <div style="text-align: center">
+        <h1>Estate Management</h1>
+    </div>
     <p>
         <a class="btn btn-primary" style="color:white" asp-page="/AdminPages/EstateCategories/Index">Estate Categories</a>
     </p>
@@ -88,8 +90,8 @@
                 <td>@Html.DisplayFor(modelItem => item.Coordinate)</td>
                 <td>
     @*                <a asp-page="./Update" asp-route-id="@item.EstateId">Edit</a> |
-    *@                <a asp-page="./AuctionsManage/Index" asp-route-estateId="@item.EstateId">View Auctions</a> |
-                    <a asp-page="./Delete" asp-route-id="@item.EstateId">Delete</a>
+    *@                <a class="btn btn-info" style="color: white" asp-page="./AuctionsManage/Index" asp-route-estateId="@item.EstateId">View Auctions</a> |
+                        <a class="btn btn-info" style="color: white" asp-page="./Delete" asp-route-id="@item.EstateId">Delete</a>
                 </td>
             </tr>
     }

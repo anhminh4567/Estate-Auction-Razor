@@ -7,63 +7,57 @@
 
 <style>
     .container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .table-container {
         background-color: #f8f9fa;
         border: 1px solid #dee2e6;
         border-radius: 8px;
         padding: 20px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        width: 95%;
-        max-width: 1200px;
     }
 
-    .table-container h1 {
+        .container h1 {
             margin-bottom: 20px;
-            text-align: center;
-    }
+        }
 
-    .table {
-        width: 100%;
-        border-collapse: collapse;
-    }
+        .container a {
+            color: #007bff;
+            text-decoration: none;
+            margin-right: 10px;
+        }
 
-        .table th,
-        .table td {
-            padding: 8px;
+            .container a:hover {
+                text-decoration: underline;
+            }
+
+        .container table {
+            width: 100%;
+        }
+
+        .container th {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+
+        .container td, .container th {
+            padding: 12px;
             text-align: left;
-            border-bottom: 1px solid #dee2e6;
+            border: 1px solid #dee2e6;
         }
 
-        .table th {
+        .container tbody tr:nth-child(even) {
             background-color: #f2f2f2;
-            font-weight: bold;
         }
 
-        .table td {
-            vertical-align: middle;
-        }
-
-    .action-links a {
-        color: #007bff;
-        text-decoration: none;
-        margin-right: 10px;
+    .btn-primary {
+        color: white;
     }
-
-        .action-links a:hover {
-            text-decoration: underline;
-        }
-</style>
+ </style>
 
 <div class="container">
-    <div class="table-container">
-        <h1>Index</h1>
+        <div style="text-align: center">
+            <h1>View Estate Auction</h1>
+        </div>
         <p>
-            <a asp-page="Create" class="btn btn-primary">Create New</a>
+            <a style="color: white" asp-page="Create" class="btn btn-primary">Create New</a>
         </p>
         <table class="table">
             <thead>
@@ -98,12 +92,10 @@
                         <td>@Html.DisplayFor(modelItem => item.Status)</td>
                         <td>@Html.DisplayFor(modelItem => item.ReceiptId)</td>
                         <td class="action-links">
-                            <a asp-page="./Details" asp-route-id="@item.AuctionId">Details</a> |
-                            <a asp-page="./Delete" asp-route-id="@item.AuctionId">Delete</a>
+                        <a class="btn btn-info" style="color: white" asp-page="./Delete" asp-route-id="@item.AuctionId">Delete</a>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
-    </div>
 </div>

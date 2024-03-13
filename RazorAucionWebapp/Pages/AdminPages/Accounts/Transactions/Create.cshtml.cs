@@ -32,8 +32,11 @@ namespace RazorAucionWebapp.Pages.AdminPages.Accounts.Transactions
         public decimal Amount { get; set; }
 		[BindProperty]
 		public string DetailDescription { get; set; } = "Transaction By Admin, admin create this to manually update balance, might be due to some transaction error before";
+		[BindProperty]
+		public int? AccId { get; set; }
 		public IActionResult OnGet(int? accountId)
         {
+			AccId = accountId;
 			if (accountId == null)
 			{
 				return BadRequest();
@@ -91,5 +94,7 @@ namespace RazorAucionWebapp.Pages.AdminPages.Accounts.Transactions
 		{
 			return Task.CompletedTask;
 		}
+
+
 	}
 }
