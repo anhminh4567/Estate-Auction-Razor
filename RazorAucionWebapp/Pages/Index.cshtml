@@ -126,7 +126,14 @@
                                     </div>
                                 </div>
                                 <div class="currentBid mt-2">
-                                    <span>Current Bid:  </span><span style="font-weight: bold;">$9000</span>
+                                    @{
+                                        decimal currentBid = 0;
+                                        if (auc.Bids is not null && auc.Bids.Count > 0)
+                                        {
+                                            currentBid = auc.Bids.Last().Amount;
+                                        }
+                                    }
+                                    <span>Current Bid:  </span><span style="font-weight: bold;">$@currentBid</span>
                                 </div>
                                 <div class="detailBtn">
                                     <a asp-page="./CustomerPages/DetailAuction" asp-route-id="@auc.AuctionId">See detail</a>
@@ -211,13 +218,6 @@
             console.log(newDiv);
             $("#auctions-container").append(newDiv);
         });
-
-
-
-
-
-
-
         connection.on("UpdatedObject", function (auction, estate) {
             console.log(auction);
             console.log(estate);

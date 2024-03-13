@@ -38,7 +38,7 @@ namespace Repository.Implementation.Auction
         {
             return await _set.Include(a => a.Estate).ThenInclude(e => e.Company).Include(a => a.Estate)
 					.ThenInclude(e => e.Images)
-					.ThenInclude(img => img.Image).
+					.ThenInclude(img => img.Image).Include(a => a.Bids).
 					Include(a => a.JoinedAccounts).Skip(start).Take(amount).ToListAsync();
         }
     }

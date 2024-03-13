@@ -22,7 +22,20 @@
     font-size: .9rem;
 }
 
-.auction_detail_wrapper{
+.deleteBtn {
+    a{
+         text-decoration: none;
+         color: white;
+         display: inline-block;
+         background: rgba(165, 42, 42, 1);
+         padding: .1rem .5rem;
+         border-radius: .2rem;
+         font-weight: bold;
+         margin: 3.5rem 1rem 0 0;
+     }
+}
+
+.auction_detail_wrapper {
     height: 33rem;
     padding: 2rem 3rem 1.5rem 1.5rem;
     box-shadow: 0 0 3rem -1rem rgba(0, 0, 0, 0.35);
