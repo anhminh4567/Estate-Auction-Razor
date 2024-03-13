@@ -1,69 +1,70 @@
 ﻿@page
 @using Repository.Database.Model.Enum;
 @model RazorAucionWebapp.Pages.CustomerPages.JoinAuctionModel
-@{
-}
-<div>
-	<div>
-		<a asp-page="../Index" class="btn btn-outline-primary">Go back to Home</a>
-	</div>
-	<div class="text-danger" asp-validation-summary="ModelOnly">
-	</div>
-	<div>Entrance fee is @Model.Auction.EntranceFee</div>
-	<hr />
-	@{
-		if (Model.Auction.JoinedAccounts?.Count > 0)
-		{
-			<h4>Total Joined People: @Model.Auction.JoinedAccounts?.Count  </h4>
-			<div class="JoinedAccount">
-				@foreach (var acc in Model.Auction.JoinedAccounts)
-				{
-					<div class="border border-2 p-3 m-3">
-						<p>@acc.Account.FullName</p>
-						<p>@acc.Account.Email</p>
-						<p>@acc.RegisterDate</p>
-						<p>@acc.Status.ToString()</p>
-					</div>
-				}
-			</div>
-		}
-		else
-		{
-			<p class="text-danger">No one joined yet</p>
-		}
-	}
 
-	@{
-		if (Model.JoinedAuction is null)
-		{
-			<form method="post">
-				<input type="hidden" asp-for="AuctionId" value="@Model.Auction.AuctionId" />
-				<button type="submit" class="btn btn-primary">Join !</button>
-			</form>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="border p-4 rounded shadow-sm">
+                <div class="text-center bg-dark text-white p-3 mb-4 rounded-top">
+                    <h2>Join Auction</h2>
+                </div>
 
-		}
-		else
-		{
-			if (Model.JoinedAuction.Status.Equals(JoinedAuctionStatus.REGISTERED))
-			{
-				<form method="post" asp-page-handler="Quit">
-					<input type="hidden" asp-for="AuctionId" value="@Model.Auction.AuctionId" />
-					<button type="submit" class="btn btn-primary">QUIT !</button>
-				</form>
-			}
-			else if (Model.JoinedAuction.Status.Equals(JoinedAuctionStatus.BANNED))
-			{
-				<div ><p class="text-danger">CANNOT JOIN OR QUIT, YOU ARE BANNED</p></div>
-			}
-			else
-			{
-				<form method="post">
-					<input type="hidden" asp-for="AuctionId" value="@Model.Auction.AuctionId" />
-					<button type="submit" class="btn btn-primary">JOIN !</button>
-				</form>
-			}
-		}
-	}
+                <div class="text-center mb-4">
+                    <strong>Entrance fee:</strong> @Model.Auction.EntranceFee
+                </div>
 
+                @if (Model.Auction.JoinedAccounts?.Count > 0)
+                {
+                        <h4 class="text-center mb-3">Total Joined People: @Model.Auction.JoinedAccounts?.Count</h4>
+                        <div class="list-group mb-4">
+                        @foreach (var acc in Model.Auction.JoinedAccounts)
+                        {
+                                    <div class="list-group-item">
+                                        <h5 class="mb-1">@acc.Account.FullName</h5>
+                                        <p class="mb-1">@acc.Account.Email</p>
+                                        <p class="mb-1">Joined on: @acc.RegisterDate</p>
+                                        <p class="mb-0">Status: @acc.Status.ToString()</p>
+                                    </div>
+                        }
+                        </div>
+                }
+                else
+                {
+                        <p class="text-center text-danger">No one joined yet</p>
+                }
 
+                <div class="text-center">
+                    @if (Model.JoinedAuction is null)
+                    {
+                            <form method="post">
+                                <input type="hidden" asp-for="AuctionId" value="@Model.Auction.AuctionId" />
+                                <button type="submit" class="btn btn-primary float-right">Join!</button>
+                            </form>
+                    }
+                    else
+                    {
+                        if (Model.JoinedAuction.Status.Equals(JoinedAuctionStatus.REGISTERED))
+                        {
+                                    <form method="post" asp-page-handler="Quit">
+                                        <input type="hidden" asp-for="AuctionId" value="@Model.Auction.AuctionId" />
+                                        <button type="submit" class="btn btn-danger float-right">Quit!</button>
+                                    </form>
+                        }
+                        else if (Model.JoinedAuction.Status.Equals(JoinedAuctionStatus.BANNED))
+                        {
+                                    <p class="text-center text-danger">YOU ARE BANNED! Cannot join or quit.</p>
+                        }
+                        else
+                        {
+                                    <form method="post">
+                                        <input type="hidden" asp-for="AuctionId" value="@Model.Auction.AuctionId" />
+                                        <button type="submit" class="btn btn-primary float-right">Join!</button>
+                                    </form>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
