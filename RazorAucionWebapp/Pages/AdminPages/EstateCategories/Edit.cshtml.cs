@@ -33,7 +33,9 @@ namespace RazorAucionWebapp.Pages.AdminPages.EstateCategories
             else
             {
                 //error at this line
-                var flag = await _estateCategoryDetailRepository.CheckForDuplicateName(EstateCategoryDetail);
+                //var flag = await _estateCategoryDetailRepository.CheckForDuplicateName(EstateCategoryDetail);
+
+                var flag = true;
                 if (flag)
                 {
                     try

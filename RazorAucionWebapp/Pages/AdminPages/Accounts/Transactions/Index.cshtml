@@ -63,9 +63,9 @@
 					@Html.DisplayFor(modelItem => item.vnp_PayDate)
 				</td>
 				<td>
-					<a class="btn btn-primary disabled" asp-page="./Edit" asp-route-id="@item.TransactionId">Edit</a> |
-					<a class="btn btn-primary disabled" asp-page="./Details" asp-route-id="@item.TransactionId">Details</a> |
-					<a class="btn btn-primary disabled" asp-page="./Delete" asp-route-id="@item.TransactionId">Delete</a>
+					<a class="btn btn-primary disabled" asp-page="./Edit" asp-route-id="@item.TransactionId">Edit</a>
+@* 					<a class="btn btn-primary disabled" asp-page="./Details" asp-route-id="@item.TransactionId">Details</a> |
+					<a class="btn btn-primary disabled" asp-page="./Delete" asp-route-id="@item.TransactionId">Delete</a> *@
 				</td>
 			</tr>
 		}

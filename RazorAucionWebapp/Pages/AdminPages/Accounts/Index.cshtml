@@ -79,9 +79,10 @@
                     <td>@Html.DisplayFor(modelItem => item.CMND)</td>
                     <td>@Html.DisplayFor(modelItem => item.Balance)</td>
                     <td>
-@*                         <a class="btn btn-sm btn-primary" asp-page="./Edit" asp-route-id="@item.AccountId">Edit</a>
- *@                        <a class="btn btn-sm btn-info" asp-page="/AdminPages/Accounts/Detail" asp-route-id="@item.AccountId">Details</a>
-@*                         <a class="btn btn-sm btn-danger" asp-page="./Delete" asp-route-id="@item.AccountId">Delete</a>
+@*                         <a class="btn btn-sm btn-primary" asp-page="./Edit" asp-route-id="@item.AccountId">Edit</a>*@      
+                        <a class="btn btn-sm btn-info" asp-page="/AdminPages/Accounts/Detail" asp-route-id="@item.AccountId">Details</a>
+                        <a class="btn btn-sm btn-info" asp-page="/AdminPages/Accounts/Transactions/Index" asp-route-AccountId="@item.AccountId">Transactions</a>
+                      @*<a class="btn btn-sm btn-danger" asp-page="./Delete" asp-route-id="@item.AccountId">Delete</a>
  *@                    </td>
                 </tr>
             }
