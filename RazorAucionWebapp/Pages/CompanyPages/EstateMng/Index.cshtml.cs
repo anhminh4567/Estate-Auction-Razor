@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using MimeKit.Cryptography;
 using Repository.Database;
 using Repository.Database.Model;
 using Repository.Database.Model.RealEstate;
@@ -26,12 +27,13 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
 
         public IList<Estate> Estates { get;set; } = default!;
 
-
+        private int _companyId { get; set; }
         public async Task<IActionResult> OnGetAsync()
         {
             try
             {
-                Estates = await _estateServices.GetAllDetails();
+                await PopulateData();
+                Estates = (await _estateServices.GetAllDetails()).Where(e => e.CompanyId.Equals(_companyId)).ToList();
                 foreach(var estate in Estates)
                 {
                     var appImages = await _estateImagesServices.GetByEstateId(estate.EstateId); // this will return list of image
@@ -54,6 +56,12 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
                 return Page();
             }
         }
-
+        private async Task PopulateData()
+        {
+            var tryGetCompanyId = int.TryParse(HttpContext.User.Claims?.FirstOrDefault(c => c.Type.Equals("Id"))?.Value, out var companyId);
+            if (tryGetCompanyId is false)
+                throw new Exception("cannot find id of company");
+            _companyId = companyId;
+        }
     }
 }

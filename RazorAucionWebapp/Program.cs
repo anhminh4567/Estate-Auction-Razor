@@ -19,30 +19,26 @@ var appSettings = JsonSerializer.Deserialize<BindAppsettings>(json, new JsonSeri
 });
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-//builder.Services.AddRazorPages(opt => 
-//{
-//    opt.Conventions.AuthorizeFolder("/AdminPages", "Admin");
-//	opt.Conventions.AuthorizeFolder("/AdminPages", "VerifiedUser");
+//Add services to the container.
+builder.Services.AddRazorPages(opt =>
+{
+    opt.Conventions.AuthorizeFolder("/AdminPages", "Admin");
 
-//	opt.Conventions.AuthorizeFolder("/CompanyPages", "Company");
-//	opt.Conventions.AuthorizeFolder("/CompanyPages", "Admin");
-//	opt.Conventions.AuthorizeFolder("/CompanyPages", "VerifiedUser");
+    opt.Conventions.AuthorizeFolder("/CompanyPages", "ADMIN_COMPANY");
 
-//	opt.Conventions.AuthorizeFolder("/Vnpay", "VerifiedUser");
+    opt.Conventions.AuthorizeFolder("/Vnpay", "ADMIN_CUSTOMER_COMPANY");
 
-//	opt.Conventions.AuthorizeFolder("/CustomerPages", "Customer");
-//	opt.Conventions.AuthorizeFolder("/CustomerPages", "Company");
-//	opt.Conventions.AuthorizeFolder("/CustomerPages", "Admin");
-//	opt.Conventions.AllowAnonymousToPage("/CustomerPages/DetailAuction");
+    opt.Conventions.AuthorizeFolder("/CustomerPages", "ADMIN_CUSTOMER_COMPANY");
+    
+    opt.Conventions.AllowAnonymousToPage("/CustomerPages/DetailAuction");
 
-//	opt.Conventions.AuthorizePage("/CustomerPages/Transactions/Create", "VerifiedUser");
-//	opt.Conventions.AuthorizePage("/CustomerPages/ReceiptPayment/Create", "VerifiedUser");
-//	opt.Conventions.AuthorizePage("/CustomerPages/BidAuction", "VerifiedUser");
-//	opt.Conventions.AuthorizePage("/CustomerPages/JoinAuction", "VerifiedUser");
+    opt.Conventions.AuthorizePage("/CustomerPages/Transactions/Create", "ADMIN_CUSTOMER");
+    opt.Conventions.AuthorizePage("/CustomerPages/ReceiptPayment/Create", "ADMIN_CUSTOMER");
+    opt.Conventions.AuthorizePage("/CustomerPages/BidAuction", "ADMIN_CUSTOMER");
+    opt.Conventions.AuthorizePage("/CustomerPages/JoinAuction", "ADMIN_CUSTOMER");
 
 
-//});
+});
 
 builder.Services.AddDbContext<AuctionRealEstateDbContext>();
 
@@ -84,22 +80,71 @@ builder.Services.AddAuthorization(config =>
         c.RequireRole("ADMIN");
         c.RequireClaim("Status", "ACTIVED");
         c.RequireAuthenticatedUser();
+
     });
-    config.AddPolicy("Customer", c =>
-    {
-        c.RequireRole("CUSTOMER");
-        c.RequireAuthenticatedUser();
-    });
-    config.AddPolicy("Company", c =>
-    {
-        c.RequireRole("COMPANY");
-        c.RequireClaim("Status", "ACTIVED");
-        c.RequireAuthenticatedUser();
-    });
-    config.AddPolicy("VerifiedUser", c =>
+    config.AddPolicy("ADMIN_COMPANY", c =>
     {
         c.RequireClaim("Status", "ACTIVED");
         c.RequireAuthenticatedUser();
+        c.RequireAssertion(context =>
+        {
+            if (context.User.HasClaim(ClaimTypes.Role, "ADMIN"))
+            {
+                return true;
+            }
+            else if (context.User.HasClaim(ClaimTypes.Role, "COMPANY"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        });
+    });
+    config.AddPolicy("ADMIN_CUSTOMER_COMPANY", c =>
+    {
+        c.RequireClaim("Status", "ACTIVED");
+        c.RequireAuthenticatedUser();
+        c.RequireAssertion(context =>
+        {
+            if (context.User.HasClaim(ClaimTypes.Role, "ADMIN"))
+            {
+                return true;
+            }
+            else if (context.User.HasClaim(ClaimTypes.Role, "CUSTOMER"))
+            {
+                return true;
+            }
+            else if(context.User.HasClaim(ClaimTypes.Role, "COMPANY"))
+            {
+                return true ;
+            }
+            else
+            {
+                return false;
+            }
+        });
+    });
+    config.AddPolicy("ADMIN_CUSTOMER", c =>
+    {
+        c.RequireClaim("Status", "ACTIVED");
+        c.RequireAuthenticatedUser();
+        c.RequireAssertion(context =>
+        {
+            if (context.User.HasClaim(ClaimTypes.Role, "ADMIN"))
+            {
+                return true;
+            }
+            else if (context.User.HasClaim(ClaimTypes.Role, "CUSTOMER"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        });
     });
 });
 var app = builder.Build();
@@ -120,8 +165,8 @@ app.Use(async (context, next) =>
     await next(context);
     if (context.Response.StatusCode == StatusCodes.Status401Unauthorized)
     {
-        var getMessageIfPossible = context.Items.TryGetValue( "UnauthorizedMessage", out var message);
-        if(getMessageIfPossible is true)
+        var getMessageIfPossible = context.Items.TryGetValue("UnauthorizedMessage", out var message);
+        if (getMessageIfPossible is true)
         {
             context.Response.Redirect("/Unauthorized?message=" + message);
         }
@@ -138,42 +183,42 @@ app.Use(async (context, next) =>
     if (context.Request.Path.StartsWithSegments("/auctionrealtime") ||
         context.Request.Path.StartsWithSegments("/accountrealtime") ||
         context.Request.Path.StartsWithSegments("/bidrealtime") ||
-	    context.Request.Path.StartsWithSegments("/PublicImages")
-	)
+        context.Request.Path.StartsWithSegments("/PublicImages")
+    )
     {
 
     }
     else
     {
-		var getIdentity = context.User.Identity;
-		if (getIdentity is not null)
-		{
-			if (getIdentity.IsAuthenticated)
-			{
-				var getRole = context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Role)).Value;
-				// admin pass this
-				if (getRole != Role.ADMIN.ToString())
-				{
-					var getActiveClaim = context.User.Claims.FirstOrDefault(c => c.Type.Equals("Status")).Value;
-					var getUserId = context.User.Claims.FirstOrDefault(c => c.Type.Equals("Id")).Value;
-					var scope = context.RequestServices.GetRequiredService<IUnitOfWork>();
+        var getIdentity = context.User.Identity;
+        if (getIdentity is not null)
+        {
+            if (getIdentity.IsAuthenticated)
+            {
+                var getRole = context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Role)).Value;
+                // admin pass this
+                if (getRole != Role.ADMIN.ToString())
+                {
+                    var getActiveClaim = context.User.Claims.FirstOrDefault(c => c.Type.Equals("Status")).Value;
+                    var getUserId = context.User.Claims.FirstOrDefault(c => c.Type.Equals("Id")).Value;
+                    var scope = context.RequestServices.GetRequiredService<IUnitOfWork>();
 
-					var getUser = await scope.Repositories.accountRepository.GetAsync(int.Parse(getUserId));
-					if (getUser.Status.Equals(AccountStatus.DEACTIVED) && getUser.Status.ToString() != getActiveClaim)
-					{
-						await context.SignOutAsync("cookie");
-						context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-						context.Items.Add("UnauthorizedMessage", "user has been banned, please contact admin to active your account");
-						return;
-					}
-				}
-			}
-			else
-			{
-				// do nothing, continue run next middleware
-			}
-		}
-	}
+                    var getUser = await scope.Repositories.accountRepository.GetAsync(int.Parse(getUserId));
+                    if (getUser.Status.Equals(AccountStatus.DEACTIVED) && getUser.Status.ToString() != getActiveClaim)
+                    {
+                        await context.SignOutAsync("cookie");
+                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        context.Items.Add("UnauthorizedMessage", "user has been banned, please contact admin to active your account");
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                // do nothing, continue run next middleware
+            }
+        }
+    }
     await next(context);
 });
 app.UseAuthorization();
