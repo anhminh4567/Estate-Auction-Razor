@@ -2,82 +2,71 @@
 @model RazorAucionWebapp.Pages.CustomerPages.ViewAuctionListModel
 
 @{
-    ViewData["Title"] = "ViewAuctionList";
+	ViewData["Title"] = "ViewAuctionList";
 }
 
 <div class="container">
-    <h1>Auction List That Customer Has Joined, The Original Is In Index Page</h1>
-    <table class="table">
-        <thead>
-            <tr>
-@*                <th>
-                    @Html.DisplayNameFor(model => model.Auctions[0].Estate)
-                </th>*@
-                <th>
-                    @Html.DisplayNameFor(model => model.JoinedAuctions[0].RegistrationDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.JoinedAuctions[0].StartDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.JoinedAuctions[0].EndDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.JoinedAuctions[0].WantedPrice)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.JoinedAuctions[0].IncrementPrice)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.JoinedAuctions[0].MaxParticipant)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.JoinedAuctions[0].Status)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.JoinedAuctions)
-            {
-                <tr>
-                    @*<td>
-                        @Html.DisplayFor(modelItem => item.Estate.Description)
-                    </td>*@
-                    <td>
-                        @Html.DisplayFor(modelItem => item.RegistrationDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.StartDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EndDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.WantedPrice)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IncrementPrice)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.MaxParticipant)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Status)
-                    </td>
-                    <td>
-                        <a asp-page="./DetailAuction" asp-route-id="@item.AuctionId">Detail</a>
-                        @{
-                            if (item.AuctionReceipt is not null) // means this auction is won by this user
-                            {
-                                <a class="btn btn-success" asp-page="./ReceiptPayment/Index" asp-route-auctionId="@item.AuctionId">See your transaction</a>
-                            }
-                        }
-                    </td>
-                    
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+	<h1>Auction List That Customer Has Joined, The Original Is In Index Page</h1>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>
+					@Html.DisplayNameFor(model => model.JoinedAuctions[0].RegistrationDate)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.JoinedAuctions[0].StartDate)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.JoinedAuctions[0].EndDate)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.JoinedAuctions[0].WantedPrice)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.JoinedAuctions[0].IncrementPrice)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.JoinedAuctions[0].MaxParticipant)
+				</th>
+				<th>
+					@Html.DisplayNameFor(model => model.JoinedAuctions[0].Status)
+				</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model.JoinedAuctions)
+			{
+												<tr>
+													<th>Registration Date</th>
+													<th>Start Date</th>
+													<th>End Date</th>
+													<th>Wanted Price</th>
+													<th>Increment Price</th>
+													<th>Max Participants</th>
+													<th>Status</th>
+													<th>Action</th>
+												</tr>
+				@if (item.AuctionReceipt is not null)
+				{
 
+		<tr>
+		<td>@Html.DisplayFor(modelItem => item.RegistrationDate)</td>
+		<td>@Html.DisplayFor(modelItem => item.StartDate)</td>
+		<td>@Html.DisplayFor(modelItem => item.EndDate)</td>
+		<td>@Html.DisplayFor(modelItem => item.WantedPrice)</td>
+		<td>@Html.DisplayFor(modelItem => item.IncrementPrice)</td>
+		<td>@Html.DisplayFor(modelItem => item.MaxParticipant)</td>
+		<td>@Html.DisplayFor(modelItem => item.Status)</td>
+		<td>
+		<a asp-page="./DetailAuction" asp-route-id="@item.AuctionId" class="btn btn-primary">Detail</a>
+		<a asp-page="./ReceiptPayment/Index" asp-route-auctionId="@item.AuctionId" class="btn btn-success">See Your Transaction</a>
+					</td>
+</tr>
+				}
+
+			}
+			
+		</tbody>
+	</table>
+</div>

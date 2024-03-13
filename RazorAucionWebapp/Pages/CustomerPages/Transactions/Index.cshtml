@@ -57,31 +57,27 @@
             <tbody>
                 @foreach (var item in Model.Transactions)
                 {
-                    <tr>
-                        <td>@Html.DisplayFor(modelItem => item.Status)</td>
-                        <td>@Html.DisplayFor(modelItem => item.vnp_TxnRef)</td>
-                        <td>@Html.DisplayFor(modelItem => item.vnp_Amount)</td>
-                        <td>@Html.DisplayFor(modelItem => item.vnp_TransactionDate)</td>
-                        <td>@Html.DisplayFor(modelItem => item.vnp_OrderInfo)</td>
-                        <td>@Html.DisplayFor(modelItem => item.vnp_PayDate)</td>
-                        <td>
+                            <tr>
+                                <td>@item.Status</td>
+                                <td>@item.vnp_TxnRef</td>
+                                <td>@item.vnp_Amount</td>
+                                <td>@DateTime.ParseExact(item.vnp_TransactionDate.ToString(), "yyyyMMddHHmmss", null).ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                <td>@item.vnp_OrderInfo</td>
+                                <td>@DateTime.ParseExact(item.vnp_PayDate.ToString(), "yyyyMMddHHmmss", null).ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                <td>
                             @{
                                 var tryParsePayDate1 = DateTime.TryParse(item.vnp_PayDate, out var dateTime);
                                 if (tryParsePayDate1 is false)
                                 {
-                                    dateTime = DateTime.ParseExact(item.vnp_PayDate, "yyyyMMddHHmmss", null);
-                                }
-                                if (DateTime.Compare(dateTime.AddMinutes(Model.RefundValidTime), DateTime.Now) <= 0 || item.Status.Equals(TransactionStatus.CANCELLED))
-                                {
-                                    <button class="btn btn-danger" disabled>Refund</button>
+                                                            <button class="btn btn-danger disabled" disabled>Refund</button>
                                 }
                                 else
                                 {
-                                    <a class="btn btn-danger" asp-page="../../Vnpay/Refund" asp-route-transactionId="@item.TransactionId" asp-route-accountId="@Model._userId">Refund</a>
+                                                            <a class="btn btn-refund" asp-page="../../Vnpay/Refund" asp-route-transactionId="@item.TransactionId" asp-route-accountId="@Model._userId">Refund</a>
                                 }
                             }
-                        </td>
-                    </tr>
+                                </td>
+                            </tr>
                 }
             </tbody>
         </table>

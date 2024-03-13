@@ -4,98 +4,77 @@
 @{
     ViewData["Title"] = "Index";
 }
-
 <style>
-    .container {
-        background-color: #f8f9fa;
-        border: 1px solid #dee2e6;
-        border-radius: 8px;
-        padding: 20px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    .table-striped td {
+        border-right: 1px solid black;
     }
 
-        .container h1 {
-            margin-bottom: 20px;
-        }
-
-        .container a {
-            color: #007bff;
-            text-decoration: none;
-            margin-right: 10px;
-        }
-
-            .container a:hover {
-                text-decoration: underline;
-            }
-
-        .container table {
-            width: 100%;
-        }
-
-        .container th {
-            background-color: #343a40;
-            color: #ffffff;
-        }
-
-        .container td, .container th {
-            padding: 12px;
-            text-align: left;
-            border: 1px solid #dee2e6;
-        }
-
-        .container tbody tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-    .btn-primary {
-        color: white;
+    .table-striped th:last-child,
+    .table-striped td:last-child {
+        border-right: 1px white;
     }
- </style>
-
-<div class="container">
-        <div style="text-align: center">
-            <h1>View Estate Auction</h1>
+    .table-striped th,
+    .table-striped td {
+        text-align: center;
+    }
+</style>
+<div class="container mt-2">
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <div class="card">
+                <h5 class="card-header bg-dark text-white">Manage Auctions</h5>
+                <div class="card-body">
+                    <p class="text-right">
+                        <a asp-page="Create" class="btn btn-primary">Create New Auction</a>
+                    </p>
+                    <div class="table-responsive" style="width: 100%">
+                        <table class="table table-striped" style="width: 100%;">
+                            <thead class="thead-dark bg-dark text-white">
+                                <tr>
+                                    <th scope="col">Auction ID</th>
+                                    <th scope="col">Estate Coordinate</th>
+                                    <th scope="col">Registration Date</th>
+                                    <th scope="col">Start Date</th>
+                                    <th scope="col">End Date</th>
+                                    <th scope="col">End Pay Date</th>
+                                    <th scope="col">Entrance Fee</th>
+                                    <th scope="col">Wanted Price</th>
+                                    <th scope="col">Increment Price</th>
+                                    <th scope="col">Max Participants</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Receipt ID</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Auctions)
+                                {
+                                            <tr>
+                                                <td>@item.AuctionId</td>
+                                                <td>@(item.Estate != null ? item.Estate.Coordinate : "N/A")</td>
+                                                <td>@item.RegistrationDate.ToShortDateString()</td>
+                                                <td>@item.StartDate.ToShortDateString()</td>
+                                                <td>@item.EndDate.ToShortDateString()</td>
+                                                <td>@item.EndPayDate.ToShortDateString()</td>
+                                                <td>@item.EntranceFee</td>
+                                                <td>@item.WantedPrice</td>
+                                                <td>@item.IncrementPrice</td>
+                                                <td>@item.MaxParticipant</td>
+                                                <td>@item.Status</td>
+                                                <td>@item.ReceiptId</td>
+                                                <td>
+                                                    <div class="btn-group" role="group" aria-label="Actions">
+                                                        <a asp-page="./Details" asp-route-id="@item.AuctionId" class="btn btn-info">Details</a>
+                                                        <a asp-page="./Delete" asp-route-id="@item.AuctionId" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this auction?')">Delete</a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-        <p>
-            <a style="color: white" asp-page="Create" class="btn btn-primary">Create New</a>
-        </p>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Estate Coordinate</th>
-                    <th>Registration Date</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                    <th>End Pay Date</th>
-                    <th>Entrance Fee</th>
-                    <th>Wanted Price</th>
-                    <th>Increment Price</th>
-                    <th>Max Participant</th>
-                    <th>Status</th>
-                    <th>Receipt ID</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Auctions)
-                {
-                    <tr>
-                        <td>@Html.DisplayFor(modelItem => item.Estate.Coordinate)</td>
-                        <td>@Html.DisplayFor(modelItem => item.RegistrationDate)</td>
-                        <td>@Html.DisplayFor(modelItem => item.StartDate)</td>
-                        <td>@Html.DisplayFor(modelItem => item.EndDate)</td>
-                        <td>@Html.DisplayFor(modelItem => item.EndPayDate)</td>
-                        <td>@Html.DisplayFor(modelItem => item.EntranceFee)</td>
-                        <td>@Html.DisplayFor(modelItem => item.WantedPrice)</td>
-                        <td>@Html.DisplayFor(modelItem => item.IncrementPrice)</td>
-                        <td>@Html.DisplayFor(modelItem => item.MaxParticipant)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Status)</td>
-                        <td>@Html.DisplayFor(modelItem => item.ReceiptId)</td>
-                        <td class="action-links">
-                        <a class="btn btn-info" style="color: white" asp-page="./Delete" asp-route-id="@item.AuctionId">Delete</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+    </div>
 </div>
