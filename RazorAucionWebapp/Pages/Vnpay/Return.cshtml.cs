@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Repository.Database.Model;
+using Repository.Database.Model.AppAccount;
 using Service.Services;
 using Service.Services.AppAccount;
 using Service.Services.VnpayService.Model;
@@ -22,15 +23,16 @@ namespace RazorAucionWebapp.Pages.Vnpay
 		[BindProperty]
 		public VnpayReturnResult? VnpayResult { get; set; }
 		private int _userId { get; set; }
+		private Account _account { get; set; }
 		private Transaction _currentTransaction { get; set; }
-		public async Task<IActionResult> OnGet(int? myTransactionId)
+		public async Task<IActionResult> OnGet(int? myAccountId, long? transactionDate)
 		{
-			if (myTransactionId == null)
+			if (myAccountId == null || transactionDate == null)
 				return BadRequest();
 			try
 			{
-				await PopulateData(myTransactionId.Value);
-				var returnResult = await _vnpayAvailableServices.OnPayResult(HttpContext, _currentTransaction);
+				await PopulateData(myAccountId.Value);
+				var returnResult = await _vnpayAvailableServices.OnPayResult(HttpContext, _account,transactionDate.Value );
 				if (returnResult is null || returnResult.Success == false)
 				{
 					ModelState.AddModelError(string.Empty, "something wrong, why null, why empty, check code implementation");
@@ -51,7 +53,14 @@ namespace RazorAucionWebapp.Pages.Vnpay
 		}
 		public async Task<IActionResult> OnGetTestTransactionHandler(int amount, int transactionId)
 		{
-			await PopulateData(transactionId);
+			var tryGetUserId = int.TryParse(HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("Id"))?.Value, out var userId);
+			if (tryGetUserId is false)
+				throw new UnauthorizedAccessException("User Unauthorized");
+			_userId = userId;
+			var transaction = await _transactionServices.GetById(transactionId);
+			if (transaction is null)
+				throw new Exception("not found transaction");
+			_currentTransaction = transaction;
 			_currentTransaction.Status = Repository.Database.Model.Enum.TransactionStatus.SUCCESS;
 			var result = await _transactionServices.Update(_currentTransaction);
 			if(result is false)
@@ -65,16 +74,9 @@ namespace RazorAucionWebapp.Pages.Vnpay
 			ViewData["SuccessTransactionTest"] = $"yes you have successfully add {amount}";
 			return Page();
 		}
-		private async Task PopulateData(int transactionId)
+		private async Task PopulateData(int myAccountId)
 		{
-			var tryGetUserId = int.TryParse(HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals("Id"))?.Value, out var userId);
-			if (tryGetUserId is false)
-				throw new UnauthorizedAccessException("User Unauthorized");
-			_userId = userId;
-			var transaction =  await _transactionServices.GetById(transactionId);
-			if (transaction is null)
-				throw new Exception("not found transaction");
-			_currentTransaction = transaction;
+			_account = await _accountServices.GetById(myAccountId) ?? throw new UnauthorizedAccessException();
 		}
 	}
 }

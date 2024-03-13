@@ -43,9 +43,9 @@ namespace Service.Services
 		{
 			return _vnpayQuery.btnQuery_Click(httpContext,transaction);
 		}
-		public async Task< VnpayReturnResult> OnPayResult(HttpContext httpContext, Transaction transaction) 
+		public async Task< VnpayReturnResult> OnPayResult(HttpContext httpContext, Account acc, long transactionDate) 
 		{
-			return await _vnpayReturn.OnTransactionReturn(httpContext, transaction);
+			return await _vnpayReturn.OnTransactionReturn(httpContext, acc,transactionDate);
 		}
 		public async Task<(bool isSuccess, string? message)> RefundVnpayTransaction(HttpContext httpContext, Transaction transaction, Account account, int RefundValidTimeMinute) 
 		{
