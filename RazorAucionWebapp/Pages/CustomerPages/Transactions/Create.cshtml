@@ -5,31 +5,49 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<style>
+    .card-title-custom {
+        background-color: #000; /* Black background */
+        color: #fff; /* White text */
+        text-align: center; /* Center align text */
+        padding: 10px; /* Add padding */
+    }
 
-<h4>Transaction</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    .bold-label {
+        font-weight: bold;
+    }
+</style>
 
-            <div class="form-group">
-                <label asp-for="Amount" class="control-label"></label>
-                <input asp-for="Amount" class="form-control" />
-                <span asp-validation-for="Amount" class="text-danger"></span>
+<div class="container">
+    <div class="row justify-content-center mt-5 mb-5">
+        <div class="col-md-6">
+            <h1 class="text-center">@ViewData["Title"]</h1>
+
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title card-title-custom">Transaction Details</h4>
+                    <hr />
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="form-group">
+                            <label asp-for="Amount" class="control-label bold-label">Amount</label>
+                            <input asp-for="Amount" class="form-control" />
+                            <span asp-validation-for="Amount" class="text-danger"></span>
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-primary mt-3 mb-3">Create Transaction</button>
+                            <a class="btn btn-secondary ml-2 mt-3 mb-3" asp-page="Index">Back to List</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a class="btn btnalert-primary" asp-page="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

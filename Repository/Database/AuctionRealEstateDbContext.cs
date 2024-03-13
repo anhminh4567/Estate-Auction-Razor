@@ -43,8 +43,8 @@ namespace Repository.Database
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-			//optionsBuilder.UseSqlServer("server =(local);uid=sa;pwd=12345;Database=AuctionDatabase;TrustServerCertificate=true;");
-			optionsBuilder.UseSqlServer("server=LAPTOP-HUELJUER\\SQLSERVER19;uid=sa;pwd=12345;Database=AuctionDatabase;TrustServerCertificate=true;");
+			optionsBuilder.UseSqlServer("server =(local);uid=sa;pwd=12345;Database=AuctionDatabase;TrustServerCertificate=true;");
+			//optionsBuilder.UseSqlServer("server=LAPTOP-HUELJUER\\SQLSERVER19;uid=sa;pwd=12345;Database=AuctionDatabase;TrustServerCertificate=true;");
 		}
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
