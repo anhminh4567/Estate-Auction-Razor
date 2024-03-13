@@ -6,7 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - RazorAucionWebapp</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/SignalRClient/signalr.js"></script>
+
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/RazorAucionWebapp.styles.css" asp-append-version="true" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
@@ -69,6 +74,31 @@
                         @{
                             if (Context.User.Identity.IsAuthenticated)
                             {
+                                <li class="nav-item position-relative me-3">
+                                    <script>
+                                        const notification = new signalR.HubConnectionBuilder()
+                                            .withAutomaticReconnect()
+                                            .withUrl("/notificationrealtime")
+                                            .build();
+                                        notification.on("OnNewNotification", function (msg) {
+                                            console.log(msg);
+                                            $(".notified_trigger").show();
+                                        });
+                                        notification.start().then((result) => {
+                                            console.log(result)
+                                        }).catch((error) => {
+                                            console.error(error);
+                                        });
+                                    </script>
+                                    <a asp-page="/MailBox" class="user_mail">
+                                        <div class="notified_trigger" style="display: none;">
+                                            <div class="notified justify-content-center align-content-center"></div>
+                                        </div>
+                                        <img src=@Url.Content("~/PublicImages/general/mailbox.svg") width="40" height="40" />
+                                        <div class="user_mail_hover">
+                                        </div>
+                                    </a>
+                                </li>
                                 <li class="nav-item position-relative hover_dropdown">
                                     <a class="navbar-brand" asp-page="/CustomerPages/Profile/Detail">
                                         <img src=@Url.Content(Context.User.Claims.FirstOrDefault(c => c.Type.Equals("Avatar")).Value) width="40" height="40" />
@@ -79,8 +109,8 @@
                                         <span class="fw-bold">@Context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Name))?.Value</span><br>
                                         <span style="font-size: .7rem;">@Context.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Email))?.Value </span><hr />
                                         <div class="user_choices">
-                                            <a asp-page="/CustomerPages/Profile/Detail"><span><i class="fa-solid fa-user"></i> Profile</span></a><br>
-                                            <a asp-page="/CustomerPages/Transactions/Index"><span><i class="fa-solid fa-wallet"></i> My wallet</span></a>
+                                            <a class="container-fluid" asp-page="/CustomerPages/Profile/Detail"><span><i class="fa-solid fa-user"></i> Profile</span></a><br>
+                                            <a class="container-fluid" asp-page="/CustomerPages/Transactions/Index"><span><i class="fa-solid fa-wallet"></i> My wallet</span></a>
                                         </div>
                                         <div class="logout_btn">
                                             <a asp-area="" asp-page="/Logout">Logout</a>
@@ -127,10 +157,7 @@
         </footer>
     </div>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/lib/SignalRClient/signalr.js"></script>
+    
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

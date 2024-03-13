@@ -41,7 +41,7 @@ namespace RazorAucionWebapp.Pages.Registration
 		[BindProperty]
 		[Required]
 		[DataType(DataType.Date)]
-		public DateTime Dob { get; set; }
+		public DateTime Dob { get; set; } = DateTime.Now.AddYears(-18).Date;
 		[BindProperty]
 		[Required]
 		public string Password { get; set; }

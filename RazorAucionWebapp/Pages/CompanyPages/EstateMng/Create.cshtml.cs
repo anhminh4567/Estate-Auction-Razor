@@ -74,7 +74,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
         [BindProperty]
         [Required(ErrorMessage = "At least one estate category must be selected!")]
         public List<string> SelectedEstateCategoriesOptions { get; set; }
-        public List<SelectListItem> EstateCategoriesOptions { get; set; }
+        public List<SelectListItem> EstateCategoriesOptions { get; set; } = new List<SelectListItem>();
         [BindProperty]
         public List<IFormFile> Images { get; set; }
         private int CompanyId { get; set; }

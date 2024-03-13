@@ -152,3 +152,33 @@ body {
 .user_menu_hover:hover + .user_menu {
     display: block;
 }
+
+
+.user_choices > a:hover > span {
+    color: dimgray;
+    font-weight: bolder;
+}
+
+
+.notified {
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    border: 5px solid red;
+    border-radius: 100%;
+    background-color: red;
+    z-index: 1;
+    transform: translateX(30px);
+    animation: blink 10s infinite;
+}
+@keyframes blink{
+    0% {
+        display: block;
+    }
+    30% {
+        display: none;
+    }
+    70% {
+        display: block;
+    }
+}

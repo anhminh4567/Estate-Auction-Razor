@@ -1,9 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Repository.Database.Model;
 using Repository.Database.Model.AuctionRelated;
 using Repository.Database.Model.RealEstate;
+using Service.MyHub;
+using Service.MyHub.HubServices;
+using Service.Services.AppAccount;
 using Service.Services.Auction;
 using Service.Services.RealEstate;
+using System.Security.Claims;
 
 namespace RazorAucionWebapp.Pages
 {
@@ -16,15 +21,12 @@ namespace RazorAucionWebapp.Pages
     {
         private readonly AuctionServices _auctionServices;
 		private readonly EstateImagesServices _estateImagesServices;
-
-
 		public IndexModel(AuctionServices auctionServices, EstateImagesServices estateImagesServices)
         {
             _auctionServices = auctionServices;
 			_estateImagesServices = estateImagesServices;
-
 		}
-        public List<Auction> Auctions { get; set; }
+        public List<Auction> Auctions { get; set; } = new List<Auction>();
         //frontend lo 2 so nay, dung paging
         [BindProperty]
         public int PageStart { get; set; }
@@ -53,7 +55,6 @@ namespace RazorAucionWebapp.Pages
 					}
 				}
 			}
-
 			return Page();
         }
         private async Task PopulateData(int start, int amount ) 
@@ -70,7 +71,5 @@ namespace RazorAucionWebapp.Pages
             //    });
             //}
         }
-
-
 	}
 }

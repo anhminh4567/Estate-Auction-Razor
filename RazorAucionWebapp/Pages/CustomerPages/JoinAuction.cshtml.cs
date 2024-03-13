@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Org.BouncyCastle.Asn1.X509;
+using Repository.Database.Model;
 using Repository.Database.Model.AppAccount;
 using Repository.Database.Model.AuctionRelated;
 using Repository.Database.Model.Enum;
+using Service.MyHub.HubServices;
+using Service.Services;
 using Service.Services.AppAccount;
 using Service.Services.Auction;
 
@@ -15,13 +18,17 @@ namespace RazorAucionWebapp.Pages.CustomerPages
 		private readonly AuctionServices _auctionServices;
 		private readonly AccountServices _accountServices;
 		private readonly BidServices _bidServices;
-		public JoinAuctionModel(JoinedAuctionServices joinedAuctionServices, AuctionServices auctionServices, AccountServices accountServices, BidServices bidServices)
+        private readonly NotificationServices _notificationServices;
+        private readonly NotificationHubService _notificationHubService;
+        public JoinAuctionModel(JoinedAuctionServices joinedAuctionServices, AuctionServices auctionServices, AccountServices accountServices, BidServices bidServices, NotificationServices notificationServices, NotificationHubService notificationHubService)
 		{
 			_joinedAuctionServices = joinedAuctionServices;
 			_auctionServices = auctionServices;
 			_accountServices = accountServices;
 			_bidServices = bidServices;
-		}
+            _notificationServices = notificationServices;
+            _notificationHubService = notificationHubService;
+        }
         [BindProperty]
         public int AuctionId { get; set; }
         [BindProperty]
@@ -54,6 +61,16 @@ namespace RazorAucionWebapp.Pages.CustomerPages
                 var result = await _joinedAuctionServices.JoinAuction(Account.AccountId, Auction.AuctionId);
                 if (result.IsSuccess)
                 {
+                    var company = Auction.Estate.Company;
+                    var notification = new Notification()
+                    {
+                        AccountId = Account.AccountId,
+                        CompanyId = company.AccountId,
+                        Message = String.Format("joined your auction({1})", Account.Email, Auction.AuctionId),
+                        CreatedDate = DateTime.Now.Date
+                    };
+                    await _notificationServices.CreateNotification(notification);
+                    await SendMessage(company.Email, notification);
                     return RedirectToPage("../Index");
                 }
                 else
@@ -178,6 +195,10 @@ namespace RazorAucionWebapp.Pages.CustomerPages
                 throw new Exception("cannot find auction with this id");
             Auction = tryGetJoinedAuction;
             JoinedAuction = await _joinedAuctionServices.GetByAccountId_AuctionId(_userId, auctionId);
+        }
+        public async Task SendMessage(string email,Notification notification)
+        {
+            await _notificationHubService.SendNewNotification(email, notification);
         }
     }
 }

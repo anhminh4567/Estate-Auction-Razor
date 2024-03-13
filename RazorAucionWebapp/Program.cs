@@ -116,9 +116,9 @@ builder.Services.AddAuthorization(config =>
             {
                 return true;
             }
-            else if(context.User.HasClaim(ClaimTypes.Role, "COMPANY"))
+            else if (context.User.HasClaim(ClaimTypes.Role, "COMPANY"))
             {
-                return true ;
+                return true;
             }
             else
             {
@@ -145,6 +145,13 @@ builder.Services.AddAuthorization(config =>
                 return false;
             }
         });
+    });
+    config.AddPolicy("Admin", c =>
+    {
+        c.RequireRole("ADMIN");
+        c.RequireClaim("Status", "ACTIVED");
+        c.RequireAuthenticatedUser();
+
     });
 });
 var app = builder.Build();
