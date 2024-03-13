@@ -33,7 +33,12 @@ namespace RazorAucionWebapp.Configure
             services.AddScoped<IImagesRepository, ImageRepository>();
 
             services.AddScoped<IAuctionReceiptPaymentRepository, AuctionReceiptPaymentRepository>();
-            services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+			services.AddScoped<INotificationRepository, NotificationRepository>();
+
+
+			services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+
+            
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
 		}

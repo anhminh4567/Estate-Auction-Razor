@@ -37,7 +37,9 @@ namespace RazorAucionWebapp.Configure
             services.AddScoped<CompanyServices>();
             services.AddScoped<AccountServices>();
 
-            services.AddVnpayServices();
+			services.AddScoped<NotificationServices>();
+
+			services.AddVnpayServices();
             services.AddScoped<DatabaseTransactionService>();
 
             return services;
