@@ -32,7 +32,8 @@ builder.Services.AddRazorPages(opt =>
     
     opt.Conventions.AllowAnonymousToPage("/CustomerPages/DetailAuction");
 
-    opt.Conventions.AuthorizePage("/CustomerPages/Transactions/Create", "ADMIN_CUSTOMER");
+    opt.Conventions.AuthorizeFolder("/CustomerPages/Transactions", "ADMIN_CUSTOMER_COMPANY");
+
     opt.Conventions.AuthorizePage("/CustomerPages/ReceiptPayment/Create", "ADMIN_CUSTOMER");
     opt.Conventions.AuthorizePage("/CustomerPages/BidAuction", "ADMIN_CUSTOMER");
     opt.Conventions.AuthorizePage("/CustomerPages/JoinAuction", "ADMIN_CUSTOMER");

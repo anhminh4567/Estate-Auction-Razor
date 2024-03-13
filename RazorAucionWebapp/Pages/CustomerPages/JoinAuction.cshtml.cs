@@ -190,7 +190,7 @@ namespace RazorAucionWebapp.Pages.CustomerPages
         }
         private async Task GetJoinAuction(int auctionId)
         {
-            var tryGetJoinedAuction = await _auctionServices.GetInclude(auctionId, "JoinedAccounts.Account");
+            var tryGetJoinedAuction = await _auctionServices.GetInclude(auctionId, "JoinedAccounts.Account,Estate.Company");
             if (tryGetJoinedAuction is null)
                 throw new Exception("cannot find auction with this id");
             Auction = tryGetJoinedAuction;

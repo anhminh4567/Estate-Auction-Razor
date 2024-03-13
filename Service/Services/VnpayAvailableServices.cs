@@ -49,6 +49,10 @@ namespace Service.Services
 		}
 		public async Task<(bool isSuccess, string? message)> RefundVnpayTransaction(HttpContext httpContext, Transaction transaction, Account account, int RefundValidTimeMinute) 
 		{
+            if (transaction.vnp_TxnRef.StartsWith("NONE"))
+            {
+				return (false, "cannot refund, transaction is made locally");
+			}
 			var refundValidTime = DateTime.ParseExact(transaction.vnp_PayDate,"yyyyMMddHHmmss",null).AddMinutes(RefundValidTimeMinute);
 			var comparisonResult = DateTime.Compare(DateTime.Now, refundValidTime);
 			if(comparisonResult >= 0) 
@@ -59,11 +63,18 @@ namespace Service.Services
 		}
 		public async Task<(bool IsSuccess, string? message)> AdminRefundVnpay(HttpContext httpContext, Transaction transaction, Account account)
 		{
-            // neu admin refund thi ko can thoi gian lam gi, day la bat buoc refund tuy th xu ly
-            return await RefundVnpay(httpContext,transaction,account);
+			if (transaction.vnp_TxnRef.StartsWith("NONE"))
+			{
+				return (false, "cannot refund, transaction is made locally");
+			}
+			// neu admin refund thi ko can thoi gian lam gi, day la bat buoc refund tuy th xu ly
+			return await RefundVnpay(httpContext,transaction,account);
 		}
         private async Task<(bool IsSuccess, string? message)> RefundVnpay(HttpContext httpContext, Transaction transaction, Account account)
-        {
+        {if (transaction.vnp_TxnRef.StartsWith("NONE"))
+            {
+				return (false, "cannot refund, transaction is made locally");
+			}
             var tryParseTransaction = decimal.TryParse(transaction.vnp_Amount, out var transactionAmount);
             if (tryParseTransaction == false)
             {
