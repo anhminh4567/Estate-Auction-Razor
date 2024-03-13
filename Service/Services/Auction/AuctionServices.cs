@@ -121,7 +121,7 @@ namespace Service.Services.Auction
 			{
 				if(getEstate.Status.Equals(EstateStatus.REMOVED) ||
 					getEstate.Status.Equals(EstateStatus.BANNED) ||
-					getEstate.Status.Equals(EstateStatus.FINISHED)
+					getEstate.Status.Equals(EstateStatus.FINISHED))
 				{
 					return (false,"Cannot create auction, estate is "+ getEstate.Status.ToString(),null);
 				}
