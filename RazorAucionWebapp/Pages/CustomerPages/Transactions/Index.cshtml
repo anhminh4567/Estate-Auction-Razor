@@ -81,6 +81,9 @@
 								{
 									//<button class="btn btn-danger" disabled>Refund</button>
 									<button class="btn btn-danger disabled" disabled>Refund</button>
+								}else if (item.vnp_TxnRef.StartsWith("NONE"))
+								{
+									<button class="btn btn-danger disabled" disabled>No Refund</button>
 								}
 								else
 								{
