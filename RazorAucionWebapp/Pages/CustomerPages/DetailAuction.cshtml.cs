@@ -35,7 +35,7 @@ namespace RazorAucionWebapp.Pages.CustomerPages
         [Required]
         public decimal Amount { get; set; }
         [BindProperty]
-        public bool isJoinedAccount { get; set; } = false;
+        public Account JoinedAccount { get; set; }
         [BindProperty]
         public int AuctionId { get; set; }
 
@@ -51,7 +51,7 @@ namespace RazorAucionWebapp.Pages.CustomerPages
             var getJoinedAccount = JoinedAccounts?.FirstOrDefault(a => a.AccountId == bidderId);
             if (tryGetId == true && getJoinedAccount != null)
             {
-                isJoinedAccount = true;
+                JoinedAccount = getJoinedAccount;
             }
             return Page();
         }
@@ -70,7 +70,7 @@ namespace RazorAucionWebapp.Pages.CustomerPages
                 var getJoinedAccount = JoinedAccounts?.FirstOrDefault(a => a.AccountId == bidderId);
                 if (tryGetId == true && getJoinedAccount != null)
                 {
-                    isJoinedAccount = true;
+                    JoinedAccount = getJoinedAccount;
                 }
                 var result = await _bidServices.PlaceBid(bidderId, AuctionId, Amount);
                 if (result.IsSuccess)

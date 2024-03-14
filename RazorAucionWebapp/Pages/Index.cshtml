@@ -57,7 +57,7 @@
                                         foreach (var img in auc.Estate.Images)
                                         {
                                             <div class="carousel-item @(isFirst ? "active" : "")">
-                                                <img src="@Url.Content("/PublicImages/storage/" + img.Image.Path)" width="90" height="90" class="d-block w-100" style="filter: blur(0) !important;" />
+                                                <img src="@Url.Content(img.Image.Path)" width="90" height="90" class="d-block w-100" style="filter: blur(0) !important;" />
                                             </div>
                                             isFirst = false;
                                         }
@@ -106,17 +106,9 @@
                                                     break;
                                             }
                                         }
-                                        @if (isAuctioning)
-                                        {
-                                            int remainDays = (auc.EndDate - DateTime.Now).Days;
-                                            <span><i class="fa-solid fa-clock"></i> @remainDays days left</span>
-                                        }
-                                        else
-                                        {
 
                                             <span class="fw-bold @auc_status_style">@auc.Status.ToString()</span>
 
-                                        }
                                     </div>
                                     <div>
                                         <span><i class="fa-solid fa-user"></i> @auc.JoinedAccounts?.Count/@auc.MaxParticipant</span>

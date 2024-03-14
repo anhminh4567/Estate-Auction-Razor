@@ -44,23 +44,15 @@
                             <div class="d-flex align-content-center flex-wrap">
                                 @{
                                     var auc_status_style = "";
-
-                                    bool isAuctioning = false;
                                     switch (@Model.Auction.Status.ToString())
                                     {
                                         case "NOT_STARTED":
-                                            auc_status_style = "auc_status_red";
-                                            isAuctioning = true;
-                                            break;
                                         case "PENDING_PAYMENT":
                                         case "CANCELLED":
                                         case "FAILED_TO_PAY":
                                             auc_status_style = "auc_status_red";
                                             break;
                                         case "ONGOING":
-                                            auc_status_style = "auc_status_green";
-                                            isAuctioning = true;
-                                            break;
                                         case "SUCCESS":
                                             auc_status_style = "auc_status_green";
                                             break;
@@ -74,7 +66,7 @@
                         </div>
                         <hr />
 
-                        @if (isAuctioning)
+                        @if (Model.Auction.Status.ToString()=="ONGOING")
                         {
                             <div>
                                 <p>Duration</p>
@@ -89,8 +81,9 @@
                                         @Model.Auction.EndDate.Hour:@Model.Auction.EndDate.Minute:@Model.Auction.EndDate.Second
                                     </span>
                                 </div>
-                                @if (Model.isJoinedAccount == true)
+                                @if (Model.JoinedAccount != null)
                                 {
+                                    <a asp-page="./QuitAuction" asp-route-accId="@Model.JoinedAccount.AccountId" asp-route-aucId="@Model.Auction.AuctionId">Quit auction</a>
                                     decimal bidAmount = 0;
                                     decimal currentBid = 0;
                                     if (Model.Auction.Bids is not null && Model.Auction.Bids.Count > 0)
@@ -140,6 +133,39 @@
                                 }
                             </div>
                         }
+                        else if (Model.Auction.Status.ToString() == "NOT_STARTED")
+                        {
+                            <div>
+                                <p>Duration</p>
+                                <div class="auction_duration_wrapper d-flex justify-content-between">
+                                    <span>
+                                        @Model.Auction.StartDate.ToString("dd.MM.yyy")
+                                        @Model.Auction.StartDate.Hour:@Model.Auction.StartDate.Minute:@Model.Auction.StartDate.Second
+                                    </span>
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                    <span>
+                                        @Model.Auction.EndDate.ToString("dd.MM.yyy")
+                                        @Model.Auction.EndDate.Hour:@Model.Auction.EndDate.Minute:@Model.Auction.EndDate.Second
+                                    </span>
+                                </div>
+                                @if (Model.JoinedAccount != null)
+                                {
+                                    <a class="d-inline btn btn-secondary p-2" asp-page="./JoinAuction" asp-route-id="@Model.Auction.AuctionId">Quit</a>
+                                    <h1>You joined this auction! Wait till auction happen</h1>
+                                }
+                                else
+                                {
+                                    if (HttpContext.User.Identity.IsAuthenticated)
+                                    {
+                                        <a class="d-inline btn btn-secondary p-2" asp-page="./JoinAuction" asp-route-id="@Model.Auction.AuctionId">Join this auction</a>
+                                    }
+                                    else
+                                    {
+                                        <a class="d-inline btn btn-secondary p-2" asp-page="/Registration/Login">Login to join!</a>
+                                    }
+                                }
+                            </div>
+                        }
                         else
                         {
                             <div class="empty_bid_list">
@@ -147,34 +173,6 @@
                                 <p>Auction is currently inactive!</p>
                             </div>
                         }
-
-                        @* <div class="auction_duration mt-3">
-                        <p>
-                        <span class="duration_hms">
-                        @Model.Auction.StartDate.Hour
-                        </span> :
-                        <span class="duration_hms">
-                        @Model.Auction.StartDate.Minute
-                        </span> :
-                        <span class="duration_hms mr-5">
-                        @Model.Auction.StartDate.Second
-                        </span>
-                        @Model.Auction.StartDate.ToString("dd.MM.yyy")
-                        </p>
-                        <i class="fa-solid fa-minus"></i>
-                        <p>
-                        <span class="duration_hms">
-                        @Model.Auction.EndDate.Hour
-                        </span> :
-                        <span class="duration_hms">
-                        @Model.Auction.EndDate.Minute
-                        </span> :
-                        <span class="duration_hms mr-5">
-                        @Model.Auction.EndDate.Second
-                        </span>
-                        @Model.Auction.EndDate.ToString("dd.MM.yyy")
-                        </p>
-                        </div> *@
                     </div>
                     <div id="auction_estate_details" style="display: none;">
                         <div class="d-flex justify-content-between">
@@ -246,6 +244,9 @@
                     </div>
                     <div id="auction_bid_detail" style="display: none;">
                         <h3 class="fw-bold text-uppercase mb-3">Bid records</h3>
+                        <div id="record_list_wrapper">
+
+                        </div>
                         <div class="d-flex flex-column-reverse justify-content-center align-items-center bid_record_list_wrapper">
                             @{
                                 if (Model.Auction.Bids is not null && Model.Auction.Bids.Count > 0)
@@ -262,7 +263,7 @@
                                         <div class="@leading_bid_style">
                                             @if (isFirst)
                                             {
-                                                <img src="https://i.ibb.co/tqYcp8z/gold-medal.png" width="40" height="40" />
+                                                // <img src="https://i.ibb.co/tqYcp8z/gold-medal.png" width="40" height="40" />
                                             }
                                             <div class="d-flex justify-content-between bid_record">
                                                 <span class="">@bid.Bidder.FullName</span>
@@ -349,35 +350,44 @@
         console.log(targetDiv + '');
     });
 </script>
+@section Scripts {
+
 <script>
     const connection = new signalR.HubConnectionBuilder()
-            .withAutomaticReconnect()
-            .withUrl("/auctionrealtime")
-            .build();
-        connection.on("UpdateLatestBidAmount"){
-            var tr = '';
-            $.ajax({
-                url: '/CustomerPage/DetailAuction?handler=UpdateAuctionBid',
-                method: 'GET',
-                data: {
-                    aucId: @Model.Auction.AuctionId
-                }
-                success: (result) => {
-                $.each(result, (k, v) => {
-                    $("#bid_amount_input").value = v;
-                error: (error) => {
-                    console.log(error);
-                }
-            });
-        }
+        .withAutomaticReconnect()
+        .withUrl("/auctionrealtime")
+        .build();
+
+    connection.start()
+        .then((result) => {
+            console.log(result);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+
+    connection.on("UpdateLatestBidAmount", () => {
+        // $.ajax({
+        //     url: '/CustomerPages/DetailAuction?handler=UpdateAuctionBid',
+        //     method: 'GET',
+        //     data: {
+        //         aucId: @Model.Auction.AuctionId
+        //     },
+        //     success: (result) => {
+        //             $("#bid_amount_input").val(parseFloat(result));
+        //     },
+        //     error: (error) => {
+        //         console.log(error);
+        //     }
+        // });
+        location.reload();
+    });
+
+
+
 </script>
+}
 
 @* <div>
     <a asp-page="Index">Back to List</a>
 </div> *@
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
