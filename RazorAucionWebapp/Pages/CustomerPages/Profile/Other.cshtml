@@ -1,6 +1,5 @@
 ﻿@page
-@model RazorAucionWebapp.Pages.CustomerPages.Profile.DetailModel
-
+@model RazorAucionWebapp.Pages.CustomerPages.Profile.OtherModel
 @{
     ViewData["Title"] = "Detail";
 }
@@ -18,10 +17,6 @@
             <li class="breadcrumb-item"><a href="#">Profile</a></li>
         </ol>
     </nav>
-    <div class="detailBtn">
-        <a asp-page="../Transactions/Create">Fill your wallet</a>
-        <a asp-page="./Update"><i class="fa-solid fa-pen-to-square"></i> Edit Profile</a>
-    </div>
     <div class="profile_wrapper">
         <div class="row">
             <div class="col-md-3">
@@ -51,9 +46,6 @@
                         <div class="col-md-6">
                             <div class="info_text"><span>Birthday</span> @Model.Account.Dob.ToShortDateString()</div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="info_text"><span>Citizen ID</span>@Model.Account.CMND</div>
-                        </div>
                     </div>
                     <div>
                         <h6>Account</h6>
@@ -74,9 +66,6 @@
                                 {
                                     <p class="account_status_deactivate">Status:@Model.Account.Status.ToString()</p>
                                 }
-                            </div>
-                            <div class="col-md-4">
-                                <p>Balance: <span class="fw-bold">$ @Model.Account.Balance</span></p>
                             </div>
                         </div>
                     </div>

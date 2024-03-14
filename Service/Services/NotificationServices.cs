@@ -72,10 +72,10 @@ namespace Service.Services
                     message = String.Format("{0} cancelled an auction({1}) that you have joined", sender.FullName, estate.Name);
                     break;
                 case NotificationType.StartAuction:
-                    message = String.Format("an auction({0}) that you have joined has started", sender.FullName, estate.Name);
+                    message = String.Format("an auction({0}) that you have joined has started", estate.Name);
                     break;
                 case NotificationType.EndAuction:
-                    message = String.Format("an auction({0}) that you have joined has ended", sender.FullName, estate.Name);
+                    message = String.Format("an auction({0}) that you have joined has ended", estate.Name);
                     break;
             }
 
@@ -86,7 +86,7 @@ namespace Service.Services
                 Type = type,
                 Message = message,
                 IsChecked = false,
-                CreatedDate = DateTime.Now.Date
+                CreatedDate = DateTime.Now
             };
         }
         //for user join and quit
@@ -122,16 +122,16 @@ namespace Service.Services
                     Type = type,
                     Message = message,
                     IsChecked = false,
-                    CreatedDate = DateTime.Now.Date
+                    CreatedDate = DateTime.Now
                 };
                 await _unitOfWork.Repositories.notificationRepository.CreateAsync(notification);
                 await _notificationHubService.SendNewNotification(auction.Estate.Company.Email);
             }
-            var joinedAucitons = await _unitOfWork.Repositories.joinedAuctionRepository.GetByCondition(p => p.AuctionId == auctionId, includeProperties: "Account, Auction.Estate");
+            var joinedAucitons = await _unitOfWork.Repositories.joinedAuctionRepository.GetByCondition(p => p.AuctionId == auctionId, includeProperties: "Account,Auction.Estate");
             foreach (var joinedAuction in joinedAucitons)
             {
-                int senderId = joinedAuction.AccountId.Value;
-                int receiverId = joinedAuction.Auction.Estate.CompanyId;
+                int senderId = joinedAuction.Auction.Estate.CompanyId;
+                int receiverId = joinedAuction.AccountId.Value;
                 var notification = await CreateMessage(senderId, receiverId, auctionId, type);
                 await _unitOfWork.Repositories.notificationRepository.CreateAsync(notification);
                 await _notificationHubService.SendNewNotification(joinedAuction.Account.Email);
