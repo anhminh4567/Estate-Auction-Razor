@@ -147,7 +147,6 @@ namespace Service.Services.Auction
 					{
                         throw new Exception("fail to update in CreateReceptPayment");
                     }
-                    
                 }
                 await _unitOfWork.SaveChangesAsync();
                 await _unitOfWork.CommitAsync();

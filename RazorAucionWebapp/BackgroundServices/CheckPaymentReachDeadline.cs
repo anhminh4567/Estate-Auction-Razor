@@ -21,7 +21,7 @@ namespace RazorAucionWebapp.BackgroundServices
 			{
 				await CheckIfPaymentReachTheEnd();
 				Console.WriteLine("checking if payment reach deadline");
-				await Task.Delay(10000, stoppingToken); // Wait for 30 seconds
+				await Task.Delay(12000, stoppingToken); // Wait for 30 seconds
 			}
 		}
 		private async Task CheckIfPaymentReachTheEnd()

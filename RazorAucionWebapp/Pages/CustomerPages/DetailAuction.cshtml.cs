@@ -34,7 +34,6 @@ namespace RazorAucionWebapp.Pages.CustomerPages
         [BindProperty]
         [Required]
         public decimal Amount { get; set; }
-        [BindProperty]
         public Account JoinedAccount { get; set; }
         [BindProperty]
         public int AuctionId { get; set; }

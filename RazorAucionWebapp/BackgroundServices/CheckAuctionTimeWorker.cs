@@ -72,6 +72,16 @@ namespace RazorAucionWebapp.BackgroundServices
                                 getFullDetail.JoinedAccounts.Count == 0)
                             {
                                 auc.Status = AuctionStatus.CANCELLED;
+                                if (getFullDetail.JoinedAccounts is not null && getFullDetail.JoinedAccounts.Count  > 0) 
+                                {
+									var joinedAuctionAccounts = getFullDetail.JoinedAccounts;
+									foreach (var joinedAccount in joinedAuctionAccounts)
+									{
+										var getAccount = await unitOfWork.Repositories.accountRepository.GetAsync(joinedAccount.AccountId.Value);
+										getAccount.Balance += auc.EntranceFee;
+										await unitOfWork.Repositories.accountRepository.UpdateAsync(getAccount);
+									}
+								}
                                 //Send Notification
                                 await notificationService.SendMessage(auc.AuctionId, NotificationType.EndAuction);
                             }
@@ -123,7 +133,7 @@ namespace RazorAucionWebapp.BackgroundServices
 									}
                                     auc.ReceiptId = createResult.ReceiptId;
                                     //Send Notification
-                                    await notificationService.SendMessage(auc.AuctionId, NotificationType.EndAuction);
+                                    //await notificationService.SendMessage(auc.AuctionId, NotificationType.EndAuction);
                                 }
                             }
                         }

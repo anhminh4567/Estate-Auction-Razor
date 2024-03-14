@@ -43,7 +43,7 @@ namespace Service.Services
 		{
 			return _vnpayQuery.btnQuery_Click(httpContext,transaction);
 		}
-		public async Task< VnpayReturnResult> OnPayResult(HttpContext httpContext, Account acc, long transactionDate) 
+		public async Task< VnpayReturnResult> OnPayResult(HttpContext httpContext, Account acc, string transactionDate) 
 		{
 			return await _vnpayReturn.OnTransactionReturn(httpContext, acc,transactionDate);
 		}
@@ -128,5 +128,5 @@ namespace Service.Services
                 return (false, "error in refunding on vnpay gate, cannot resolve this request");
             }
         }
-    }
+    }　
 }

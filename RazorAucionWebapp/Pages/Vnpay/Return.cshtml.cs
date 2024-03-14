@@ -25,14 +25,14 @@ namespace RazorAucionWebapp.Pages.Vnpay
 		private int _userId { get; set; }
 		private Account _account { get; set; }
 		private Transaction _currentTransaction { get; set; }
-		public async Task<IActionResult> OnGet(int? myAccountId, long? transactionDate)
+		public async Task<IActionResult> OnGet(int? myAccountId, string? transactionDate)
 		{
 			if (myAccountId == null || transactionDate == null)
 				return BadRequest();
 			try
 			{
 				await PopulateData(myAccountId.Value);
-				var returnResult = await _vnpayAvailableServices.OnPayResult(HttpContext, _account,transactionDate.Value );
+				var returnResult = await _vnpayAvailableServices.OnPayResult(HttpContext, _account,transactionDate );
 				if (returnResult is null || returnResult.Success == false)
 				{
 					ModelState.AddModelError(string.Empty, "something wrong, why null, why empty, check code implementation");
@@ -40,7 +40,7 @@ namespace RazorAucionWebapp.Pages.Vnpay
 				}
 				// if sucess, add that to user balance
 				VnpayResult = returnResult;
-				var getUser = await _accountServices.GetById(_userId);
+				var getUser = await _accountServices.GetById(_account.AccountId);
 				getUser.Balance += VnpayResult.Amount;
 				await _accountServices.Update(getUser);
 				return Page();

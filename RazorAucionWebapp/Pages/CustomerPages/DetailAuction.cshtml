@@ -83,6 +83,7 @@
                                 </div>
                                 @if (Model.JoinedAccount != null)
                                 {
+                                    <div asp-validation-summary="ModelOnly"></div>
                                     <a asp-page="./QuitAuction" asp-route-accId="@Model.JoinedAccount.AccountId" asp-route-aucId="@Model.Auction.AuctionId">Quit auction</a>
                                     decimal bidAmount = 0;
                                     decimal currentBid = 0;

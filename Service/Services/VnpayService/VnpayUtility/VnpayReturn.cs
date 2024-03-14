@@ -22,7 +22,7 @@ namespace Service.Services.VnpayService.VnpayUtility
 			this._unitOfWork = unitOfWork;
 		}
 
-		public async Task<VnpayReturnResult> OnTransactionReturn(HttpContext httpContext, Account acc, long transactionDate)
+		public async Task<VnpayReturnResult> OnTransactionReturn(HttpContext httpContext, Account acc, string transactionDate)
         {
             if (httpContext.Request.QueryString.Value.Length > 0)
             {
@@ -72,7 +72,7 @@ namespace Service.Services.VnpayService.VnpayUtility
 						Status = TransactionStatus.SUCCESS,
 						vnp_Amount = vnp_Amount.ToString(),
 						vnp_OrderInfo = "By user id:" + acc.AccountId.ToString(),
-						vnp_TransactionDate = transactionDate,
+						vnp_TransactionDate = long.Parse(transactionDate),
 						vnp_TxnRef = orderId.ToString(),
 						vnp_PayDate = transactionDate.ToString(),
 					};
