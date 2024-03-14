@@ -137,6 +137,10 @@ namespace Service.Services.Auction
                 ////////////// CHECK IF BID IS VALID AGAINST AUCTION CONDITION /////////////
                 if (highestBid is not null)
                 {
+                    if(highestBid.BidderId == accountId)
+                    {
+                        return (false, "you are currently the highest bidder!", null);
+                    }
                     var compareToBidJump = (amount - highestBid?.Amount) >= auction.IncrementPrice;
                     if (compareToBidJump is false)
                     {
