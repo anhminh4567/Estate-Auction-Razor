@@ -148,6 +148,16 @@
     {
         <div class="h1 fw-bolder">No available auction at the moment</div>
     }
+    <div>
+        <ul class="pagination justify-content-center">
+            @for (var i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageStart ? "active" : "")">
+                    <a asp-page="/Index" asp-route-pagestart="@i" class="page-link">@i</a>
+                </li>
+            }
+        </ul>
+    </div>
 </div>
 @section Scripts{
     <script>

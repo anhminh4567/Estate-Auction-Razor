@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using RazorAucionWebapp.Pages.AdminPages.Accounts;
 using Repository.Database.Model;
 using Repository.Database.Model.AuctionRelated;
 using Repository.Database.Model.RealEstate;
@@ -27,20 +28,15 @@ namespace RazorAucionWebapp.Pages
 			_estateImagesServices = estateImagesServices;
 		}
         public List<Auction> Auctions { get; set; } = new List<Auction>();
-        //frontend lo 2 so nay, dung paging
+        [BindProperty(SupportsGet = true)]
+        public int PageStart { get; set; } = 1;
         [BindProperty]
-        public int PageStart { get; set; }
+        public int DisplayAmount { get; set; } = 6;
         [BindProperty]
-        public int DisplayAmount { get; set; }
-		// PageStart: la vi tri bat dau trong database
-		// DisplayAmount: la lay bao nhieu tu vi tri do
+        public int TotalPages { get; set; }
 		public async Task<IActionResult> OnGetAsync()
         {
-            // 2 so nay la static, mot frontend sua lai, bind 2 so nay 
-            PageStart = 0;
-            DisplayAmount = 30;
-            // 2 so nay la static, mot frontend sua lai, bind 2 so nay 
-            int correctStartValue = PageStart * DisplayAmount;
+            int correctStartValue = (PageStart-1) * DisplayAmount;
             await PopulateData(correctStartValue, DisplayAmount);
 
 			foreach (var auction in Auctions)
@@ -59,8 +55,11 @@ namespace RazorAucionWebapp.Pages
         }
         private async Task PopulateData(int start, int amount ) 
         {
+
             var list = await _auctionServices.GetRangeInclude_Estate_Company(start,amount);
             Auctions = list;
+            List<Auction> aucList = await _auctionServices.GetAll();
+            TotalPages = (int) Math.Ceiling(decimal.Divide(aucList.Count, amount));
             //Auctions = new List<Auction>();
             //foreach(var i in list)
             //{
