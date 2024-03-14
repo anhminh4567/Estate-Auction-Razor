@@ -80,7 +80,13 @@ namespace Service.Services.AppAccount
         {
             try
             {
-                var status = joinedAuction.Status;
+                var getAuction= await _unitOfWork.Repositories.auctionRepository.GetAsync(joinedAuction.AuctionId.Value);
+                if(getAuction.Status.Equals(AuctionStatus.NOT_STARTED) is false ||
+					getAuction.Status.Equals(AuctionStatus.ONGOING) is false )
+                {
+                    return (false, "cannot bann, auctin is " + getAuction.Status.ToString());
+                }
+				var status = joinedAuction.Status;
                 if (status.Equals(JoinedAuctionStatus.REGISTERED))// only when user is registered can you ban him, if i quit, or alreay banned, then no
                 {
                     await _unitOfWork.BeginTransaction();

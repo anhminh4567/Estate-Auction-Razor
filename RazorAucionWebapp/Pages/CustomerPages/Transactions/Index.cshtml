@@ -3,99 +3,94 @@
 @model RazorAucionWebapp.Pages.CustomerPages.Transactions.IndexModel
 
 @{
-    ViewData["Title"] = "Transaction History";
+	ViewData["Title"] = "Index";
 }
 
 <style>
-    /* Center the title */
-    h1 {
-        text-align: center;
-        color: #333; /* Dark gray color */
-        margin-top: 20px; /* Add margin top */
-        margin-bottom: 20px; /* Add margin bottom */
-    }
+	.container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
 
-    /* Style for alternating row colors */
-    .table-striped tbody tr:nth-of-type(odd) {
-        background-color: #f2f2f2; /* Light gray background color */
-    }
+	.form-container {
+		background-color: #f8f9fa;
+		border: 1px solid #dee2e6;
+		border-radius: 8px;
+		padding: 20px;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		width: 100%;
+	}
 
-    /* Style for thead */
-    .thead-dark {
-        background-color: #000; /* Black background color */
-        color: #fff; /* White text color */
-    }
+		.form-container h1 {
+			margin-bottom: 20px;
+			text-align: center;
+		}
 
-    /* Style for table cells */
-    td, th {
-        padding: 10px; /* Add padding to cells */
-        text-align: center; /* Center align text */
-        border-bottom: 1px solid #ddd; /* Gray border bottom */
-    }
+	.form-group {
+		margin-bottom: 20px;
+	}
 
-    th {
-        border-right: 1px solid #ddd; /* Gray border right */
-    }
+	input[type="date"] {
+		width: 100%;
+	}
 
-    td {
-        border-left: 1px solid #ddd; /* Gray border left */
-    }
-
-    /* Style for the refund buttons */
-    .btn-refund {
-        background-color: #dc3545; /* Red color */
-        border-color: #dc3545; /* Red color */
-    }
-
-    .btn-refund:hover {
-        background-color: #c82333; /* Darker red color on hover */
-        border-color: #bd2130; /* Darker red color on hover */
-    }
+	input[type="submit"] {
+		width: 100%;
+	}
 </style>
 
 <div class="container">
-    <h1>Transaction History</h1>
+	<div class="form-container">
+		<h1>Transaction History</h1>
+		<table class="table table-striped table-hover">
+			<thead>
+				<tr>
+					<th>@Html.DisplayNameFor(model => model.Transactions[0].Status)</th>
+					<th>@Html.DisplayNameFor(model => model.Transactions[0].vnp_TxnRef)</th>
+					<th>@Html.DisplayNameFor(model => model.Transactions[0].vnp_Amount)</th>
+					@*                    <th>@Html.DisplayNameFor(model => model.Transactions[0].vnp_TransactionDate)</th>
+					*@
+					<th>@Html.DisplayNameFor(model => model.Transactions[0].vnp_OrderInfo)</th>
+					@*                    <th>@Html.DisplayNameFor(model => model.Transactions[0].vnp_PayDate)</th>
+					*@
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model.Transactions)
+				{
+					<tr>
+						<td>@item.Status</td>
+						<td>@item.vnp_TxnRef</td>
+						<td>@item.vnp_Amount</td>
+						@*                                <td>@DateTime.ParseExact(item.vnp_TransactionDate.ToString(), "yyyyMMddHHmmss", null).ToString("dd/MM/yyyy HH:mm:ss")</td>
+					*@
+						<td>@item.vnp_OrderInfo</td>
+						@*                                <td>@DateTime.ParseExact(item.vnp_PayDate.ToString(), "yyyyMMddHHmmss", null).ToString("dd/MM/yyyy HH:mm:ss")</td>
+					*@
+						<td>
 
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead class="thead-dark">
-                <tr>
-                    <th>Status</th>
-                    <th>Transaction Reference</th>
-                    <th>Amount</th>
-                    <th>Transaction Date</th>
-                    <th>Order Info</th>
-                    <th>Payment Date</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Transactions)
-                {
-                            <tr>
-                                <td>@item.Status</td>
-                                <td>@item.vnp_TxnRef</td>
-                                <td>@item.vnp_Amount</td>
-                                <td>@DateTime.ParseExact(item.vnp_TransactionDate.ToString(), "yyyyMMddHHmmss", null).ToString("dd/MM/yyyy HH:mm:ss")</td>
-                                <td>@item.vnp_OrderInfo</td>
-                                <td>@DateTime.ParseExact(item.vnp_PayDate.ToString(), "yyyyMMddHHmmss", null).ToString("dd/MM/yyyy HH:mm:ss")</td>
-                                <td>
-                            @{
-                                DateTime.TryParseExact(item.vnp_PayDate.ToString(), "yyyyMMddHHmmss", null, System.Globalization.DateTimeStyles.None, out var payDate);
-                                var refundTime = payDate.AddMinutes(Model.RefundValidTime);
-                                if (refundTime <= DateTime.Now || item.Status == TransactionStatus.CANCELLED)
-                                {
-                                                            <button class="btn btn-danger disabled" disabled>Refund</button>
-                                }
-                                else
-                                {
-                                                            <a class="btn btn-refund" asp-page="../../Vnpay/Refund" asp-route-transactionId="@item.TransactionId" asp-route-accountId="@Model._userId">Refund</a>
-                                }
-                            }
-                                </td>
-                            </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+							@{
+								var tryParsePayDate1 = DateTime.TryParse(item.vnp_PayDate, out var dateTime);
+								if (tryParsePayDate1 is false)
+								{
+									dateTime = DateTime.ParseExact(item.vnp_PayDate, "yyyyMMddHHmmss", null);
+								}
+								if (DateTime.Compare(dateTime.AddMinutes(Model.RefundValidTime), DateTime.Now) <= 0 || item.Status.Equals(TransactionStatus.CANCELLED))
+								{
+									//<button class="btn btn-danger" disabled>Refund</button>
+									<button class="btn btn-danger disabled" disabled>Refund</button>
+								}
+								else
+								{
+									<a class="btn btn-refund" asp-page="../../Vnpay/Refund" asp-route-transactionId="@item.TransactionId" asp-route-accountId="@Model._userId">Refund</a>
+								}
+							}
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
 </div>

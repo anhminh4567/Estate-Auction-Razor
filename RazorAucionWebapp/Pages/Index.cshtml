@@ -128,7 +128,14 @@
                                     <span>Current Bid:  </span><span style="font-weight: bold;">$@currentBid</span>
                                 </div>
                                 <div class="detailBtn">
-                                    <a asp-page="./CustomerPages/DetailAuction" asp-route-id="@auc.AuctionId">See detail</a>
+                                    @if (HttpContext.User.FindFirst(ClaimTypes.Role)?.Value == "COMPANY")
+                                    {
+                                        <a asp-page="./CompanyPages/AuctionMng/Detail" asp-route-id="@auc.AuctionId">See detail</a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-page="./CustomerPages/DetailAuction" asp-route-id="@auc.AuctionId">See detail</a>
+                                    }
                                 </div>
                             </div>
                         </div>

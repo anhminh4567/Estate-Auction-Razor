@@ -132,19 +132,19 @@ namespace Service.Services.Auction
                 {
                     /////////// UPDATE APP COMISSION///////////
                     //auctionReceipt.Commission = auctionReceipt.Amount * (commissionPercentage / 100);
-                    auctionReceipt.Commission = commissionFixedPrice;
-                    var update1 = await _unitOfWork.Repositories.auctionReceiptRepository.UpdateAsync(auctionReceipt);
+                    //auctionReceipt.Commission = commissionFixedPrice;
+                    //var update1 = await _unitOfWork.Repositories.auctionReceiptRepository.UpdateAsync(auctionReceipt);
 
 
                     auction.Status =AuctionStatus.SUCCESS;
                     esate.Status = EstateStatus.FINISHED;
                     /////////// UPDATE Company BALANCE///////////
-                    CompanyAccount.Balance += auctionReceipt.Amount - auctionReceipt.Commission;
+                    CompanyAccount.Balance += auctionReceipt.Amount;//- auctionReceipt.Commission;
                     var update2 = await _unitOfWork.Repositories.accountRepository.UpdateAsync(CompanyAccount);
                     var update3 = await _unitOfWork.Repositories.auctionRepository.UpdateAsync(auction);
                     var update4 = await _unitOfWork.Repositories.estateRepository.UpdateAsync(esate);
-                    if(update1 is false || update2 is false || update3 is false || update4 is false)
-                    {
+                    if( update2 is false || update3 is false || update4 is false)//update1 is false ||
+					{
                         throw new Exception("fail to update in CreateReceptPayment");
                     }
                     

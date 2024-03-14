@@ -60,7 +60,7 @@ namespace RazorAucionWebapp.BackgroundServices
 							{
 								await auctionRecieptPaymentService.DeleteRange(payments.ToList());
 							}
-							Receipt.Commission = getBindAppsetting.ComissionFixedPrice; // van lay tien commission cho app
+							//Receipt.Commission = getBindAppsetting.ComissionFixedPrice; // van lay tien commission cho app
 							Receipt.RemainAmount = Receipt.Amount - auction.EntranceFee;// remain se la tien tong tru di entrence fee, do company van an entrence fee
 							await auctionRecieptService.Update(Receipt);
 							await accountService.Update(buyer);

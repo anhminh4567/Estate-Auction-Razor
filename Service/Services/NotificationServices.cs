@@ -15,10 +15,13 @@ namespace Service.Services
 
 		public async Task<List<Notification>?> GetAllNotification(int id)
 		{
-			return await _unitOfWork.Repositories.notificationRepository.GetByCondition(p => p.CompanyId == id, p => p.OrderBy(p => p.CreatedDate));
+			return await _unitOfWork.Repositories.notificationRepository.GetByCondition(p => p.AccountId == id || p.CompanyId == id, p => p.OrderBy(p => p.CreatedDate));
 		}
-
-		public async Task<Notification?> GetNotificationById(int id)
+        public async Task<List<Notification>?> GetUncheckedMail(int id)
+        {
+			return await _unitOfWork.Repositories.notificationRepository.GetByCondition(p => (p.AccountId == id || p.CompanyId == id) && !p.IsChecked );
+        }
+        public async Task<Notification?> GetNotificationById(int id)
 		{
 			return (await _unitOfWork.Repositories.notificationRepository.GetByCondition(p => p.NotificationId == id)).FirstOrDefault();
 		}
@@ -39,5 +42,10 @@ namespace Service.Services
             }
 		}
 
+		public async Task<bool> CheckUnreadMail(int id)
+		{
+			var list = await _unitOfWork.Repositories.notificationRepository.GetByCondition(p => (p.AccountId == id || p.CompanyId == id) && !p.IsChecked );
+			return list.Count != 0;
+		}
     }
 }

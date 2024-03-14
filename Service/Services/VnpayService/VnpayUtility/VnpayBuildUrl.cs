@@ -44,27 +44,28 @@ namespace Service.Services.VnpayService.VnpayUtility
 			order.CreatedDate = DateTime.Now;
 
 			// tao moi transactin de lay transction id tren return url
-			await _unitOfWork.BeginTransaction();
-			var newTransaction = new Transaction()
-			{
-				AccountId = acc.AccountId,
-				Status = TransactionStatus.PENDING,
-				vnp_Amount = amount.ToString(),
-				vnp_OrderInfo = "By user id:" + acc.AccountId.ToString(),
-				vnp_TransactionDate = long.Parse(order.CreatedDate.ToString("yyyyMMddHHmmss")),
-				vnp_TxnRef = order.OrderId.ToString(),
-				vnp_PayDate = DateTime.Now.ToString("yyyyMMddHHmmss"),
-			};
-			var creatResult = await _unitOfWork.Repositories.transactionRepository.CreateAsync(newTransaction);
-			if(creatResult is null ) 
-			{
-				await _unitOfWork.RollBackAsync();
-				return null;
-			}
 
+			//await _unitOfWork.BeginTransaction();
+			//var newTransaction = new Transaction()
+			//{
+			//	AccountId = acc.AccountId,
+			//	Status = TransactionStatus.PENDING,
+			//	vnp_Amount = amount.ToString(),
+			//	vnp_OrderInfo = "By user id:" + acc.AccountId.ToString(),
+			//	vnp_TransactionDate = long.Parse(order.CreatedDate.ToString("yyyyMMddHHmmss")),
+			//	vnp_TxnRef = order.OrderId.ToString(),
+			//	vnp_PayDate = DateTime.Now.ToString("yyyyMMddHHmmss"),
+			//};
+			//var creatResult = await _unitOfWork.Repositories.transactionRepository.CreateAsync(newTransaction);
+			//if(creatResult is null ) 
+			//{
+			//	await _unitOfWork.RollBackAsync();
+			//	return null;
+			//}
 
+			var currentDateTime = long.Parse(order.CreatedDate.ToString("yyyyMMddHHmmss"));
 			//Get Config Info
-			string vnp_Returnurl = VnpayDefaultValue.Vnp_Returnurl += creatResult.TransactionId ; //URL nhan ket qua tra ve 
+			string vnp_Returnurl = VnpayDefaultValue.Vnp_Returnurl += acc.AccountId+ "&transactionDate="+ currentDateTime ; //URL nhan ket qua tra ve 
 			string vnp_Url = VnpayDefaultValue.Vnp_Url; //URL thanh toan cua VNPAY 
 			string vnp_TmnCode = VnpayDefaultValue.Vnp_TmnCode; //Ma website
 			string vnp_HashSecret = VnpayDefaultValue.Vnp_HashSecret; //Chuoi bi mat
@@ -139,7 +140,7 @@ namespace Service.Services.VnpayService.VnpayUtility
 			string paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
 
 
-			await _unitOfWork.CommitAsync();
+			//await _unitOfWork.CommitAsync();
 
 			//Response.Redirect(paymentUrl);
 			return paymentUrl;

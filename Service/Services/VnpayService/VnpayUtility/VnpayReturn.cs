@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Protocols;
 using Repository.Database.Model;
+using Repository.Database.Model.AppAccount;
+using Repository.Database.Model.Enum;
 using Repository.Interfaces.DbTransaction;
 using Service.Services.VnpayService.Model;
 using System;
@@ -20,7 +22,7 @@ namespace Service.Services.VnpayService.VnpayUtility
 			this._unitOfWork = unitOfWork;
 		}
 
-		public async Task<VnpayReturnResult> OnTransactionReturn(HttpContext httpContext, Transaction currentTransaction)
+		public async Task<VnpayReturnResult> OnTransactionReturn(HttpContext httpContext, Account acc, long transactionDate)
         {
             if (httpContext.Request.QueryString.Value.Length > 0)
             {
@@ -61,33 +63,57 @@ namespace Service.Services.VnpayService.VnpayUtility
                     TransactionStatus = vnp_TransactionStatus,
                     Vnp_TxnRef = orderId,
                 };
-                if (checkSignature)
+				
+				if (checkSignature)
                 {
-                    if (vnp_ResponseCode == "00" && vnp_TransactionStatus == "00")
+					var newTransaction = new Transaction()
+					{
+						AccountId = acc.AccountId,
+						Status = TransactionStatus.SUCCESS,
+						vnp_Amount = vnp_Amount.ToString(),
+						vnp_OrderInfo = "By user id:" + acc.AccountId.ToString(),
+						vnp_TransactionDate = transactionDate,
+						vnp_TxnRef = orderId.ToString(),
+						vnp_PayDate = transactionDate.ToString(),
+					};
+					if (vnp_ResponseCode == "00" && vnp_TransactionStatus == "00")
                     {
                         //Thanh toan thanh cong
                         //displayMsg.InnerText = "Giao dịch được thực hiện thành công. Cảm ơn quý khách đã sử dụng dịch vụ";
                         Console.WriteLine("Success");
                         returnResult.Success = true;
                         returnResult.Message = "Success";
-						//var getTransaction = (await _unitOfWork.Repositories.transactionRepository
-						//    .GetByCondition(t => t.vnp_TxnRef == orderId.ToString())).First();
-						currentTransaction.Status = Repository.Database.Model.Enum.TransactionStatus.SUCCESS;
+
+                        var creatResult = await _unitOfWork.Repositories.transactionRepository.CreateAsync(newTransaction);
+
+                        //var getTransaction = (await _unitOfWork.Repositories.transactionRepository
+                        //    .GetByCondition(t => t.vnp_TxnRef == orderId.ToString())).First();
+                        //currentTransaction.Status = Repository.Database.Model.Enum.TransactionStatus.SUCCESS;
 						//getTransaction.Status = Repository.Database.Model.Enum.TransactionStatus.SUCCESS;
-                        await _unitOfWork.Repositories.transactionRepository.UpdateAsync(currentTransaction);
+                       // await _unitOfWork.Repositories.transactionRepository.UpdateAsync(currentTransaction);
                         return returnResult;
                     }
+                    else if( vnp_ResponseCode == "24")
+                    {
+						Console.WriteLine("fail");
+						returnResult.Success = false;
+						returnResult.Message = "24  Giao dịch không thành công do: Khách hàng hủy giao dịch";
+                        newTransaction.Status = TransactionStatus.FAIL;
+                        await _unitOfWork.Repositories.transactionRepository.UpdateAsync(newTransaction);
+					}
                     else
                     {
                         Console.WriteLine("fail");
                         returnResult.Success = false;
                         returnResult.Message = "Fail";
-						//var getTransaction = (await _unitOfWork.Repositories.transactionRepository
-						//   .GetByCondition(t => t.vnp_TxnRef == orderId.ToString())).First();
-						//getTransaction.Status = Repository.Database.Model.Enum.TransactionStatus.FAIL;
-						//await _unitOfWork.Repositories.transactionRepository.UpdateAsync(getTransaction);
-						currentTransaction.Status = Repository.Database.Model.Enum.TransactionStatus.SUCCESS;
-						await _unitOfWork.Repositories.transactionRepository.UpdateAsync(currentTransaction);
+                        //var getTransaction = (await _unitOfWork.Repositories.transactionRepository
+                        //   .GetByCondition(t => t.vnp_TxnRef == orderId.ToString())).First();
+                        //getTransaction.Status = Repository.Database.Model.Enum.TransactionStatus.FAIL;
+                        //await _unitOfWork.Repositories.transactionRepository.UpdateAsync(getTransaction);
+                        //currentTransaction.Status = Repository.Database.Model.Enum.TransactionStatus.SUCCESS;
+                        //await _unitOfWork.Repositories.transactionRepository.UpdateAsync(currentTransaction);
+                        newTransaction.Status = TransactionStatus.FAIL;
+						await _unitOfWork.Repositories.transactionRepository.UpdateAsync(newTransaction);
 						return returnResult;
                         //Thanh toan khong thanh cong. Ma loi: vnp_ResponseCode
                         //displayMsg.InnerText = "Có lỗi xảy ra trong quá trình xử lý.Mã lỗi: " + vnp_ResponseCode;
@@ -103,8 +129,9 @@ namespace Service.Services.VnpayService.VnpayUtility
                 {
                     returnResult.Success = false;
                     returnResult.Message = "Hash Incorect, the result is tampered before";
-					currentTransaction.Status = Repository.Database.Model.Enum.TransactionStatus.SUCCESS;
-					await _unitOfWork.Repositories.transactionRepository.UpdateAsync(currentTransaction);
+
+					//currentTransaction.Status = Repository.Database.Model.Enum.TransactionStatus.SUCCESS;
+					//await _unitOfWork.Repositories.transactionRepository.UpdateAsync(currentTransaction);
 					return returnResult;
                     //log.InfoFormat("Invalid signature, InputData={0}", Request.RawUrl);
                     //displayMsg.InnerText = "Có lỗi xảy ra trong quá trình xử lý";

@@ -89,28 +89,7 @@
                         @if (isAuctioning)
                         {
                             <div>
-                                <p class="jump_price position-relative">
-                                    <i class="fa-solid fa-square-plus"></i>
-                                    <span>
-                                        $ @Model.Auction.IncrementPrice
-                                    </span>
-                                    <span class="jumpprice_hover">
-                                        <i class="fa-regular fa-circle-question"></i>
-                                    </span>
-                                </p>
-                                @* <p>wanted price: @Model.Auction.WantedPrice</p> *@
-                                <a class="d-inline btn btn-primary p-2 disabled" asp-page="./BidAuction" asp-route-auctionId="@Model.Auction.AuctionId">BID NOW</a>
-                                @{
-                                    if (HttpContext.User.Identity.IsAuthenticated)
-                                    {
-                                        <a class="d-inline btn btn-secondary p-2 disabled" asp-page="./JoinAuction" asp-route-id="@Model.Auction.AuctionId">Join auction !</a>
-                                    }
-                                    else
-                                    {
-                                        <a class="d-inline btn btn-secondary p-2 disabled" asp-page="/Registration/Login">Login to join!</a>
-                                    }
-                                    <p class="text-danger m-3">Company cannot join or bid</p>
-                                }
+                                <p class="text-danger m-3 fw-bolder">Company cannot join or bid</p>
                             </div>
                         }
                         else
