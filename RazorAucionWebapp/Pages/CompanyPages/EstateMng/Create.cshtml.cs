@@ -119,7 +119,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
                     //Handling Image
                     foreach (var Image in Images)
                     {
-                        var (directory, path) = GetEstateDirectory("abc");
+                        var (directory, path) = GetEstateDirectory(ImageHandler.RemoveWhiteSpace(Estate.Name));
                         var result = await _estateImagesServices.Create(Estate.EstateId, path, Image.FileName);
                         if(result.IsSuccess)
                         {

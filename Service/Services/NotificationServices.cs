@@ -52,6 +52,20 @@ namespace Service.Services
 
         public async Task<Notification> CreateMessage(int senderId, int receiverId, int auctionId, NotificationType type)
         {
+            if(senderId == 0)
+            {
+                var estate1 = (await _unitOfWork.Repositories.auctionRepository.GetByCondition(p => p.AuctionId == auctionId, includeProperties: "Estate")).FirstOrDefault().Estate;
+                var message1 = String.Format("One of your auction({1}) has eneded", estate1.Name);
+                return new Notification()
+                {
+                    SenderId = receiverId,
+                    ReceiverId = receiverId,
+                    Type = type,
+                    Message = message1,
+                    IsChecked = false,
+                    CreatedDate = DateTime.Now.Date
+                };
+            }
             var sender = (await _unitOfWork.Repositories.accountRepository.GetByCondition(p => p.AccountId == senderId)).FirstOrDefault();
             var estate = (await _unitOfWork.Repositories.auctionRepository.GetByCondition(p => p.AuctionId == auctionId, includeProperties: "Estate")).FirstOrDefault().Estate;
             var message = "";
@@ -74,9 +88,6 @@ namespace Service.Services
                     break;
                 case NotificationType.EndAuction:
                     message = String.Format("an auction({0}) that you have joined has ended", sender.FullName, estate.Name);
-                    break;
-                case NotificationType.AdminCancelAuction:
-                    message = String.Format("Admin has cancelled one of your auction({1}) ", estate.Name);
                     break;
             }
 
@@ -102,9 +113,9 @@ namespace Service.Services
         //For update, cancel, start and end
         public async Task SendMessage(int auctionId, NotificationType type)
         {
-            var auction = (await _unitOfWork.Repositories.auctionRepository.GetByCondition(p => p.AuctionId == auctionId, includeProperties: "Account, Estate.Company")).FirstOrDefault();
-            if (type == NotificationType.AdminCancelAuction)
+            if (type == NotificationType.AutoCancelAuction)
             {
+                var auction = (await _unitOfWork.Repositories.auctionRepository.GetByCondition(p => p.AuctionId == auctionId, includeProperties: "Estate.Company")).FirstOrDefault();
                 int senderId = 0;
                 int receiverId = auction.Estate.Company.AccountId;
                 var notification = await CreateMessage(senderId, receiverId, auctionId, type);
