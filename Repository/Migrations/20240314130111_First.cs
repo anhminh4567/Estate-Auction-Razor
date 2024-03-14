@@ -81,6 +81,36 @@ namespace Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Notifications",
+                columns: table => new
+                {
+                    NotificationId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ReceiverId = table.Column<int>(type: "int", nullable: false),
+                    SenderId = table.Column<int>(type: "int", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsChecked = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 3, 14, 20, 1, 11, 112, DateTimeKind.Local).AddTicks(6789))
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notifications", x => x.NotificationId);
+                    table.ForeignKey(
+                        name: "FK_Notifications_Account_ReceiverId",
+                        column: x => x.ReceiverId,
+                        principalTable: "Account",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Notifications_Account_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "Account",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Transactions",
                 columns: table => new
                 {
@@ -155,36 +185,6 @@ namespace Repository.Migrations
                         principalTable: "Company",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Notifications",
-                columns: table => new
-                {
-                    NotificationId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CompanyId = table.Column<int>(type: "int", nullable: false),
-                    AccountId = table.Column<int>(type: "int", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsChecked = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 3, 11, 11, 21, 59, 429, DateTimeKind.Local).AddTicks(1402))
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Notifications", x => x.NotificationId);
-                    table.ForeignKey(
-                        name: "FK_Notifications_Account_AccountId",
-                        column: x => x.AccountId,
-                        principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Notifications_Company_CompanyId",
-                        column: x => x.CompanyId,
-                        principalTable: "Company",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -356,7 +356,7 @@ namespace Repository.Migrations
                     AccountId = table.Column<int>(type: "int", nullable: true),
                     ReceiptId = table.Column<int>(type: "int", nullable: true),
                     PayAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    PayTime = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 3, 11, 11, 21, 59, 427, DateTimeKind.Local).AddTicks(6814))
+                    PayTime = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2024, 3, 14, 20, 1, 11, 109, DateTimeKind.Local).AddTicks(3419))
                 },
                 constraints: table =>
                 {
@@ -437,14 +437,14 @@ namespace Repository.Migrations
                 column: "AuctionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Notifications_AccountId",
+                name: "IX_Notifications_ReceiverId",
                 table: "Notifications",
-                column: "AccountId");
+                column: "ReceiverId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Notifications_CompanyId",
+                name: "IX_Notifications_SenderId",
                 table: "Notifications",
-                column: "CompanyId");
+                column: "SenderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Transactions_AccountId",
