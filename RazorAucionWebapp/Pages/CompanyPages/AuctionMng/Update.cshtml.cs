@@ -76,6 +76,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
                 return BadRequest();
             }
 
+
             return RedirectToPage("./Index");
         }
 

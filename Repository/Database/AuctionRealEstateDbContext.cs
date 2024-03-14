@@ -135,6 +135,8 @@ namespace Repository.Database
             builder.Entity<Notification>(e =>
             {
                 var type = new EnumToStringConverter<NotificationType>();
+                e.HasOne(e => e.Receiver).WithMany(e => e.RecievedNotifications).HasForeignKey(e => e.ReceiverId).IsRequired().OnDelete(DeleteBehavior.Restrict);
+                e.HasOne(e => e.Sender).WithMany(e => e.SentNotifications).HasForeignKey(e => e.SenderId).IsRequired().OnDelete(DeleteBehavior.Restrict);
                 e.Property(e => e.Type).HasConversion(type);
                 e.Property(e => e.IsChecked).HasDefaultValue(false);
                 e.Property(e => e.CreatedDate).HasDefaultValue(DateTime.Now);

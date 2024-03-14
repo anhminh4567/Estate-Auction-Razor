@@ -24,8 +24,8 @@ namespace Service.MyHub.HubServices
 
         public async Task SendNewNotification(string userEmail)
         {
-            var connectionId = _connectionMapping.GetConnections(userEmail);
-            await _notificationHub.Clients.User(connectionId).SendAsync("OnNewNotification");
+            var connectionId = _connectionMapping.GetConnections(userEmail).FirstOrDefault();
+            await _notificationHub.Clients.Client(connectionId).SendAsync("NewNotification");
         }
     }
 }

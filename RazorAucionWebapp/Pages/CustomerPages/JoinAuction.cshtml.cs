@@ -19,15 +19,13 @@ namespace RazorAucionWebapp.Pages.CustomerPages
 		private readonly AccountServices _accountServices;
 		private readonly BidServices _bidServices;
         private readonly NotificationServices _notificationServices;
-        private readonly NotificationHubService _notificationHubService;
-        public JoinAuctionModel(JoinedAuctionServices joinedAuctionServices, AuctionServices auctionServices, AccountServices accountServices, BidServices bidServices, NotificationServices notificationServices, NotificationHubService notificationHubService)
+        public JoinAuctionModel(JoinedAuctionServices joinedAuctionServices, AuctionServices auctionServices, AccountServices accountServices, BidServices bidServices, NotificationServices notificationServices)
 		{
 			_joinedAuctionServices = joinedAuctionServices;
 			_auctionServices = auctionServices;
 			_accountServices = accountServices;
 			_bidServices = bidServices;
             _notificationServices = notificationServices;
-            _notificationHubService = notificationHubService;
         }
         [BindProperty]
         public int AuctionId { get; set; }
@@ -57,20 +55,11 @@ namespace RazorAucionWebapp.Pages.CustomerPages
             try
             {
                 GetUserId();
-                await GetJoinAuction(AuctionId);
                 var result = await _joinedAuctionServices.JoinAuction(Account.AccountId, Auction.AuctionId);
                 if (result.IsSuccess)
                 {
-                    var company = Auction.Estate.Company;
-                    var notification = new Notification()
-                    {
-                        AccountId = Account.AccountId,
-                        CompanyId = company.AccountId,
-                        Message = String.Format("joined your auction({1})", Account.Email, Auction.AuctionId),
-                        CreatedDate = DateTime.Now.Date
-                    };
-                    await _notificationServices.CreateNotification(notification);
-                    await _notificationHubService.SendNewNotification(company.Email);
+                    await GetJoinAuction(AuctionId);
+                    await _notificationServices.SendMessage(_userId, Auction.AuctionId, NotificationType.JoinAuction);
                     return RedirectToPage("../Index");
                 }
                 else
@@ -138,6 +127,7 @@ namespace RazorAucionWebapp.Pages.CustomerPages
                 var result = await _joinedAuctionServices.QuitAuction(Account.AccountId, Auction.AuctionId);
                 if (result.IsSuccess)
                 {
+                    await _notificationServices.SendMessage(_userId, Auction.AuctionId, NotificationType.QuitAuction);
                     return RedirectToPage("../Index");
                 }
                 else

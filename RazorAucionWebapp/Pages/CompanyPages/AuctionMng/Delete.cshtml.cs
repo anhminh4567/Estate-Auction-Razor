@@ -6,11 +6,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Repository.Database;
+using Repository.Database.Model.AppAccount;
+using Repository.Database.Model;
 using Repository.Database.Model.AuctionRelated;
 using Repository.Database.Model.Enum;
 using Repository.Database.Model.RealEstate;
+using Service.MyHub.HubServices;
+using Service.Services;
 using Service.Services.Auction;
 using Service.Services.RealEstate;
+using Service.Services.AppAccount;
 
 namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
 {
@@ -19,11 +24,13 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
         private readonly AuctionServices _auctionServices;
         private readonly EstateServices _estateServices;
         private readonly BidServices _bidServices;
-        public DeleteModel(AuctionServices auctionServices, EstateServices estateServices, BidServices bidServices)
+        private readonly NotificationServices _notificationServices;
+        public DeleteModel(AuctionServices auctionServices, EstateServices estateServices, BidServices bidServices, NotificationServices notificationServices)
         {
             _auctionServices = auctionServices;
             _estateServices = estateServices;
             _bidServices = bidServices;
+            _notificationServices = notificationServices;
         }
 
         [BindProperty]
@@ -58,6 +65,7 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
                 var result = await _auctionServices.CancelAuction(Auction);
                 if (result.IsSuccess)
                 {
+                    await _notificationServices.SendMessage(Auction.AuctionId, NotificationType.CancelAuction);
                     return RedirectToPage("./Index");
                 }
                 else

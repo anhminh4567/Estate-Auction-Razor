@@ -169,16 +169,4 @@ body {
     background-color: red;
     z-index: 1;
     transform: translateX(30px);
-    animation: blink 10s infinite;
-}
-@keyframes blink{
-    0% {
-        display: block;
-    }
-    30% {
-        display: none;
-    }
-    70% {
-        display: block;
-    }
 }

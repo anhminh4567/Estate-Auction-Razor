@@ -8,6 +8,6 @@ namespace Repository.Database.Model.Enum
 {
     public enum NotificationType
     {
-        JoinAuction, StartAuction, CancelAuction, CompletePayment, CancelPayment, PastDue
+        JoinAuction, QuitAuction, StartAuction, EndAuction, CancelAuction, UpdateAuction, AdminCancelAuction
     }
 }

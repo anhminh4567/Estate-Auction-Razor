@@ -39,6 +39,7 @@ namespace Service.Services.AppAccount
         {
             return await _unitOfWork.Repositories.joinedAuctionRepository.GetByCondition(j => j.AuctionId == auctionId && j.Status.Equals(status));
         }
+
         public async Task<List<JoinedAuction>> GetByAccountId(int accountId)
         {
             return await _unitOfWork.Repositories.joinedAuctionRepository.GetByCondition(j => j.AccountId == accountId);
@@ -47,6 +48,11 @@ namespace Service.Services.AppAccount
         {
             return (await _unitOfWork.Repositories.joinedAuctionRepository.GetByCondition(j => j.AuctionId == auctionId && j.AccountId == accountId)).FirstOrDefault();
         }
+        public async Task<List<JoinedAuction>?> GetInclude(int auctionId, string included)
+        {
+            return await _unitOfWork.Repositories.joinedAuctionRepository.GetByCondition(p => p.AuctionId == auctionId, includeProperties: included);
+        }
+
         private async Task<bool> CheckIfUserHasJoinedTheAuction(Account account, Repository.Database.Model.AuctionRelated.Auction auction)
         {
             var getUserJoinedAuctionJoined = (await _unitOfWork.Repositories.joinedAuctionRepository

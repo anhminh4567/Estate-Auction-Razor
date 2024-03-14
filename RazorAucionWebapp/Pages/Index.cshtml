@@ -231,8 +231,8 @@
             console.log(auction);
             console.log(estate);
         });
-        connection.start().then((result) => {
-            console.log(result)
+        connection.start().then(() => {
+            console.log("Connection established, Connection ID:", connection.connectionId);
         }).catch((error) => {
             console.error(error);
         }

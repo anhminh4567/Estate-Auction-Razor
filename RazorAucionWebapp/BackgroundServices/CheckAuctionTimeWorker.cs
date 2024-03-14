@@ -1,8 +1,10 @@
 ﻿using RazorAucionWebapp.Configure;
+using RazorAucionWebapp.Pages;
 using Repository.Database;
 using Repository.Database.Model.AuctionRelated;
 using Repository.Database.Model.Enum;
 using Repository.Interfaces.DbTransaction;
+using Service.Services;
 using Service.Services.Auction;
 
 namespace RazorAucionWebapp.BackgroundServices
@@ -43,6 +45,7 @@ namespace RazorAucionWebapp.BackgroundServices
 				var bidServices = scope.ServiceProvider.GetRequiredService<BidServices>();
                 var auctionRecieptService = scope.ServiceProvider.GetRequiredService<AuctionReceiptServices>();
                 var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+                var notificationService = scope.ServiceProvider.GetRequiredService<NotificationServices>();
 				var getAll = await auctionService.GetWithCondition(a =>
                 a.Status.Equals(AuctionStatus.NOT_STARTED) ||
                 a.Status.Equals(AuctionStatus.ONGOING));
@@ -50,10 +53,14 @@ namespace RazorAucionWebapp.BackgroundServices
                 {
                     try
                     {
+                        NotificationType type;
+
                         await unitOfWork.BeginTransaction();
                         if (auc.Status.Equals(AuctionStatus.NOT_STARTED) && auc.StartDate.CompareTo(DateTime.Now) <= 0)
                         {
                             auc.Status = AuctionStatus.ONGOING; // chane from not started to ready 
+                            //Send Notification
+                                await notificationService.SendMessage(auc.AuctionId, NotificationType.StartAuction);
                         }
                         if (auc.Status.Equals(AuctionStatus.ONGOING) && auc.EndDate.CompareTo(DateTime.Now) <= 0)
                         {
@@ -65,13 +72,19 @@ namespace RazorAucionWebapp.BackgroundServices
                                 getFullDetail.JoinedAccounts.Count == 0)
                             {
                                 auc.Status = AuctionStatus.CANCELLED;
+                                //Send Notification
+                                await notificationService.SendMessage(auc.AuctionId, NotificationType.AdminCancelAuction);
                             }
                             else
                             {
                                 auc.Status = AuctionStatus.PENDING_PAYMENT; //waiting for payment
                                 var getHighestBid = await bidServices.GetHighestBids(auctionId: auc.AuctionId);
                                 if (getHighestBid is null)
+                                    {
                                     auc.Status = AuctionStatus.CANCELLED;// cancelled if no bid is placed
+                                    //Send Notification
+                                    await notificationService.SendMessage(auc.AuctionId, NotificationType.AdminCancelAuction);
+                                }
                                 else
                                 {
                                     var newWinnder = new AuctionReceipt()
@@ -109,14 +122,16 @@ namespace RazorAucionWebapp.BackgroundServices
                                         }
 									}
                                     auc.ReceiptId = createResult.ReceiptId;
-                                    // auc.Estate.Status = EstateStatus.FINISHED;
+                                    //Send Notification
+                                    await notificationService.SendMessage(auc.AuctionId, NotificationType.EndAuction);
                                 }
                             }
                         }
                         var tryUpdte = await auctionService.Update(auc);
                         await unitOfWork.SaveChangesAsync();
                         await unitOfWork.CommitAsync();
-                    }catch (Exception ex)
+                    }
+                    catch (Exception ex)
                     {
                         await unitOfWork.RollBackAsync();
                         Console.WriteLine(ex.Message);

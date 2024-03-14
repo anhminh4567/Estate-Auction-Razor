@@ -25,9 +25,8 @@ namespace Service.MyHub
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
             var context = Context.GetHttpContext();
-            _connectionMapping.Remove(context.User.Identity.Name);
+            _connectionMapping.Remove(context.User.Identity.Name, Context.ConnectionId);
             await Groups.RemoveFromGroupAsync(connectionId: Context.ConnectionId, "notifications");
         }
-
     }
 }

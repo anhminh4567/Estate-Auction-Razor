@@ -10,10 +10,10 @@ namespace Repository.Database.Model
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int NotificationId { get; set; }
-        public int CompanyId { get; set; }
-        public Company? Company { get; set; }
-        public int AccountId { get; set; }
-        public Account? Account { get; set; }
+        public int ReceiverId { get; set; }
+        public Account? Receiver { get; set; }
+        public int SenderId { get; set; }
+        public Account? Sender { get; set; }
         public NotificationType Type { get; set; }
         public string Message { get; set; }
         public bool IsChecked { get; set; }

@@ -83,18 +83,18 @@
                                             .withAutomaticReconnect()
                                             .withUrl("/notificationrealtime")
                                             .build();
-                                        notification.on("OnNewNotification", function (msg) {
-                                            console.log(msg);
-                                            $(".notified_trigger").show();
+                                        notification.on("NewNotification", function () {
+                                            console.log("recieved")
+                                            $(".notified_trigger").removeClass("d-none");
                                         });
-                                        notification.start().then((result) => {
-                                            console.log(result)
+                                        notification.start().then(() => {
+                                            console.log("Connection established, Connection ID:", notification.connectionId);
                                         }).catch((error) => {
                                             console.error(error);
                                         });
                                     </script>
                                     <a asp-page="/MailBox" class="user_mail">
-                                        <div class="notified_trigger" style="display: none;">
+                                        <div class="notified_trigger @(TempData["NewMail"] == null ? "d-none" : "")">
                                             <div class="notified justify-content-center align-content-center"></div>
                                         </div>
                                         <img src=@Url.Content("~/PublicImages/general/mailbox.svg") width="40" height="40" />

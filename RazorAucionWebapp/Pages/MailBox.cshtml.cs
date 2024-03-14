@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Repository.Database.Model;
 using Service.Services;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace RazorAucionWebapp.Pages
 {
@@ -27,12 +28,12 @@ namespace RazorAucionWebapp.Pages
             await _notificationServices.SetToChecked(nId);
             return new JsonResult("");
         }
-
         private async Task GetUserMail()
         {
             int id;
             var flag = int.TryParse(HttpContext.User.FindFirst("Id")?.Value, out id);
             if(flag) Notifications = await _notificationServices.GetAllNotification(id);
         }
+        
     }
 }
