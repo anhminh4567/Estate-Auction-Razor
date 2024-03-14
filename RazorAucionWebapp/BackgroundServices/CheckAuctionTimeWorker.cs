@@ -73,7 +73,7 @@ namespace RazorAucionWebapp.BackgroundServices
                             {
                                 auc.Status = AuctionStatus.CANCELLED;
                                 //Send Notification
-                                await notificationService.SendMessage(auc.AuctionId, NotificationType.AutoCancelAuction);
+                                await notificationService.SendMessage(auc.AuctionId, NotificationType.EndAuction);
                             }
                             else
                             {
@@ -83,7 +83,7 @@ namespace RazorAucionWebapp.BackgroundServices
                                     {
                                     auc.Status = AuctionStatus.CANCELLED;// cancelled if no bid is placed
                                     //Send Notification
-                                    await notificationService.SendMessage(auc.AuctionId, NotificationType.AutoCancelAuction);
+                                    await notificationService.SendMessage(auc.AuctionId, NotificationType.EndAuction);
                                 }
                                 else
                                 {
