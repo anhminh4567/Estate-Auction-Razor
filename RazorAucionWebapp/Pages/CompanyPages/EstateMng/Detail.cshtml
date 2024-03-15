@@ -100,7 +100,7 @@
 					<th>Wanted Price</th>
 					<th>Status</th>
 					<th>Jump price</th>
-					<th>Current Bid</th>
+					<th>Highest Bid</th>
 					<th></th>
 				</tr>
 				@foreach (var auc in Model.Estate.Auctions)
@@ -112,7 +112,14 @@
 						<td>@auc.WantedPrice</td>
 						<td>@auc.Status</td>
 						<td>@auc.IncrementPrice</td>
-						<td>$ 999</td>
+						@{
+							decimal currentBid = 0;
+							if (auc.Bids is not null && auc.Bids.Count > 0)
+							{
+								currentBid = auc.Bids.Last().Amount;
+							}
+						}
+						<td>$@currentBid</td>
 						<td class="detailBtn">
 							<a href="/CompanyPages/AuctionMng/Detail?id=@auc.AuctionId">
 								Detail
@@ -140,4 +147,26 @@
 	$('.sub_img').click(function () {
 		$('.main_img').attr('src', $(this).attr('src'))
 	})
+
+	const connection = new signalR.HubConnectionBuilder()
+		.withAutomaticReconnect()
+		.withUrl("/auctionrealtime")
+		.build();
+
+	connection.start()
+		.then((result) => {
+			console.log(result);
+		})
+		.catch((error) => {
+			console.error(error);
+		});
+
+	connection.on("UpdateLatestBidAmount", () => {
+		location.reload();
+	});
+
+	connection.on("UpdateAuctionStatus", () => {
+		location.reload();
+	})
+
 </script>

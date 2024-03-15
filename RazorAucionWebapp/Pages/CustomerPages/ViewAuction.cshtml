@@ -1,5 +1,6 @@
 ﻿@page
 @model RazorAucionWebapp.Pages.CustomerPages.ViewAuctionListModel
+@using Repository.Database.Model.Enum;
 
 @{
     ViewData["Title"] = "My Auction List";
@@ -26,6 +27,7 @@
                     <th>Max Participants</th>
                     <th>Status</th>
                     <th>Action</th>
+                    <th>Remain amount</th>
                 </tr>
             </thead>
             <tbody>
@@ -41,10 +43,13 @@
                                 <td>@Html.DisplayFor(modelItem => item.Status)</td>
                                 <td>
                                     <a asp-page="./DetailAuction" asp-route-id="@item.AuctionId" class="btn btn-primary">Detail</a>
-                            @if (item.AuctionReceipt is not null)
+                            @if (item.AuctionReceipt is not null && item.Status.Equals(AuctionStatus.PENDING_PAYMENT))
                             {
                                                 <a asp-page="./ReceiptPayment/Index" asp-route-auctionId="@item.AuctionId" class="btn btn-success">See Your Transaction</a>
                             }
+                                </td>
+                                <td>
+                                    <span>@(item.AuctionReceipt is not null ? item.AuctionReceipt.RemainAmount : "None")</span>
                                 </td>
                             </tr>
                 }

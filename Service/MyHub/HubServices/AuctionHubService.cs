@@ -45,5 +45,9 @@ namespace Service.MyHub.HubServices
         {
             await _auctionHub.Clients.All.SendAsync("UpdateLatestBidAmount");
         }
+        public async Task UpdateAuctionStatus()
+        {
+            await _auctionHub.Clients.All.SendAsync("UpdateAuctionStatus");
+        }
     }
 }

@@ -4,6 +4,7 @@ using Repository.Database;
 using Repository.Database.Model.AuctionRelated;
 using Repository.Database.Model.Enum;
 using Repository.Interfaces.DbTransaction;
+using Service.MyHub.HubServices;
 using Service.Services;
 using Service.Services.Auction;
 
@@ -46,6 +47,7 @@ namespace RazorAucionWebapp.BackgroundServices
                 var auctionRecieptService = scope.ServiceProvider.GetRequiredService<AuctionReceiptServices>();
                 var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
                 var notificationService = scope.ServiceProvider.GetRequiredService<NotificationServices>();
+                var auctionHubService = scope.ServiceProvider.GetRequiredService<AuctionHubService>();
 				var getAll = await auctionService.GetWithCondition(a =>
                 a.Status.Equals(AuctionStatus.NOT_STARTED) ||
                 a.Status.Equals(AuctionStatus.ONGOING));
@@ -59,6 +61,8 @@ namespace RazorAucionWebapp.BackgroundServices
                         if (auc.Status.Equals(AuctionStatus.NOT_STARTED) && auc.StartDate.CompareTo(DateTime.Now) <= 0)
                         {
                             auc.Status = AuctionStatus.ONGOING; // chane from not started to ready 
+                            // Reload Auction Detail page to update status
+                                await auctionHubService.UpdateAuctionStatus();
                             //Send Notification
                                 await notificationService.SendMessage(auc.AuctionId, NotificationType.StartAuction);
                         }

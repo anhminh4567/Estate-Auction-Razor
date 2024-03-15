@@ -27,7 +27,7 @@
 					<th>Wanted Price</th>
 					<th>Status</th>
 					<th>Jump price</th>
-					<th>Current Bid</th>
+					<th>Highest Bid</th>
 					<th></th>
 				</tr>
 				@foreach (var auc in Model.Auctions)
@@ -39,7 +39,14 @@
 						<td>@auc.WantedPrice</td>
 						<td class="text-danger fw-bold">@auc.Status</td>
 						<td>@auc.IncrementPrice</td>
-						<td>$ 999</td>
+						@{
+							decimal currentBid = 0;
+							if (auc.Bids is not null && auc.Bids.Count > 0)
+							{
+								currentBid = auc.Bids.Last().Amount;
+							}
+						}
+						<td>$@currentBid</td>
 						<td class="detailBtn">
 							<a href="/CompanyPages/AuctionMng/Detail?id=@auc.AuctionId">
 								Detail

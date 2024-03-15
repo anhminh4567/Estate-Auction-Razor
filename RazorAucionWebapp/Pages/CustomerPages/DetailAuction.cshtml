@@ -214,16 +214,16 @@
                                         {
                                             foreach (var categoryDetail in Model.Auction.Estate.EstateCategory)
                                             {
-                                                <span>@categoryDetail.CategoryDetail.CategoryName</span>
-                                                @if (categoryDetail != Model.Auction.Estate.EstateCategory.Last())
+                                                    <span>@categoryDetail.CategoryDetail.CategoryName</span>
+                                                    @if (categoryDetail != Model.Auction.Estate.EstateCategory.Last())
                                                 {
-                                                    <span>, </span>
+                                                        <span>, </span>
                                                 }
                                             }
                                         }
                                         else
                                         {
-                                            <span class="text-danger">No Category, something wrong</span>
+                                                <span class="text-danger">No Category, something wrong</span>
                                         }
                                     }
                                 </td>
@@ -261,27 +261,27 @@
                                             leading_bid_style = "leading_bid";
                                             isFirst = true;
                                         }
-                                        <div class="@leading_bid_style">
-                                            @if (isFirst)
+                                            <div class="@leading_bid_style">
+                                                @if (isFirst)
                                             {
                                                 // <img src="https://i.ibb.co/tqYcp8z/gold-medal.png" width="40" height="40" />
                                             }
-                                            <div class="d-flex justify-content-between bid_record">
-                                                <span class="">@bid.Bidder.FullName</span>
-                                                <span class="">$ @bid.Amount</span>
-                                                @*<p class="d-inline p-3 m-3 text-primary">amount: @bid.Time</p>*@
-                                            </div>
+                                                <div class="d-flex justify-content-between bid_record">
+                                                    <span class="">@bid.Bidder.FullName</span>
+                                                    <span class="">$ @bid.Amount</span>
+                                                    @*<p class="d-inline p-3 m-3 text-primary">amount: @bid.Time</p>*@
+                                                </div>
 
-                                        </div>
+                                            </div>
                                     }
-                                    <p class="fw-bold"><span class="text-danger">@Model.Auction.Bids.Last().Bidder.FullName</span> is the highest bidder!</p>
+                                        <p class="fw-bold"><span class="text-danger">@Model.Auction.Bids.Last().Bidder.FullName</span> is the highest bidder!</p>
                                 }
                                 else
                                 {
-                                    <div class="empty_bid_list">
-                                        <img src="https://i.ibb.co/8bWQRX7/no-task.png" width="40" height="40" />
-                                        <p>Auction has no bids yet!</p>
-                                    </div>
+                                        <div class="empty_bid_list">
+                                            <img src="https://i.ibb.co/8bWQRX7/no-task.png" width="40" height="40" />
+                                            <p>Auction has no bids yet!</p>
+                                        </div>
                                 }
                             }
                         </div>
@@ -296,31 +296,31 @@
                         @{
                             if (Model.Auction.JoinedAccounts is not null && Model.Auction.JoinedAccounts.Count > 0)
                             {
-                                <table class="joined_account_table">
-                                    <tr>
-                                        <td>Id</td>
-                                        <td>Name</td>
-                                        <td>Email</td>
-                                        <td>Join date</td>
-                                    </tr>
-                                    @foreach (var joinedAccount in Model.Auction.JoinedAccounts)
-                                    {
+                                    <table class="joined_account_table">
                                         <tr>
-                                            <td>@joinedAccount.Account.AccountId</td>
-                                            <td>@joinedAccount.Account.FullName</td>
-                                            <td>@joinedAccount.Account.Email</td>
-                                            <td>@joinedAccount.RegisterDate.ToString("dd/MM/yyy")</td>
+                                            <td>Id</td>
+                                            <td>Name</td>
+                                            <td>Email</td>
+                                            <td>Join date</td>
                                         </tr>
+                                        @foreach (var joinedAccount in Model.Auction.JoinedAccounts)
+                                    {
+                                            <tr>
+                                                <td>@joinedAccount.Account.AccountId</td>
+                                                <td>@joinedAccount.Account.FullName</td>
+                                                <td>@joinedAccount.Account.Email</td>
+                                                <td>@joinedAccount.RegisterDate.ToString("dd/MM/yyy")</td>
+                                            </tr>
                                     }
-                                </table>
+                                    </table>
 
                             }
                             else
                             {
-                                <div class="empty_join_list">
-                                    <img src="https://i.ibb.co/C5Cpv6B/suspect.png" width="40" height="40" />
-                                    <p class="">No one has joined yet!</p>
-                                </div>
+                                    <div class="empty_join_list">
+                                        <img src="https://i.ibb.co/C5Cpv6B/suspect.png" width="40" height="40" />
+                                        <p class="">No one has joined yet!</p>
+                                    </div>
                             }
                         }
 
@@ -384,6 +384,9 @@
         location.reload();
     });
 
+    connection.on("UpdateAuctionStatus", () => {
+            location.reload();
+    })
 
 
 </script>

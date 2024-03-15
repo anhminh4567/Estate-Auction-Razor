@@ -29,7 +29,7 @@ namespace Repository.Implementation.RealEstate
         public async Task<Estate?> GetFullDetail(int id)
         {
 			return await _set.Include(e => e.EstateCategory)?.ThenInclude(e => e.CategoryDetail)
-				.Include(e => e.Auctions).Include(e => e.Company).FirstOrDefaultAsync(e => e.EstateId == id);
+				.Include(e => e.Auctions).ThenInclude(a => a.Bids).Include(e => e.Company).FirstOrDefaultAsync(e => e.EstateId == id);
         }
 		public async Task<Estate?> GetInclude(int id,params string[] includes) 
 		{
