@@ -305,12 +305,12 @@
                                         </tr>
                                         @foreach (var joinedAccount in Model.Auction.JoinedAccounts)
                                     {
-                                            <tr>
+                                        <tr class="clickable-row" data-id="@joinedAccount.Account.AccountId">
                                                 <td>@joinedAccount.Account.AccountId</td>
                                                 <td>@joinedAccount.Account.FullName</td>
                                                 <td>@joinedAccount.Account.Email</td>
                                                 <td>@joinedAccount.RegisterDate.ToString("dd/MM/yyy")</td>
-                                            </tr>
+                                        </tr>
                                     }
                                     </table>
 
@@ -350,6 +350,15 @@
         $(".det_btns").show();
         console.log(targetDiv + '');
     });
+    $(".clickable-row").click(function () {
+        var id = $(this).data("id");
+        console.log(id)
+        window.location = `/CustomerPages/Profile/Other?id=${id}`
+    });
+</script>
+@section Scripts {
+
+<script>
     const connection = new signalR.HubConnectionBuilder()
         .withAutomaticReconnect()
         .withUrl("/auctionrealtime")
