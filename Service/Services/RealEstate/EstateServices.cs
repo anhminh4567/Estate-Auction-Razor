@@ -199,7 +199,7 @@ namespace Service.Services.RealEstate
                     a.Status != AuctionStatus.FAILED_TO_PAY &&
                     a.Status != AuctionStatus.CANCELLED).FirstOrDefault();// this is because at one time only 1 aution valid is happening
                 
-                await _unitOfWork.BeginTransaction();
+                //await _unitOfWork.BeginTransaction();
                 
                 if(getCurrentValidAuction is not null)
                 {
@@ -211,15 +211,17 @@ namespace Service.Services.RealEstate
                     }
                 }
                 // bat dau bann
-				estate.Status = EstateStatus.BANNED;
-				await _unitOfWork.Repositories.estateRepository.UpdateAsync(estate);
-                await _unitOfWork.SaveChangesAsync();
-                await _unitOfWork.CommitAsync();
+				//estate.Status = EstateStatus.BANNED;
+				//await _unitOfWork.Repositories.estateRepository.UpdateAsync(estate);
+                //await _unitOfWork.SaveChangesAsync();
+                //await _unitOfWork.CommitAsync();
+                var deleteResult = await DeleteEstate(estate);
+                return deleteResult;
                 return (true, "Success");
             }
             catch (Exception ex) 
             {
-                await _unitOfWork.RollBackAsync();
+                //await _unitOfWork.RollBackAsync();
                 return (false, ex.Message);
             }
 		}

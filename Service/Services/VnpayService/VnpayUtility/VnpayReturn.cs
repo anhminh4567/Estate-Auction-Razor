@@ -98,8 +98,9 @@ namespace Service.Services.VnpayService.VnpayUtility
 						Console.WriteLine("fail");
 						returnResult.Success = false;
 						returnResult.Message = "24  Giao dịch không thành công do: Khách hàng hủy giao dịch";
-                        newTransaction.Status = TransactionStatus.FAIL;
-                        await _unitOfWork.Repositories.transactionRepository.UpdateAsync(newTransaction);
+                        //newTransaction.Status = TransactionStatus.FAIL;
+                        //await _unitOfWork.Repositories.transactionRepository.UpdateAsync(newTransaction);
+                        return returnResult;
 					}
                     else
                     {

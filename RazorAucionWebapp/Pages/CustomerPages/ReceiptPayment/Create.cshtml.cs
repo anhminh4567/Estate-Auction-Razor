@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Build.Framework;
 using RazorAucionWebapp.Configure;
 using Repository.Database;
 using Repository.Database.Model.AppAccount;
@@ -58,7 +58,8 @@ namespace RazorAucionWebapp.Pages.CustomerPages.ReceiptPayment
 
         [BindProperty]
         [Required]
-        public decimal PayAmount { get; set; }
+		[Range(1, 100000000)]
+		public decimal PayAmount { get; set; }
         [BindProperty]
         [Required]
         public int ReceiptId { get; set; }

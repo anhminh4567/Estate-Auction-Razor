@@ -350,10 +350,6 @@
         $(".det_btns").show();
         console.log(targetDiv + '');
     });
-</script>
-@section Scripts {
-
-<script>
     const connection = new signalR.HubConnectionBuilder()
         .withAutomaticReconnect()
         .withUrl("/auctionrealtime")
@@ -385,12 +381,18 @@
     });
 
     connection.on("UpdateAuctionStatus", () => {
-            location.reload();
+        console.log('called');
+        location.reload();
     })
+</script>
+
+
+<script>
+    
 
 
 </script>
-}
+
 
 @* <div>
     <a asp-page="Index">Back to List</a>

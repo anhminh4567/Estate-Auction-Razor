@@ -45,7 +45,10 @@
                                     <a asp-page="./DetailAuction" asp-route-id="@item.AuctionId" class="btn btn-primary">Detail</a>
                             @if (item.AuctionReceipt is not null && item.Status.Equals(AuctionStatus.PENDING_PAYMENT))
                             {
-                                                <a asp-page="./ReceiptPayment/Index" asp-route-auctionId="@item.AuctionId" class="btn btn-success">See Your Transaction</a>
+                                if(item.AuctionReceipt.BuyerId == Model.UserId)
+                                {
+                                    <a asp-page="./ReceiptPayment/Index" asp-route-auctionId="@item.AuctionId" class="btn btn-success">See Your Transaction</a>
+                                }
                             }
                                 </td>
                                 <td>

@@ -32,7 +32,7 @@ namespace RazorAucionWebapp.Pages.Vnpay
 			try
 			{
 				await PopulateData(myAccountId.Value);
-				var returnResult = await _vnpayAvailableServices.OnPayResult(HttpContext, _account,transactionDate );
+				var returnResult = await _vnpayAvailableServices.OnPayResult(HttpContext, _account, transactionDate.Substring(0, 14));
 				if (returnResult is null || returnResult.Success == false)
 				{
 					ModelState.AddModelError(string.Empty, "something wrong, why null, why empty, check code implementation");

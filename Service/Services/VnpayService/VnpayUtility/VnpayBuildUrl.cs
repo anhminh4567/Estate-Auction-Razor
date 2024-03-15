@@ -62,8 +62,15 @@ namespace Service.Services.VnpayService.VnpayUtility
 			//	await _unitOfWork.RollBackAsync();
 			//	return null;
 			//}
+			var currentDateTime1 = order.CreatedDate.Year.ToString() +
+					order.CreatedDate.Month.ToString() +
+					order.CreatedDate.Date.ToString() +
+					order.CreatedDate.Hour.ToString() +
+					order.CreatedDate.Minute.ToString() +
+					order.CreatedDate.Second.ToString();
 
 			var currentDateTime = order.CreatedDate.ToString("yyyyMMddHHmmss");
+
 			//Get Config Info
 			string vnp_Returnurl = VnpayDefaultValue.Vnp_Returnurl += acc.AccountId+ "&transactionDate="+ currentDateTime ; //URL nhan ket qua tra ve 
 			string vnp_Url = VnpayDefaultValue.Vnp_Url; //URL thanh toan cua VNPAY 

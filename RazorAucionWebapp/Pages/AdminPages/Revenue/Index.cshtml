@@ -71,6 +71,9 @@
                         @Html.DisplayNameFor(model => model.AuctionReceipt[0].Buyer)
                     </th> *@
                     <th>
+                        @Html.DisplayNameFor(model => model.AuctionReceipt[0].AuctionId)
+                    </th>
+                    <th>
                         @Html.DisplayNameFor(model => model.AuctionReceipt[0].Amount)
                     </th>
                     <th>
@@ -93,6 +96,9 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.Buyer.CMND)
                         </td> *@
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AuctionId)
+                        </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Amount)
                         </td>

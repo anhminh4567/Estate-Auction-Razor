@@ -54,16 +54,20 @@ namespace RazorAucionWebapp.Pages.CompanyPages.EstateMng
         public string Description { get; set; }
         [BindProperty]
         [Required]
-        public float Width { get; set; }
+		[Range(1f, 100000000f)]
+		public float Width { get; set; }
         [BindProperty]
         [Required]
-        public float Length { get; set; }
+		[Range(1f, 100000000f)]
+		public float Length { get; set; }
         [BindProperty]
         [Required]
-        public float Area { get; set; }
+		[Range(1f, 1000000000f)]
+		public float Area { get; set; }
         [BindProperty]
         [Required]
-        public int Floor { get; set; }
+		[Range(0, 100)]
+		public int Floor { get; set; }
         [BindProperty]
         [Required]
         public string Location { get; set; }

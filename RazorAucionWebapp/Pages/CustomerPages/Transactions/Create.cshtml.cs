@@ -29,7 +29,7 @@ namespace RazorAucionWebapp.Pages.CustomerPages.Transactions
         }
         [BindProperty]
         [Required]
-        [Range(1, int.MaxValue)]
+        [Range(10000, 100000000,ErrorMessage ="Amount must greater than 1 and less than 10000000")]
         public int Amount { get; set; }
 
         private int _userId { get; set; }

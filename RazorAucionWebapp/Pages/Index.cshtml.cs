@@ -38,18 +38,26 @@ namespace RazorAucionWebapp.Pages
         {
             int correctStartValue = (PageStart-1) * DisplayAmount;
             await PopulateData(correctStartValue, DisplayAmount);
-
+			HashSet<int> estatesId = new HashSet<int>();
 			foreach (var auction in Auctions)
 			{
 				var appImages = await _estateImagesServices.GetByEstateId(auction.Estate.EstateId); // this will return list of image
-				foreach (var appImage in appImages)
-				{
-					var image = auction.Estate.Images.FirstOrDefault(i => i.Image.Path == appImage.Path);
-					if (image != null)
+                if( estatesId.Contains(auction.Estate.EstateId) is false)
+                {
+					estatesId.Add(auction.EstateId);
+					foreach (var appImage in appImages)
 					{
-						image.Image.Path = "~/PublicImages/storage/" + appImage.Path;
+						var image = auction.Estate.Images.FirstOrDefault(i => i.Image.Path == appImage.Path);
+						if (image != null)
+						{
+							image.Image.Path = "~/PublicImages/storage/" + appImage.Path;
+						}
 					}
-				}
+                }
+                else
+                {
+                    continue;
+                }
 			}
 			return Page();
         }

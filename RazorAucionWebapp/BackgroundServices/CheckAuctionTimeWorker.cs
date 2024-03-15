@@ -97,6 +97,7 @@ namespace RazorAucionWebapp.BackgroundServices
                                     {
                                     auc.Status = AuctionStatus.CANCELLED;// cancelled if no bid is placed
                                     //Send Notification
+                                    await auctionHubService.UpdateAuctionStatus();
                                     await notificationService.SendMessage(auc.AuctionId, NotificationType.EndAuction);
                                 }
                                 else
@@ -137,13 +138,13 @@ namespace RazorAucionWebapp.BackgroundServices
 									}
                                     auc.ReceiptId = createResult.ReceiptId;
                                     //Send Notification
-                                    //await notificationService.SendMessage(auc.AuctionId, NotificationType.EndAuction);
+                                    await notificationService.SendMessage(auc.AuctionId, NotificationType.EndAuction);
                                 }
                             }
                         }
                         var tryUpdte = await auctionService.Update(auc);
                         await unitOfWork.SaveChangesAsync();
-                        await unitOfWork.CommitAsync();
+                        await unitOfWork.CommitAsync(); await auctionHubService.UpdateAuctionStatus();
                     }
                     catch (Exception ex)
                     {

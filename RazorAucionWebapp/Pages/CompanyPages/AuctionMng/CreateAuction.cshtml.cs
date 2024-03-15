@@ -57,16 +57,20 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
         public DateTime EndPayDate { get; set; } = getDate(15);
         [BindProperty]
         [Required]
-        public decimal WantedPrice { get; set; }
+		[Range(1, double.MaxValue)]
+		public decimal WantedPrice { get; set; }
         [BindProperty]
         [Required]
-        public decimal IncrementPrice { get; set; }
+		[Range(1, double.MaxValue)]
+		public decimal IncrementPrice { get; set; }
         [BindProperty]
         [Required]
-        public decimal EntranceFee { get; set; }
+		[Range(1, double.MaxValue)]
+		public decimal EntranceFee { get; set; }
         [BindProperty]
         [Required]
-        public int MaxParticipant { get; set; }
+		[Range(1, int.MaxValue)]
+		public int MaxParticipant { get; set; }
         //[BindProperty]
         //[NotNull]
         //[Required]

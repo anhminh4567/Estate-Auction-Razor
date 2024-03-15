@@ -136,6 +136,16 @@ namespace Service.Services.Auction
                     }
                 }
 			}
+
+
+			var getCompanyAccount = await _unitOfWork.Repositories.accountRepository.GetAsync(getEstate.CompanyId);
+			if(getCompanyAccount.Balance <= 0)
+			{
+				return (false, "cannot create new aucction your balance is under 0, fill your wallet now",null);
+			}
+
+
+
 			var createResult = await _unitOfWork.Repositories.auctionRepository.CreateAsync(auction);
 			if (createResult is not null)
 			{
@@ -187,11 +197,16 @@ namespace Service.Services.Auction
 					// update lai company, buyder balance, xoa receipt
 					var update1 = await _unitOfWork.Repositories.accountRepository.UpdateAsync(getWinner);
 					var update2 = await _unitOfWork.Repositories.accountRepository.UpdateAsync(getCompany);
+
+
 					// HIEN KO NEN XOA RECEIPT, do receipt app phai an tien 
-					var update3 = await _unitOfWork.Repositories.auctionReceiptRepository.DeleteAsync(getReceipt);
+					//var update3 = await _unitOfWork.Repositories.auctionReceiptRepository.DeleteAsync(getReceipt);
+					////////////////////////////////////////////////////////////////////
+
+
 					auction.Status = AuctionStatus.CANCELLED;
 					var update4 = await _unitOfWork.Repositories.auctionRepository.UpdateAsync(auction);
-					if (update1 is false || update2 is false || update3 is false || update4 is false)
+					if (update1 is false || update2 is false  || update4 is false )//|| update3 is false)
 					{
 						throw new Exception("Error in update cancel auction");
 					}

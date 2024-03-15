@@ -51,7 +51,7 @@ namespace RazorAucionWebapp.Pages.CustomerPages
                 return BadRequest(ex.Message);
             }
         }
-        private int UserId { get; set; }
+        public int UserId { get; set; }
 
         private void GetUserId()
         {

@@ -349,5 +349,39 @@
         console.log(id)
         window.location = `/CustomerPages/Profile/Other?id=${id}`
     });
+    const connection = new signalR.HubConnectionBuilder()
+        .withAutomaticReconnect()
+        .withUrl("/auctionrealtime")
+        .build();
+
+    connection.start()
+        .then((result) => {
+            console.log(result);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+
+    connection.on("UpdateLatestBidAmount", () => {
+        // $.ajax({
+        //     url: '/CustomerPages/DetailAuction?handler=UpdateAuctionBid',
+        //     method: 'GET',
+        //     data: {
+        //         aucId: @Model.Auction.AuctionId
+        //     },
+        //     success: (result) => {
+        //             $("#bid_amount_input").val(parseFloat(result));
+        //     },
+        //     error: (error) => {
+        //         console.log(error);
+        //     }
+        // });
+        location.reload();
+    });
+
+    connection.on("UpdateAuctionStatus", () => {
+        console.log('called');
+        location.reload();
+    })
 </script>
 
