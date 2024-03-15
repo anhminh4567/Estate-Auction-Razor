@@ -99,6 +99,11 @@ namespace RazorAucionWebapp.Pages.CompanyPages.AuctionMng
                 {
                     return Page();
                 }
+                if(EntranceFee >= IncrementPrice)
+                {
+                    ModelState.AddModelError(string.Empty, "Entrence fee must < increment price");
+                    return Page();
+                }
                 var newAuction = new Auction()
                 {
                     RegistrationDate = DateTime.Now,
