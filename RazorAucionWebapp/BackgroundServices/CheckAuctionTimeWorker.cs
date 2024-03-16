@@ -55,6 +55,7 @@ namespace RazorAucionWebapp.BackgroundServices
                 {
                     try
                     {
+                        var isUpdated = false;
                         NotificationType type;
 
                         await unitOfWork.BeginTransaction();
@@ -65,6 +66,7 @@ namespace RazorAucionWebapp.BackgroundServices
                                 await auctionHubService.UpdateAuctionStatus();
                             //Send Notification
                                 await notificationService.SendMessage(auc.AuctionId, NotificationType.StartAuction);
+                            isUpdated = true ;
                         }
                         if (auc.Status.Equals(AuctionStatus.ONGOING) && auc.EndDate.CompareTo(DateTime.Now) <= 0)
                         {
@@ -139,12 +141,18 @@ namespace RazorAucionWebapp.BackgroundServices
                                     auc.ReceiptId = createResult.ReceiptId;
                                     //Send Notification
                                     await notificationService.SendMessage(auc.AuctionId, NotificationType.EndAuction);
+                                    isUpdated = true;
                                 }
                             }
                         }
                         var tryUpdte = await auctionService.Update(auc);
                         await unitOfWork.SaveChangesAsync();
-                        await unitOfWork.CommitAsync(); await auctionHubService.UpdateAuctionStatus();
+                        await unitOfWork.CommitAsync();
+                        await Task.Delay(100);
+                        if (isUpdated)
+                        {
+                            await auctionHubService.UpdateAuctionStatus();
+                        }
                     }
                     catch (Exception ex)
                     {

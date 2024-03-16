@@ -72,7 +72,7 @@ namespace Service.Services.VnpayService.VnpayUtility
 			var currentDateTime = order.CreatedDate.ToString("yyyyMMddHHmmss");
 
 			//Get Config Info
-			string vnp_Returnurl = VnpayDefaultValue.Vnp_Returnurl += acc.AccountId+ "&transactionDate="+ currentDateTime ; //URL nhan ket qua tra ve 
+			string vnp_Returnurl = VnpayDefaultValue.Vnp_Returnurl + acc.AccountId+ "&transactionDate="+ currentDateTime ; //URL nhan ket qua tra ve 
 			string vnp_Url = VnpayDefaultValue.Vnp_Url; //URL thanh toan cua VNPAY 
 			string vnp_TmnCode = VnpayDefaultValue.Vnp_TmnCode; //Ma website
 			string vnp_HashSecret = VnpayDefaultValue.Vnp_HashSecret; //Chuoi bi mat

@@ -7,16 +7,16 @@
 		<h3>LOGIN</h3>
 		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 		<div class="inputGrp">
-			<input type="text" asp-for="Email" required/>
+			<input  asp-for="Email" required/>
 			<label class="lbl" asp-for="Email">Email</label>
 			<div class="wBorder"></div>
-			@* <span asp-validation-for="Email" class="text-danger"></span> *@
+			 <span asp-validation-for="Email" class="text-danger"></span> 
 		</div>
 		<div class="inputGrp">
-			<input type="password" asp-for="Password" required />
+			<input asp-for="Password" required />
 			<label asp-for="Password">Password</label>
 			<div class="wBorder2"></div>
-			@* <span asp-validation-for="Password" class="text-danger"></span> *@
+			 <span asp-validation-for="Password" class="text-danger"></span> 
 		</div>
 		<div>
 			<button type="submit" class="btn btn-primary">Login</button>

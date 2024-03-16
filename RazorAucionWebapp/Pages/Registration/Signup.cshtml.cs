@@ -26,9 +26,11 @@ namespace RazorAucionWebapp.Pages.Registration
 		[Required]
 		[DataType(DataType.EmailAddress)]
 		public string Email { get; set; }
+
 		[BindProperty]
 		[Required]
 		public string Name { get; set; }
+
 		[BindProperty]
 		[RegularExpression(@"^\d{10}$")]
 		[Required]
@@ -44,15 +46,27 @@ namespace RazorAucionWebapp.Pages.Registration
 		public DateTime Dob { get; set; } = DateTime.Now.AddYears(-18).Date;
 		[BindProperty]
 		[Required]
+		[DataType(DataType.Password)]
 		public string Password { get; set; }
 		[BindProperty]
 		[Required]
-		public string RePassword { get; set; }
+        [DataType(DataType.Password)]
+        public string RePassword { get; set; }
 		public void OnGet()
         {
         }
 		public async Task<IActionResult> OnPostAsync() 
 		{
+			if(ModelState.IsValid == false) 
+			{
+				ModelState.AddModelError(string.Empty, "Error in parameter");
+                return Page();
+            }
+			if( (Password == RePassword) is false) 
+			{
+				ModelState.AddModelError(string.Empty, "re password not match");
+				return Page();
+			}
 			if (await _accountServices.IsEmailExisted(Email))
 			{
 				ModelState.AddModelError(string.Empty,"email exist");

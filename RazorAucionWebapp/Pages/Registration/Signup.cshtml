@@ -8,48 +8,48 @@
 		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 		<div class="row">
 			<div class="inputGrp col-md">
-				<input type="text" asp-for="Email" required />
+				<input  asp-for="Email" required />
 				<label class="lbl" asp-for="Email">Email</label>
 				<div class="wBorder"></div>
-				@* <span asp-validation-for="Email" class="text-danger"></span> *@
+				 <span asp-validation-for="Email" class="text-danger"></span> 
 			</div>
 			<div class="inputGrp col-md">
-				<input type="text" asp-for="Name" required />
+				<input  asp-for="Name" required />
 				<label class="lbl" asp-for="Name">Full Name</label>
 				<div class="wBorder2"></div>
-				@* <span asp-validation-for="Email" class="text-danger"></span> *@
+				 <span asp-validation-for="Email" class="text-danger"></span> 
 			</div>
 		</div>
 		
 		<div class="inputGrp">
-			<input type="text" asp-for="Tel" required />
+			<input  asp-for="Tel" required />
 			<label class="lbl" asp-for="Tel">Phone Number</label>
 			<div class="wBorder3"></div>
-			@* <span asp-validation-for="Email" class="text-danger"></span> *@
+			 <span asp-validation-for="Email" class="text-danger"></span> 
 		</div>
 		<div class="inputGrp">
-			<input type="text" asp-for="CMND" required />
+			<input  asp-for="CMND" required />
 			<label class="lbl" asp-for="CMND">Citizen ID (CCCD)</label>
 			<div class="wBorder4"></div>
-			@* <span asp-validation-for="Email" class="text-danger"></span> *@
+			 <span asp-validation-for="Email" class="text-danger"></span> 
 		</div>
 		<div class="inputGrp">
-			<input type="date" asp-for="Dob" required />
+			<input  asp-for="Dob" required />
 			<label class="lbl" asp-for="Dob">Customer Birthdate</label>
 			<div class="wBorder5"></div>
-			@* <span asp-validation-for="Email" class="text-danger"></span> *@
+			 <span asp-validation-for="Email" class="text-danger"></span> 
 		</div>
 		<div class="inputGrp">
-			<input type="password" asp-for="Password" required />
+			<input  asp-for="Password" required />
 			<label asp-for="Password">Password</label>
 			<div class="wBorder2"></div>
-			@* <span asp-validation-for="Password" class="text-danger"></span> *@
+			 <span asp-validation-for="Password" class="text-danger"></span> 
 		</div>
 		<div class="inputGrp">
-			<input type="password" asp-for="RePassword" required />
+			<input  asp-for="RePassword" required />
 			<label asp-for="RePassword">Confirm Password</label>
 			<div class="wBorder6"></div>
-			@* <span asp-validation-for="Password" class="text-danger"></span> *@
+			 <span asp-validation-for="Password" class="text-danger"></span> 
 		</div>
 		<div>
 			<button type="submit" class="btn btn-primary">Register</button>
