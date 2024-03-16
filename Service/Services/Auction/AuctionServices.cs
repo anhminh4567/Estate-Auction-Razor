@@ -5,6 +5,7 @@ using Repository.Interfaces.AppAccount;
 using Repository.Interfaces.Auction;
 using Repository.Interfaces.DbTransaction;
 using Repository.Interfaces.RealEstate;
+using Service.Interfaces.Auction;
 using Service.MyHub.HubServices;
 using Service.Services.AppAccount;
 using Service.Services.RealEstate;
@@ -22,7 +23,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Service.Services.Auction
 {
-	public class AuctionServices
+	public class AuctionServices : IAuctionServices
 	{
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly AuctionHubService _auctionHubService;

@@ -3,6 +3,7 @@ using Repository.Database.Model.AppAccount;
 using Repository.Database.Model.RealEstate;
 using Repository.Interfaces.AppAccount;
 using Repository.Interfaces.DbTransaction;
+using Service.Interfaces.AppAccount;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Service.Services.AppAccount
 {
-	public class AccountImagesServices
+	public class AccountImagesServices : IAccountImagesServices
 	{
 		private readonly IUnitOfWork _unitOfWork;
         private readonly ImageService _imageService;

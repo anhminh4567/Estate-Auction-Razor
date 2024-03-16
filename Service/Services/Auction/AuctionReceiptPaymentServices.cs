@@ -4,6 +4,7 @@ using Repository.Database.Model.Enum;
 using Repository.Database.Model.RealEstate;
 using Repository.Interfaces.Auction;
 using Repository.Interfaces.DbTransaction;
+using Service.Interfaces.Auction;
 using Service.Services.AppAccount;
 using Service.Services.RealEstate;
 using System;
@@ -14,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Service.Services.Auction
 {
-	public class AuctionReceiptPaymentServices
+	public class AuctionReceiptPaymentServices : IAuctionReceiptPaymentServices
 	{
 		private readonly IUnitOfWork _unitOfWork;
         public AuctionReceiptPaymentServices(IUnitOfWork unitOfWork)

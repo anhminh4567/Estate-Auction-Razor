@@ -13,10 +13,11 @@ using Repository.Interfaces.Auction;
 using Service.Services.RealEstate;
 using Service.Services.Auction;
 using Repository.Interfaces.DbTransaction;
+using Service.Interfaces.AppAccount;
 
 namespace Service.Services.AppAccount
 {
-	public class CompanyServices
+	public class CompanyServices : ICompanyServices
 	{
 		private readonly IUnitOfWork _unitOfWork;
         private readonly EstateServices _estateServices;

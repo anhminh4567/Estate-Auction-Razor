@@ -5,6 +5,7 @@ using Repository.Database.Model.Enum;
 using Repository.Interfaces;
 using Repository.Interfaces.AppAccount;
 using Repository.Interfaces.DbTransaction;
+using Service.Interfaces.AppAccount;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ using System.Xml.Linq;
 
 namespace Service.Services.AppAccount
 {
-	public class AccountServices
+	public class AccountServices 
 	{
 		private readonly IUnitOfWork _unitOfWork;
 

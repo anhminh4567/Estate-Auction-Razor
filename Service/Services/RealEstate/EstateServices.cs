@@ -16,7 +16,7 @@ using System.Xml.Linq;
 
 namespace Service.Services.RealEstate
 {
-	public class EstateServices : IEstateServices<Estate>
+	public class EstateServices 
 	{
 		private readonly IUnitOfWork _unitOfWork;
         private readonly AuctionServices _auctionServices;

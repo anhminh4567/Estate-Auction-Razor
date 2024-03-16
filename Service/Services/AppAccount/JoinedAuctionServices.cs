@@ -11,10 +11,11 @@ using Repository.Database.Model.Enum;
 using Repository.Database.Model.AuctionRelated;
 using Repository.Interfaces.DbTransaction;
 using System.Diagnostics.Contracts;
+using Service.Interfaces.AppAccount;
 
 namespace Service.Services.AppAccount
 {
-    public class JoinedAuctionServices
+    public class JoinedAuctionServices 
     {
         private readonly IUnitOfWork _unitOfWork;
 

@@ -1,4 +1,11 @@
-﻿using Service.Services;
+﻿using Repository.Implementation;
+using Repository.Implementation.AppAccount;
+using Repository.Implementation.Auction;
+using Repository.Implementation.RealEstate;
+using Repository.Interfaces;
+using Repository.Interfaces.Auction;
+using Repository.Interfaces.RealEstate;
+using Service.Services;
 using Service.Services.AppAccount;
 using Service.Services.Auction;
 using Service.Services.RealEstate;
@@ -9,7 +16,7 @@ namespace RazorAucionWebapp.Configure
 	public static class RegisterServices
 	{
 		public static IServiceCollection AddMyServices(this IServiceCollection services) 
-		{
+		{            
 
             services.AddScoped<VnpayBuildUrl>();
             services.AddScoped<VnpayQuery>();

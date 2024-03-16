@@ -1,6 +1,7 @@
 ﻿using Repository.Database.Model.AuctionRelated;
 using Repository.Interfaces.Auction;
 using Repository.Interfaces.DbTransaction;
+using Service.Interfaces.Auction;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Service.Services.Auction
 {
-	public  class AuctionReceiptServices
+	public  class AuctionReceiptServices : IAuctionReceiptServices
 	{
 		private readonly IUnitOfWork _unitOfWork;
 

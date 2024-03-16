@@ -2,12 +2,14 @@
 using Repository.Database.Model;
 using Repository.Database.Model.Enum;
 using Repository.Database.Model.RealEstate;
+using Repository.Interfaces;
 using Repository.Interfaces.DbTransaction;
+using Service.Interfaces;
 using Service.MyHub.HubServices;
 
 namespace Service.Services
 {
-	public class NotificationServices
+	public class NotificationServices : INotificationServices
 	{
 		private readonly IUnitOfWork _unitOfWork;
         private readonly NotificationHubService _notificationHubService;

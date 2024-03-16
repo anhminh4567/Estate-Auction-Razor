@@ -1,6 +1,7 @@
 ﻿using Repository.Database.Model.RealEstate;
 using Repository.Interfaces.DbTransaction;
 using Repository.Interfaces.RealEstate;
+using Service.Interfaces.RealEstate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Service.Services.RealEstate
 {
-	public class EstateCategoriesServices
+	public class EstateCategoriesServices : IEstateCategoriesServices
 	{
 		private readonly IUnitOfWork _unitOfWork;
 

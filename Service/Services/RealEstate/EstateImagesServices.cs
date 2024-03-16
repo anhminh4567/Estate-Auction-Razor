@@ -2,6 +2,7 @@
 using Repository.Database.Model.RealEstate;
 using Repository.Interfaces.DbTransaction;
 using Repository.Interfaces.RealEstate;
+using Service.Interfaces.RealEstate;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Service.Services.RealEstate
 {
-	public class EstateImagesServices
+	public class EstateImagesServices : IEstateImagesServices
 	{
 		private readonly IUnitOfWork _unitOfWork;
         private readonly ImageService _imageService;

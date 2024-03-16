@@ -4,6 +4,7 @@ using Repository.Database.Model;
 using Repository.Database.Model.AppAccount;
 using Repository.Interfaces;
 using Repository.Interfaces.DbTransaction;
+using Service.Interfaces;
 using Service.Services.AppAccount;
 using Service.Services.VnpayService.VnpayUtility;
 using System;
@@ -14,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Service.Services
 {
-	public class TransactionServices
+	public class TransactionServices : ITransactionServices
 	{
 		private readonly IUnitOfWork _unitOfWork;
 

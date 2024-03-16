@@ -11,10 +11,11 @@ using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using Repository.Interfaces.DbTransaction;
+using Service.Interfaces;
 
 namespace Service.Services
 {
-	public class ImageService
+	public class ImageService : IImageService
 	{
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly string[] _validFileExtendsion = new[] { "png", "jpeg" };

@@ -10,5 +10,7 @@ namespace Repository.Interfaces.AppAccount
 	public interface IAccountImageRepository : ICrud<AccountImages>
 	{
 		Task<IList<AccountImages>> GetAllByAccountId(int id);
-	}
+		Task<AccountImages> GetAsync(int AccountId);
+
+    }
 }

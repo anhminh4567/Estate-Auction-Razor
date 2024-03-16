@@ -4,6 +4,7 @@ using Repository.Database.Model.Enum;
 using Repository.Interfaces.AppAccount;
 using Repository.Interfaces.Auction;
 using Repository.Interfaces.DbTransaction;
+using Service.Interfaces.Auction;
 using Service.MyHub.HubServices;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Service.Services.Auction
 {
-    public class BidServices
+    public class BidServices : IBidServices
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly BidHubServices _bidHubServices;
