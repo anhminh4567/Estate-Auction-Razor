@@ -10,17 +10,18 @@ using Repository.Database;
 using Repository.Database.Model;
 using Repository.Database.Model.AppAccount;
 using Repository.Database.Model.Enum;
-using Service.Services;
+using Service.Interfaces;
+using Service.Interfaces.AppAccount;
 using Service.Services.AppAccount;
 
 namespace RazorAucionWebapp.Pages.AdminPages.Accounts.Transactions
 {
     public class CreateModel : PageModel
     {
-        private readonly TransactionServices _transactionServices;
-        private readonly AccountServices _accountServices;
+        private readonly ITransactionServices _transactionServices;
+        private readonly IAccountServices _accountServices;
 
-		public CreateModel(TransactionServices transactionServices, AccountServices accountServices)
+		public CreateModel(ITransactionServices transactionServices, IAccountServices accountServices)
 		{
 			_transactionServices = transactionServices;
 			_accountServices = accountServices;
