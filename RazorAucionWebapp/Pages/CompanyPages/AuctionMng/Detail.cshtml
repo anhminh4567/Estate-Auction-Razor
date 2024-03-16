@@ -3,7 +3,7 @@
 @model RazorAucionWebapp.Pages.CompanyPages.AuctionMng.DetailModel
 
 @{
-	ViewData["Title"] = "Detail";
+    ViewData["Title"] = "Detail";
 }
 
 
@@ -16,10 +16,10 @@
             <li class="breadcrumb-item"><a href="#">Auction detail</a></li>
         </ol>
     </nav>
-    
+
     <div class="d-flex justify-content-between">
         <h1 class="fw-bold text-uppercase mt-5">Detail Auction #@Model.Auction.AuctionId</h1>
-        @if(Model.Auction.Status.ToString() == "ONGOING")
+        @if (Model.Auction.Status.ToString() == "ONGOING")
         {
             <div class="deleteBtn">
                 <a asp-page="Delete" asp-route-id="@Model.Auction?.AuctionId">Cancel</a>
@@ -89,6 +89,18 @@
                         @if (isAuctioning)
                         {
                             <div>
+                                <p>Duration</p>
+                                <div class="auction_duration_wrapper d-flex justify-content-between">
+                                    <span>
+                                        @Model.Auction.StartDate.ToString("dd.MM.yyy")
+                                        @Model.Auction.StartDate.Hour:@Model.Auction.StartDate.Minute:@Model.Auction.StartDate.Second
+                                    </span>
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                    <span>
+                                        @Model.Auction.EndDate.ToString("dd.MM.yyy")
+                                        @Model.Auction.EndDate.Hour:@Model.Auction.EndDate.Minute:@Model.Auction.EndDate.Second
+                                    </span>
+                                </div>
                                 <p class="text-danger m-3 fw-bolder">Company cannot join or bid</p>
                             </div>
                         }
@@ -256,11 +268,11 @@
                                     @foreach (var joinedAccount in Model.Auction.JoinedAccounts)
                                     {
                                         <tr class="clickable-row" data-id="@joinedAccount.Account.AccountId">
-                                                    <td>@joinedAccount.Account.AccountId</td>
-                                                    <td>@joinedAccount.Account.FullName</td>
-                                                    <td>@joinedAccount.Account.Email</td>
-                                                    <td>@joinedAccount.RegisterDate.ToString("dd/MM/yyy")</td>
-                                         </tr>
+                                            <td>@joinedAccount.Account.AccountId</td>
+                                            <td>@joinedAccount.Account.FullName</td>
+                                            <td>@joinedAccount.Account.Email</td>
+                                            <td>@joinedAccount.RegisterDate.ToString("dd/MM/yyy")</td>
+                                        </tr>
                                     }
                                 </table>
 
@@ -286,48 +298,64 @@
         </div>
     </div>
 </div>
+@{
+    if (Model.Auction.AuctionReceipt is not null)
+    {
+        <h2 class="text-center auction-result mt-3">Auction receipt</h2>
 
-<div class="AuctionReceipt container">
-    <ul>
-        @{
-            if (Model.Auction.AuctionReceipt is not null)
-            {
-                var acc = Model.Auction.AuctionReceipt;
-                <li>
-                    <p>@acc.Buyer.FullName</p>
-                    <p>@acc.Buyer.Email</p>
-                    <p>@acc.Commission</p>
-                    <p>@acc.Amount</p>
-                    <p>@acc.RemainAmount</p>
-                    @*<p>@acc.RegiisterFee</p>*@
-                    <a class="btn btn-primary" asp-page="./Receipts/Detail" asp-route-auctionId="@Model.Auction.AuctionId">detail auctionReceipt</a>
-                </li>
-            }
-        }
-    </ul>
-</div>
+        <div class="AuctionReceipt container">
+            <table class="table">
+                <thead>
+                    <tr class="table-secondary">
+                        <th scope="col">Winner</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Auction Commission</th>
+                        <th scope="col">Auction pay amount</th>
+                        <th scope="col">Entrance fee</th>
+                        <th scope="col">Remain pay amount</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        @{var acc = Model.Auction.AuctionReceipt;}
+                        <td>@acc.Buyer.FullName</td>
+                        <td>@acc.Buyer.Email</td>
+                        <td>$@acc.Commission</td>
+                        <td>$@acc.Amount</td>
+                        <td>$@Model.Auction.EntranceFee</td>
+                        <td>$@acc.RemainAmount</td>
+                        <a class="btn btn-primary" asp-page="./Receipts/Detail" asp-route-auctionId="@Model.Auction.AuctionId">AuctionReceipt detail</a>
+
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    }
+}
 
 <div class="container">
     <div>
-    @{
-        var tryGetRoleClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Role));
-        if (tryGetRoleClaim is null)
-        {
-            <a class=" btn btn-secondary" asp-page="./Index">Back to List</a>
-        }
-        else
-        {
-            if (tryGetRoleClaim.Value.Equals(Role.CUSTOMER) is false)
+        @{
+            var tryGetRoleClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(ClaimTypes.Role));
+            if (tryGetRoleClaim is null)
             {
-                <a class=" btn btn-danger" asp-page="./Delete" asp-route-id="@Model.Auction?.AuctionId">Cancel</a>
                 <a class=" btn btn-secondary" asp-page="./Index">Back to List</a>
             }
             else
             {
-                <a class=" btn btn-secondary" asp-page="./Index">Back to List</a>
+                if (tryGetRoleClaim.Value.Equals(Role.CUSTOMER) is false)
+                {
+                    <a class=" btn btn-danger" asp-page="./Delete" asp-route-id="@Model.Auction?.AuctionId">Cancel</a>
+                    <a class=" btn btn-secondary" asp-page="./Index">Back to List</a>
+                }
+                else
+                {
+                    <a class=" btn btn-secondary" asp-page="./Index">Back to List</a>
+                }
             }
         }
-    }
     </div>
 </div>
 <script>

@@ -313,3 +313,30 @@
            }
     }
 }
+
+.auction-result {
+    position: relative;
+}
+
+.auction-result:after {
+    content: ' ';
+    position: absolute;
+    top: 90%;
+    left: 50%;
+    height: 1.5rem;
+    width: 15rem;
+    transform: translateX(-50%);
+    background: url(https://i.ibb.co/pj84C9k/pngegg-2.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.auction_duration_wrapper {
+    background: #0B60B0;
+    padding: .5rem 1rem;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.9);
+    align-items: center;
+    border-radius: .3rem;
+}
