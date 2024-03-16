@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Microsoft.Extensions.Configuration;
 using Repository.Database.Model;
 using Repository.Database.Model.AppAccount;
 using Repository.Database.Model.AuctionRelated;
@@ -44,7 +43,7 @@ namespace Repository.Database
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-		//optionsBuilder.UseSqlServer("server =(local);uid=sa;pwd=12345;Database=AuctionDatabase;TrustServerCertificate=true;");
+			optionsBuilder.UseSqlServer("server =(local);uid=sa;pwd=12345;Database=AuctionDatabase;TrustServerCertificate=true;");
 			//optionsBuilder.UseSqlServer("server=LAPTOP-HUELJUER\\SQLSERVER19;uid=sa;pwd=12345;Database=AuctionDatabase;TrustServerCertificate=true;");
 		}
 
