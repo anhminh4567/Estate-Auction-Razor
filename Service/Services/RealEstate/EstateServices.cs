@@ -3,6 +3,7 @@ using Repository.Database.Model.Enum;
 using Repository.Database.Model.RealEstate;
 using Repository.Interfaces.DbTransaction;
 using Repository.Interfaces.RealEstate;
+using Service.Interfaces.RealEstate;
 using Service.Services.Auction;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ using System.Xml.Linq;
 
 namespace Service.Services.RealEstate
 {
-	public class EstateServices
+	public class EstateServices : IEstateServices<Estate>
 	{
 		private readonly IUnitOfWork _unitOfWork;
         private readonly AuctionServices _auctionServices;

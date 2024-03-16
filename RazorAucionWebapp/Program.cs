@@ -1,5 +1,6 @@
 global using Repository.Interfaces.AppAccount;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using RazorAucionWebapp.BackgroundServices;
 using RazorAucionWebapp.Configure;
@@ -41,7 +42,11 @@ builder.Services.AddRazorPages(opt =>
 
 });
 
-builder.Services.AddDbContext<AuctionRealEstateDbContext>();
+
+builder.Services.AddDbContext<AuctionRealEstateDbContext>(opt =>
+{
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionStringDB"));
+});
 
 builder.Services.AddMyRepositories();
 builder.Services.AddMyServices();
